@@ -26,7 +26,7 @@ SECRET_KEY = 'django-insecure-*#e4@jz&u2%5l&h685pt2288!o8k!!s$xbt-aktnp(d#zijh0b
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['localhost','127.0.0.1','scavenger-hunt-app.herokuapp.com']
+ALLOWED_HOSTS = ['localhost','127.0.0.1','scavenger-hunt-app.herokuapp.com', 'scavenger-hunt-app-1c0405daa9d6.herokuapp.com']
 
 
 # Application definition
