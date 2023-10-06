@@ -1,0 +1,39 @@
+{% load static %}
+{% load socialaccount %}
+
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login Page</title>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <link rel="stylesheet" href="{% static 'styles.css' %}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.1/css/all.min.css">
+</head>
+
+<body>
+<div class="container mt-5">
+    <div class="row justify-content-center">
+        <div class="col-md-6">
+            {% if user.is_authenticated %}
+                <p>Name: {{ user.first_name }}</p>
+                <p>Username: {{ user.username }}</p>
+                {% if user.is_superuser %}
+                    <p>You are logged in as an Admin user.</p>
+                {% else %}
+                    <p>You are logged in as a Regular user.</p>
+                {% endif %}
+                <a href="{% url 'logout' %}" class="btn btn-danger">Logout</a>
+            {% else %}
+                <h2>Welcome Guest!</h2>
+                <p>You need to <a href="{% url 'login' %}">log in</a> to see more content.</p>
+            {% endif %}
+        </div>
+    </div>
+</div>
+</body>
+
+
+</html>

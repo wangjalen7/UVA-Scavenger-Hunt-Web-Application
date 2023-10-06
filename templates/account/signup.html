@@ -1,0 +1,76 @@
+{% load static %}
+{% load socialaccount %}
+
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Register Page</title>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <link rel="stylesheet" href="{% static 'styles.css' %}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.1/css/all.min.css">
+</head>
+
+<body>
+
+<div class="container mt-5">
+    <div class="row justify-content-center">
+        <div class="col-md-6">
+                <h2>Register</h2>
+
+                <div class="text-center">
+                    <p>Register with:</p>
+                    <a href="{% provider_login_url 'google' %}" class="btn btn-link btn-floating mx-1">
+                        <i class="fab fa-google"></i>
+                    </a>
+                </div>
+                <p class="text-center">OR</p>
+                <form method="post" action="{% url 'account_signup' %}">
+                    {% csrf_token %}
+                    <div class="form-outline mb-4">
+                        {{ form.username.errors }}
+                        <input type="text" name="{{ form.username.name }}" id="{{ form.username.id_for_label }}" required class="form-control" value="{{ form.username.value|default:'' }}">
+                        <label class="form-label" for="{{ form.username.id_for_label }}">Username</label>
+                    </div>
+
+                    <div class="form-outline mb-4">
+                        {{ form.email.errors }}
+                        <input type="email" name="{{ form.email.name }}" id="{{ form.email.id_for_label }}" required class="form-control" value="{{ form.email.value|default:'' }}">
+                        <label class="form-label" for="{{ form.email.id_for_label }}">Email</label>
+                    </div>
+
+                    <div class="form-outline mb-4">
+                        {{ form.first_name.errors }}
+                        <input type="text" name="{{ form.first_name.name }}" id="{{ form.first_name.id_for_label }}" required class="form-control" value="{{ form.first_name.value|default:'' }}">
+                        <label class="form-label" for="{{ form.first_name.id_for_label }}">First Name</label>
+                    </div>
+                                        
+                    <div class="form-outline mb-4">
+                        {{ form.last_name.errors }}
+                        <input type="text" name="{{ form.last_name.name }}" id="{{ form.last_name.id_for_label }}" required class="form-control" value="{{ form.last_name.value|default:'' }}">
+                        <label class="form-label" for="{{ form.last_name.id_for_label }}">Last Name</label>
+                    </div>
+
+                    <div class="form-outline mb-4">
+                        {{ form.password1.errors }}
+                        <input type="password" name="{{ form.password1.name }}" id="{{ form.password1.id_for_label }}" required class="form-control">
+                        <label class="form-label" for="{{ form.password1.id_for_label }}">Password</label>
+                    </div>
+
+                    <div class="form-outline mb-4">
+                        {{ form.password2.errors }}
+                        <input type="password" name="{{ form.password2.name }}" id="{{ form.password2.id_for_label }}" required class="form-control">
+                        <label class="form-label" for="{{ form.password2.id_for_label }}">Confirm Password</label>
+                    </div>
+
+                    <button type="submit" class="btn btn-primary btn-block mb-4">Sign up</button>
+
+                </form>
+        </div>
+    </div>
+</div>
+
+</body>
+</html>
