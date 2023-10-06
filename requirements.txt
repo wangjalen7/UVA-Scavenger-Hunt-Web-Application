@@ -10,3 +10,5 @@ gunicorn
 django-heroku
 
 django-allauth
+
+allauth
