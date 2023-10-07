@@ -100,7 +100,7 @@ WSGI_APPLICATION = 'ScavengerHuntApp.wsgi.application'
 # }
 
 
-DATABASE_URL = os.environ.get('DATABASE_URL') or config('DATABASE_URL')
+DATABASE_URL = os.environ.get('DATABASE_URL') or config('DATABASE_URL', default='')
 DATABASES = {
     'default': dj_database_url.config(default=DATABASE_URL)
 }
