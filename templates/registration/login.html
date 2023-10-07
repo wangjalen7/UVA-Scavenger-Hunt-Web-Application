@@ -24,35 +24,39 @@
                         <p>You are already logged in. Go to the <a href="{% url 'index' %}">home page</a>.</p>
                         <a href="{% url 'logout' %}" class="btn btn-danger">Logout</a>
                     {% else %}
-                <h2>Login</h2>
-                <form method="post" action="{% url 'login' %}">
-                    {% csrf_token %}
-                    <div class="form-outline mb-4">
-                        <input type="text" name="username" id="id_username" required class="form-control">
-                        <label class="form-label" for="id_username">Username</label>
-                    </div>
-
-                    <div class="form-outline mb-4">
-                        <input type="password" name="password" id="id_password" required class="form-control">
-                        <label class="form-label" for="id_password">Password</label>
-                    </div>
-
-                    <div class="row mb-4">
-                        <div class="col">
-                            <a href="#!">Forgot password?</a>
-                        </div>
-                    </div>
-
-                    <button type="submit" class="btn btn-primary btn-block mb-4">Sign in</button>
-
+                        <h2>Login</h2>
+                        <form method="post" action="{% url 'login' %}">
+                            {% csrf_token %}
+                            <div class="form-outline mb-4">
+                                <input type="text" name="username" id="id_username" required class="form-control">
+                                <label class="form-label" for="id_username">Username</label>
+                            </div>
+    
+                            <div class="form-outline mb-4">
+                                <input type="password" name="password" id="id_password" required class="form-control">
+                                <div class="d-flex justify-content-between align-items-center mt-1"> 
+                                    <label class="form-label mb-0" for="id_password">Password</label>
+                                    <a href="#!">Forgot password?</a>
+                                </div>
+                            </div>
+                            
+    
+                            <button type="submit" class="btn btn-primary btn-block mb-4">Sign in</button>
+    
                     <div class="text-center">
-                        <a href="{% url 'account_signup' %}">Register</a>
+                        Don't have an account? <a href="{% url 'account_signup' %}">Sign Up</a>
                         <p>or sign in with:</p>
-                        <a href="{% provider_login_url 'google' %}" class="btn btn-link btn-floating mx-1">
+                        <a href="{% provider_login_url 'google' %}" class="btn btn-link btn-floating mx-1 mt-n4">
                             <i class="fab fa-google"></i>
                         </a>
                     </div>
+
+
+                    <div class="row mb-4">
+
+                    </div>
                 </form>
+
                 {% endif %}
             </div>
         </div>
