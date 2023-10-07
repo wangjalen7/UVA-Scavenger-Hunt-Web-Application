@@ -165,7 +165,7 @@ SOCIALACCOUNT_PROVIDERS = {
     }
 }
 
-SITE_ID = 2
+SITE_ID = 3
 
 LOGIN_URL = 'login'
 LOGIN_REDIRECT_URL = 'login'
