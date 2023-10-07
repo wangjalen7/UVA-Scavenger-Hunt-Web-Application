@@ -7,3 +7,15 @@ def index(request):
     return render(request, 'index.html', {'user': request.user})
 
 
+
+
+from allauth.account.views import SignupView
+from .forms import AllauthCustomSignupForm
+
+class CustomSignupView(SignupView):
+    form_class = AllauthCustomSignupForm
+    template_name = 'account/signup.html'
+
+
+
+

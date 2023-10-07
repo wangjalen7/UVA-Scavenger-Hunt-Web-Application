@@ -51,6 +51,8 @@ INSTALLED_APPS = [
 
 SOCIALACCOUNT_LOGIN_ON_GET=True
 
+ACCOUNT_FORMS = {'signup': 'mainapp.forms.AllauthCustomSignupForm'}
+
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
