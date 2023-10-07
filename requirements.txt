@@ -12,3 +12,7 @@ gunicorn
 django-allauth
 
 psycopg2-binary
+
+python-decouple
+
+dj-database-url
