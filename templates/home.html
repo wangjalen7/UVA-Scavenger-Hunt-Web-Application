@@ -1,0 +1,16 @@
+
+{% block title %}Home{% endblock %}
+
+{% block content %}
+{% if user.is_authenticated %}
+  {% if user.is_staff %}
+    Hi admin {{ user.username }}
+  {% else %}
+    Hi {{ user.username }}!
+  {% endif %}
+{% else %}
+  <p>You are not logged in</p>
+  <a href="{% url 'login' %}">Log In</a>
+{% endif %}
+{% endblock %}
+<a href="{% url 'index' %}">Return to index</a>

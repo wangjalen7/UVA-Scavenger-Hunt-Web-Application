@@ -22,8 +22,10 @@
                 <p>Username: {{ user.username }}</p>
                 {% if user.is_staff %}
                     <p>You are logged in as an Admin user.</p>
+                    <a href="{% url 'home' %}" class="btn btn-danger">Go to home page</a>
                 {% else %}
                     <p>You are logged in as a Regular user.</p>
+                    <a href="{% url 'home' %}" class="btn btn-danger">Go to home page</a>
                 {% endif %}
                 <a href="{% url 'logout' %}" class="btn btn-danger">Logout</a>
             {% else %}
