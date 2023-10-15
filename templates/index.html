@@ -20,8 +20,14 @@
             {% if user.is_authenticated %}
                 <p>Name: {{ user.first_name }}</p>
                 <p>Username: {{ user.username }}</p>
+
+                <!-- Add buttons for creating and viewing scavenger hunts here -->
+                <a href="{% url 'create_scavenger_hunt' %}" class="btn btn-primary">Create Scavenger Hunt</a>
+
                 {% if user.is_staff %}
                     <p>You are logged in as an Admin user.</p>
+                    <!-- Add button for approving/denying scavenger hunts for admins -->
+
                 {% else %}
                     <p>You are logged in as a Regular user.</p>
                 {% endif %}
