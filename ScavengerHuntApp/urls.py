@@ -31,5 +31,6 @@ urlpatterns = [
     path('logout/', auth_views.LogoutView.as_view(), name='logout'),
     path('register/', TemplateView.as_view(template_name="register.html"), name='register'),
     path('create_scavenger_hunt/', views.create_scavenger_hunt, name='create_scavenger_hunt'),
+    path('view_scavenger_hunts/', views.view_scavenger_hunts, name='view_scavenger_hunts'),
 ]
 

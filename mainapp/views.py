@@ -1,6 +1,7 @@
 from django.shortcuts import render, redirect
 from django.contrib.auth.decorators import login_required
 from .forms import ScavengerHuntForm
+from .models import ScavengerHunt
 
 @login_required
 def index(request):
@@ -17,15 +18,18 @@ class CustomSignupView(SignupView):
     template_name = 'account/signup.html'
 
 def create_scavenger_hunt(request):
-    if request.method == 'POST':
+    if request.method == "POST":
         form = ScavengerHuntForm(request.POST)
         if form.is_valid():
             hunt = form.save(commit=False)
-            hunt.creator = request.user
+            hunt.status = "Pending"
             hunt.save()
-            return redirect('index')  # or wherever you want to redirect after creation
+            return redirect('/')
     else:
         form = ScavengerHuntForm()
-    return render(request, 'create_hunt.html', {'form': form})
+    return render(request, 'create_scavenger_hunt.html', {'form': form})
 
 
+def view_scavenger_hunts(request):
+    hunts = ScavengerHunt.objects.all()
+    return render(request, 'view_hunts.html', {'hunts': hunts})

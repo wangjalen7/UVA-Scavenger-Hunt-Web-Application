@@ -1,0 +1,24 @@
+<h2>Scavenger Hunts</h2>
+
+<table border="1">
+    <thead>
+        <tr>
+            <th>Name</th>
+            <th>Start Date</th>
+            <th>End Date</th>
+            <th>Description</th>
+            <th>Status</th>
+        </tr>
+    </thead>
+    <tbody>
+    {% for hunt in hunts %}
+        <tr>
+            <td>{{ hunt.name }}</td>
+            <td>{{ hunt.start_date }}</td>
+            <td>{{ hunt.end_date }}</td>
+            <td>{{ hunt.description }}</td>
+            <td>{{ hunt.status }}</td>
+        </tr>
+    {% endfor %}
+    </tbody>
+</table>
