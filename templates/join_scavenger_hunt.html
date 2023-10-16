@@ -1,6 +1,7 @@
 
+<h2>Join {{hunt}} Hunt</h2>
+<p>User: {{user}}</p>
 {% block content %}
-<h2>Join a Scavenger Hunt</h2>
 <form method="post">
     {% csrf_token %}
     {{ form.as_p }}

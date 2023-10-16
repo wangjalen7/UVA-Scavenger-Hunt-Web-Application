@@ -16,9 +16,9 @@ class AllauthCustomSignupForm(SignupForm):
 class ScavengerHuntForm(forms.ModelForm):
     class Meta:
         model = ScavengerHunt
-        fields = ['name', 'start_date', 'end_date', 'creator', 'privacy', 'description']
+        fields = ['name', 'start_date', 'end_date', 'privacy', 'description']
 
 class JoinHuntForm(forms.ModelForm):
     class Meta:
         model = Player
-        fields = ['hunt', 'user', 'team']
+        fields = ['team']

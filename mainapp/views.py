@@ -26,24 +26,30 @@ class ListScavengerHunt(ListView):
     def get_queryset(self):
         return ScavengerHunt.objects.filter(privacy = "public")
     
-def join_hunt(request):
+def join_hunt(request, hunt_id):
+    scav_hunt = ScavengerHunt.objects.get(id=hunt_id)
+    player_user = User.objects.get(username=request.user.username)
     if request.method == "POST":
         form = JoinHuntForm(request.POST)
         if form.is_valid():
             player = form.save(commit=False)
+            player.hunt = scav_hunt
+            player.user = player_user
             player.points = 0
             player.save()
             return redirect('/')
     else:
         form = JoinHuntForm()
-    return render(request, 'join_scavenger_hunt.html', {'form': form})
+    return render(request, 'join_scavenger_hunt.html', {'form': form, 'hunt': scav_hunt.name, 'user': player_user.username})
 
 def create_scavenger_hunt(request):
+    user = User.objects.get(username=request.user.username)
     if request.method == "POST":
         form = ScavengerHuntForm(request.POST)
         if form.is_valid():
             hunt = form.save(commit=False)
             hunt.status = "Pending"
+            hunt.creator=user
             hunt.save()
             return redirect('/')
     else:

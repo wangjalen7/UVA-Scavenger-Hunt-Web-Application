@@ -5,7 +5,12 @@
         {% if scavenger_hunt_list %}
             <ul>
             {% for hunt in scavenger_hunt_list %}
-            <li><a href="{% url 'publicevents' %}">{{ hunt.name }}</a> <a href = "{% url 'joinhunt' %}">Join</a></li>
+            <li><p>Name: {{ hunt.name }}</p>
+                <p>Description: {{ hunt.description }} </p>
+                <p>Start Date: {{hunt.start_date}}</p>
+                <p>End Date: {{hunt.start_date}}</p>
+                <p>Creator: {{hunt.creator}}</p>
+                <a href = "{% url 'join_hunt' hunt.id %}">Join</a></li>
             {% endfor %}
             </ul>
         {% else %}
