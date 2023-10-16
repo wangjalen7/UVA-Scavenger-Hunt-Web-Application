@@ -7,6 +7,7 @@ from .forms import AllauthCustomSignupForm
 from django.shortcuts import render
 from django.shortcuts import redirect
 from django.views.generic import ListView
+from django.contrib.auth.models import User
 
 @login_required
 def index(request):
@@ -24,7 +25,9 @@ class ListScavengerHunt(ListView):
 
     def get_queryset(self):
         return ScavengerHunt.objects.filter(privacy = "public")
-
+    
+def join_hunt(request, User):
+    pass
 
 def create_scavenger_hunt(request):
     if request.method == "POST":
