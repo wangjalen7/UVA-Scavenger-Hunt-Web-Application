@@ -6,6 +6,7 @@ from allauth.account.views import SignupView
 from .forms import AllauthCustomSignupForm
 from django.shortcuts import render
 from django.shortcuts import redirect
+from django.views.generic import ListView
 
 @login_required
 def index(request):
@@ -15,6 +16,14 @@ def index(request):
 class CustomSignupView(SignupView):
     form_class = AllauthCustomSignupForm
     template_name = 'account/signup.html'
+
+class ListScavengerHunt(ListView):
+    model = ScavengerHunt
+    template_name = "public_events.html"
+    context_object_name="scavenger_hunt_list"
+
+    def get_queryset(self):
+        return ScavengerHunt.objects.filter(privacy = "public")
 
 
 def create_scavenger_hunt(request):

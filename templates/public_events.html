@@ -1,0 +1,13 @@
+<div>
+    {%block content%}
+        {% if scavenger_hunt_list %}
+            <ul>
+            {% for hunt in scavenger_hunt_list %}
+            <li><a href="{% url 'publicevents' hunt.id %}">{{ question.question_text }}</a></li>
+            {% endfor %}
+            </ul>
+        {% else %}
+            <p>No polls are available.</p>
+        {% endif %}
+    {%endblock%}
+</div>

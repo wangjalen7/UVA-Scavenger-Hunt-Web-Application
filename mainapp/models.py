@@ -17,6 +17,7 @@ class ScavengerHunt(models.Model):
     description = models.TextField()
     creator = models.ForeignKey(User, on_delete=models.CASCADE)
     status = models.CharField(choices=STATUS_CHOICES, default='pending', max_length=10)
+    privacy = models.CharField(max_length=30, default="private")
 
     def __str__(self):
         return self.name
