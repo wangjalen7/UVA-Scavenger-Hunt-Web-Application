@@ -1,7 +1,7 @@
 from django.shortcuts import render, redirect
 from django.contrib.auth.decorators import login_required
 from .forms import ScavengerHuntForm, JoinHuntForm
-from .models import ScavengerHunt
+from .models import ScavengerHunt, Player
 from allauth.account.views import SignupView
 from .forms import AllauthCustomSignupForm
 from django.shortcuts import render
@@ -36,8 +36,15 @@ def join_hunt(request, hunt_id):
             player.hunt = scav_hunt
             player.user = player_user
             player.points = 0
-            player.save()
-            return redirect('/')
+            try:
+                queryset = Player.objects.get(hunt=scav_hunt, user=player_user)
+            except Player.DoesNotExist:
+                queryset = None
+            if queryset != None:
+                player.save()
+                return redirect('/')
+            else:
+                return render(request,'already_joined.html', context={'message': 'Already Joined'})
     else:
         form = JoinHuntForm()
     return render(request, 'join_scavenger_hunt.html', {'form': form, 'hunt': scav_hunt.name, 'user': player_user.username})
