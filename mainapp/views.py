@@ -32,15 +32,15 @@ def join_hunt(request, hunt_id):
     if request.method == "POST":
         form = JoinHuntForm(request.POST)
         if form.is_valid():
-            player = form.save(commit=False)
-            player.hunt = scav_hunt
-            player.user = player_user
-            player.points = 0
             try:
                 queryset = Player.objects.get(hunt=scav_hunt, user=player_user)
             except Player.DoesNotExist:
                 queryset = None
-            if queryset != None:
+            if queryset == None:
+                player = form.save(commit=False)
+                player.hunt = scav_hunt
+                player.user = player_user
+                player.points = 0
                 player.save()
                 return redirect('/')
             else:
