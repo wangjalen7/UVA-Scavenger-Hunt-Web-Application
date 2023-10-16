@@ -1,9 +1,11 @@
+{%load static%}
+
 <div>
     {%block content%}
         {% if scavenger_hunt_list %}
             <ul>
             {% for hunt in scavenger_hunt_list %}
-            <li><a href="{% url 'publicevents' hunt.id %}">{{ question.question_text }}</a></li>
+            <li><a href="{% url 'publicevents' %}">{{ hunt.name }}</a></li>
             {% endfor %}
             </ul>
         {% else %}
