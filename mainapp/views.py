@@ -1,6 +1,6 @@
 from django.shortcuts import render, redirect
 from django.contrib.auth.decorators import login_required
-from .forms import ScavengerHuntForm
+from .forms import ScavengerHuntForm, JoinHuntForm
 from .models import ScavengerHunt
 from allauth.account.views import SignupView
 from .forms import AllauthCustomSignupForm
@@ -26,8 +26,17 @@ class ListScavengerHunt(ListView):
     def get_queryset(self):
         return ScavengerHunt.objects.filter(privacy = "public")
     
-def join_hunt(request, User):
-    pass
+def join_hunt(request):
+    if request.method == "POST":
+        form = JoinHuntForm(request.POST)
+        if form.is_valid():
+            player = form.save(commit=False)
+            player.points = 0
+            player.save()
+            return redirect('/')
+    else:
+        form = JoinHuntForm()
+    return render(request, 'join_scavenger_hunt.html', {'form': form})
 
 def create_scavenger_hunt(request):
     if request.method == "POST":

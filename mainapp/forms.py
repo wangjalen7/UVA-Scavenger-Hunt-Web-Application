@@ -1,6 +1,6 @@
 from allauth.account.forms import SignupForm
 from django import forms
-from .models import ScavengerHunt
+from .models import ScavengerHunt, Player
 
 class AllauthCustomSignupForm(SignupForm):
     first_name = forms.CharField(max_length=30, label='First Name', required=True)
@@ -17,3 +17,8 @@ class ScavengerHuntForm(forms.ModelForm):
     class Meta:
         model = ScavengerHunt
         fields = ['name', 'start_date', 'end_date', 'creator', 'privacy', 'description']
+
+class JoinHuntForm(forms.ModelForm):
+    class Meta:
+        model = Player
+        fields = ['hunt', 'user', 'team']

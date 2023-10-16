@@ -27,5 +27,12 @@ class UserProfile(models.Model):
     def __str__(self):
         return self.user.username
     
+
+class Player(models.Model):
+    hunt = models.OneToOneField(ScavengerHunt, on_delete=models.CASCADE)
+    user = models.OneToOneField(User, on_delete=models.CASCADE)
+    points = models.IntegerField(default=0)
+    team = models.CharField(max_length=30, blank=False)
+    
     
 
