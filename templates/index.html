@@ -23,7 +23,7 @@
 
                 <a href="{% url 'create_scavenger_hunt' %}" class="btn btn-primary">Create Scavenger Hunt</a>
                 <a href="{% url 'view_scavenger_hunts' %}" class="btn btn-info">View Scavenger Hunts</a>
-                <a href="{% url 'public_events' %}" class="btn btn-info">View Public Scavenger Hunts (fix layout)</a>
+                <a href="{% url 'public_events' %}" class="btn btn-info">Public Hunts</a>
                 {% if user.is_staff %}
                     <p>You are logged in as an Admin user.</p>
                     <a href="{% url 'manage_scavenger_hunts' %}" class="btn btn-info">Manage Scavenger Hunts</a>
