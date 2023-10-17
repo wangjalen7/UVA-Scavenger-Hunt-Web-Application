@@ -30,10 +30,11 @@ urlpatterns = [
     path('login/', auth_views.LoginView.as_view(), name='login'),
     path('logout/', auth_views.LogoutView.as_view(), name='logout'),
     path('register/', TemplateView.as_view(template_name="register.html"), name='register'),
-    path('create_scavenger_hunt/', views.create_scavenger_hunt, name='create_scavenger_hunt'),
-    path('view_scavenger_hunts/', views.view_scavenger_hunts, name='view_scavenger_hunts'),
-    path('manage_scavenger_hunts/', views.manage_scavenger_hunts, name='manage_scavenger_hunts'),
-    path('approve_hunt/<int:hunt_id>/', views.approve_hunt, name='approve_hunt'),
-    path('deny_hunt/<int:hunt_id>/', views.deny_hunt, name='deny_hunt'),
+    path('create_event/', views.create_event, name='create_event'),
+    path('view_public_events/', views.view_public_events, name='view_public_events'),
+    path('view_my_events/', views.view_my_events, name='view_my_events'),
+    path('manage_events/', views.manage_events, name='manage_events'),
+    path('approve_hunt/<int:event_id>/', views.approve_event, name='approve_event'),
+    path('deny_hunt/<int:event_id>/', views.deny_event, name='deny_event'),
 ]
 

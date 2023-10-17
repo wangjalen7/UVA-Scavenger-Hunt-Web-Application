@@ -1,6 +1,6 @@
 from allauth.account.forms import SignupForm
 from django import forms
-from .models import ScavengerHunt
+from .models import Event
 
 class AllauthCustomSignupForm(SignupForm):
     first_name = forms.CharField(max_length=30, label='First Name', required=True)
@@ -13,7 +13,14 @@ class AllauthCustomSignupForm(SignupForm):
         user.save()
         return user
 
-class ScavengerHuntForm(forms.ModelForm):
+from django.forms.widgets import DateInput
+
+class EventForm(forms.ModelForm):
     class Meta:
-        model = ScavengerHunt
-        fields = ['name', 'start_date', 'end_date', 'description']
+        model = Event
+        fields = ['name', 'start_date', 'end_date', 'description', 'privacy']
+        widgets = {
+            'start_date': DateInput(attrs={'type': 'date'}),
+            'end_date': DateInput(attrs={'type': 'date'}),
+            'privacy': forms.Select(choices=Event.PRIVACY_CHOICES),
+        }

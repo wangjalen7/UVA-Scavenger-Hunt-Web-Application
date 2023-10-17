@@ -1,7 +1,7 @@
 from django.shortcuts import render, redirect
 from django.contrib.auth.decorators import login_required
-from .forms import ScavengerHuntForm
-from .models import ScavengerHunt
+from .forms import EventForm
+from .models import Event
 from allauth.account.views import SignupView
 from .forms import AllauthCustomSignupForm
 from django.shortcuts import render
@@ -17,36 +17,54 @@ class CustomSignupView(SignupView):
     template_name = 'account/signup.html'
 
 
-def create_scavenger_hunt(request):
+@login_required
+def create_event(request):
     if request.method == "POST":
-        form = ScavengerHuntForm(request.POST)
+        form = EventForm(request.POST)
         if form.is_valid():
-            hunt = form.save(commit=False)
-            hunt.status = "Pending"
-            hunt.save()
+            event = form.save(commit=False)
+            event.creator = request.user  # Set the creator as the current user
+            event.status = "pending"
+            event.save()
             return redirect('/')
     else:
-        form = ScavengerHuntForm()
-    return render(request, 'create_scavenger_hunt.html', {'form': form})
+        form = EventForm()
+    return render(request, 'create_event.html', {'form': form})
 
+@login_required
+def view_public_events(request):
+    events = Event.objects.filter(status='approved', privacy='U')
+    return render(request, 'view_events.html', {'events': events, 'title': "Public Events"})
 
-def view_scavenger_hunts(request):
-    hunts = ScavengerHunt.objects.all()
-    return render(request, 'view_hunts.html', {'hunts': hunts})
+@login_required
+def view_my_events(request):
+    events = Event.objects.filter(creator=request.user)
+    return render(request, 'view_events.html', {'events': events, 'title': "My Events"})
 
-def manage_scavenger_hunts(request):
-    hunts = ScavengerHunt.objects.all()
-    return render(request, 'manage_scavenger_hunts.html', {'hunts': hunts})
+@login_required
+def manage_events(request):
+    events_pending = Event.objects.filter(status='pending', privacy='U')
+    events_approved = Event.objects.filter(status='approved', privacy='U')
+    events_denied = Event.objects.filter(status='denied', privacy='U')
 
+    context = {
+        'events_pending': events_pending,
+        'events_approved': events_approved,
+        'events_denied': events_denied,
+    }
 
-def approve_hunt(request, hunt_id):
-    hunt = ScavengerHunt.objects.get(id=hunt_id)
-    hunt.status = "approved"
-    hunt.save()
-    return redirect('manage_scavenger_hunts')
+    return render(request, 'manage_events.html', context)
 
-def deny_hunt(request, hunt_id):
-    hunt = ScavengerHunt.objects.get(id=hunt_id)
-    hunt.status = "denied"
-    hunt.save()
-    return redirect('manage_scavenger_hunts')
+@login_required
+def approve_event(request, event_id):
+    event = Event.objects.get(id=event_id)
+    event.status = "approved"
+    event.save()
+    return redirect('manage_events')
+
+@login_required
+def deny_event(request, event_id):
+    event = Event.objects.get(id=event_id)
+    event.status = "denied"
+    event.save()
+    return redirect('manage_events')

@@ -1,6 +1,7 @@
+{% extends "base.html" %}
 {% load static %}
 {% load socialaccount %}
-
+{% block content %}
 <!DOCTYPE html>
 <html lang="en">
 
@@ -9,7 +10,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Login Page</title>
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
-    <link rel="stylesheet" href="{% static 'styles.css' %}">
+    <!-- <link rel="stylesheet" href="{% static 'styles.css' %}"> -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.1/css/all.min.css">
 </head>
 
@@ -21,11 +22,12 @@
                 <p>Name: {{ user.first_name }}</p>
                 <p>Username: {{ user.username }}</p>
 
-                <a href="{% url 'create_scavenger_hunt' %}" class="btn btn-primary">Create Scavenger Hunt</a>
-                <a href="{% url 'view_scavenger_hunts' %}" class="btn btn-info">View Scavenger Hunts</a>
+                <a href="{% url 'create_event' %}" class="btn btn-primary">Create Event</a>
+                <a href="{% url 'view_my_events' %}" class="btn btn-info">View My Events</a>
+                <a href="{% url 'view_public_events' %}" class="btn btn-info">View Public Events</a>
                 {% if user.is_staff %}
                     <p>You are logged in as an Admin user.</p>
-                    <a href="{% url 'manage_scavenger_hunts' %}" class="btn btn-info">Manage Scavenger Hunts</a>
+                    <a href="{% url 'manage_events' %}" class="btn btn-info">Manage Events</a>
 
                 {% else %}
                     <p>You are logged in as a Regular user.</p>
@@ -42,3 +44,4 @@
 
 
 </html>
+{% endblock %}
