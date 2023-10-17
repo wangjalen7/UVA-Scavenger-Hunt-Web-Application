@@ -1,0 +1,121 @@
+{% extends "base.html" %}
+{% load static %}
+{% block content %}
+
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Manage Events</title>
+    <link rel="stylesheet" href="{% static 'styles.css' %}">
+</head>
+
+<h2>Manage Events</h2>
+
+<h3>Pending Events</h3>
+<table>
+    <thead>
+        <tr>
+            <th>Name</th>
+            <th>Start Date</th>
+            <th>End Date</th>
+            <th>Description</th>
+            <th>Status</th>
+            <th>Actions</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for event in events_pending %}
+        <tr>
+            <td>{{ event.name }}</td>
+            <td>{{ event.start_date }}</td>
+            <td>{{ event.end_date }}</td>
+            <td>{{ event.description }}</td>
+            <td>{{ event.get_status_display }}</td>
+            <td>
+                <form method="post" action="{% url 'approve_event' event.id %}">
+                    {% csrf_token %}
+                    <input type="submit" value="Approve">
+                </form>
+                <form method="post" action="{% url 'deny_event' event.id %}">
+                    {% csrf_token %}
+                    <input type="submit" value="Deny">
+                </form>
+            </td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+
+<h3>Approved Events</h3>
+<table>
+    <thead>
+        <tr>
+            <th>Name</th>
+            <th>Start Date</th>
+            <th>End Date</th>
+            <th>Description</th>
+            <th>Status</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for event in events_approved %}
+        <tr>
+            <td>{{ event.name }}</td>
+            <td>{{ event.start_date }}</td>
+            <td>{{ event.end_date }}</td>
+            <td>{{ event.description }}</td>
+            <td>{{ event.get_status_display }}</td>
+            <td>
+                <form method="post" action="{% url 'approve_event' event.id %}">
+                    {% csrf_token %}
+                    <input type="submit" value="Approve">
+                </form>
+                <form method="post" action="{% url 'deny_event' event.id %}">
+                    {% csrf_token %}
+                    <input type="submit" value="Deny">
+                </form>
+            </td>
+            
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+
+<h3>Denied Events</h3>
+<table>
+    <thead>
+        <tr>
+            <th>Name</th>
+            <th>Start Date</th>
+            <th>End Date</th>
+            <th>Description</th>
+            <th>Status</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for event in events_denied %}
+        <tr>
+            <td>{{ event.name }}</td>
+            <td>{{ event.start_date }}</td>
+            <td>{{ event.end_date }}</td>
+            <td>{{ event.description }}</td>
+            <td>{{ event.get_status_display }}</td>
+            <td>
+                <form method="post" action="{% url 'approve_event' event.id %}">
+                    {% csrf_token %}
+                    <input type="submit" value="Approve">
+                </form>
+                <form method="post" action="{% url 'deny_event' event.id %}">
+                    {% csrf_token %}
+                    <input type="submit" value="Deny">
+                </form>
+            </td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+
+{% endblock %}

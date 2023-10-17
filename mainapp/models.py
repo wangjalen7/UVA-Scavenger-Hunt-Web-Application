@@ -24,17 +24,25 @@ class HuntTemplate(models.Model):
     theme = models.CharField(max_length=255)
 
 class Event(models.Model):
+    STATUS_CHOICES = (
+        ('pending', 'Pending'),
+        ('approved', 'Approved'),
+        ('denied', 'Denied')
+    )
     PRIVACY_CHOICES = [
         ('P', 'Private'),
         ('U', 'Public'),
     ]
-    name = models.CharField(max_length=255)
+    name = models.CharField(max_length=100)
+    start_date = models.DateField()
+    end_date = models.DateField()
     description = models.TextField()
-    start_date = models.DateTimeField()
-    end_date = models.DateTimeField()
-    template = models.ForeignKey(HuntTemplate, on_delete=models.CASCADE)
-    created_by = models.ForeignKey(User, on_delete=models.CASCADE)
-    privacy = models.CharField(max_length=1, choices=PRIVACY_CHOICES)
+    creator = models.ForeignKey(User, on_delete=models.CASCADE)
+    status = models.CharField(choices=STATUS_CHOICES, default='pending', max_length=10)
+    privacy = models.CharField(max_length=1, choices=PRIVACY_CHOICES, default='U')
+
+    def __str__(self):
+        return self.name
 
 
 class Team(models.Model):
@@ -52,7 +60,6 @@ class TaskCompletion(models.Model):
     completed_by = models.ForeignKey(User, on_delete=models.CASCADE)
     team = models.ForeignKey(Team, on_delete=models.CASCADE, null=True)
     date_completed = models.DateTimeField(auto_now_add=True)
-
 
 
 
