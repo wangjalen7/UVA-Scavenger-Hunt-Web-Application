@@ -28,6 +28,8 @@ urlpatterns = [
     path('login/', auth_views.LoginView.as_view(), name='login'),
     path('logout/', auth_views.LogoutView.as_view(), name='logout'),
     path('register/', TemplateView.as_view(template_name="register.html"), name='register'),
-
+    path('create_event/', TemplateView.as_view(template_name="createevent.html"), name='create_event'),
+    #path('create-event/', views.create_event_page, name='create_event')
+    path('viewcreatedevents/', TemplateView.as_view(template_name="viewcreatedevents.html"), name='viewcreatedevents')
 ]
 
