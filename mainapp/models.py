@@ -63,3 +63,21 @@ class TaskCompletion(models.Model):
 
 
 
+
+class UserProfile(models.Model):
+    user = models.OneToOneField(User, on_delete=models.CASCADE)
+    bio = models.TextField(blank=True, null=True)
+    # profile_pic
+    
+    def __str__(self):
+        return self.user.username
+    
+
+class Player(models.Model):
+    hunt = models.OneToOneField(ScavengerHunt, on_delete=models.CASCADE)
+    user = models.OneToOneField(User, on_delete=models.CASCADE)
+    points = models.IntegerField(default=0)
+    team = models.CharField(max_length=30, blank=False)
+    
+    
+
