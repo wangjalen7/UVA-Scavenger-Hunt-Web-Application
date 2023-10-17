@@ -19,4 +19,4 @@ dj-database-url
 
 psycopg2
 
-bootstrap5
+django-bootstrap5
