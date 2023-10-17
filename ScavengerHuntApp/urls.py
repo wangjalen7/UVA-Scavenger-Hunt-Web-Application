@@ -20,6 +20,8 @@ from mainapp.views import index
 from django.urls import path, include
 from django.views.generic import TemplateView
 from django.contrib.auth import views as auth_views
+from django.urls import path
+from mainapp import views
 
 urlpatterns = [
     path('admin/', admin.site.urls),
@@ -29,5 +31,11 @@ urlpatterns = [
     path('logout/', auth_views.LogoutView.as_view(), name='logout'),
     path('register/', TemplateView.as_view(template_name="register.html"), name='register'),
     path('home/', TemplateView.as_view(template_name="home.html"), name='home'),
-] 
+    path('create_event/', views.create_event, name='create_event'),
+    path('view_public_events/', views.view_public_events, name='view_public_events'),
+    path('view_my_events/', views.view_my_events, name='view_my_events'),
+    path('manage_events/', views.manage_events, name='manage_events'),
+    path('approve_hunt/<int:event_id>/', views.approve_event, name='approve_event'),
+    path('deny_hunt/<int:event_id>/', views.deny_event, name='deny_event'),
+]
 
