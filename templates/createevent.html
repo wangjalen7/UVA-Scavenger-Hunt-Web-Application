@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Create Event</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.5.2/dist/css/bootstrap.min.css" rel="stylesheet">
+</head>
+<body>
+    <div class="container text-center">
+        <h1 style="font-size: 70px;">Create Event</h1>
+    </div>
+    <div class="container-fluid text-center">
+        <!-- <form method="post" action=" {% url 'create_event' %}" class="mt-4"> -->
+           <!-- {% csrf_token %} -->
+            <div class="mb-3">
+                <label for="eventName" class="form-label">Event Name:</label>
+                <input type="text" class="form-control" id="eventName" name="name" required>
+            </div>
+
+            <div class="mb-3">
+                <label for="eventDescription" class="form-label">Event Description:</label>
+                <textarea class="form-control" id="eventDescription" name="description" required></textarea>
+            </div>
+
+            <div class="mb-3">
+                <label for="startDate" class="form-label">Start Date:</label>
+                <input type="date" class="form-control" id="startDate" name="start_date" required>
+            </div>
+
+            <div class="mb-3">
+                <label for="endDate" class="form-label">End Date:</label>
+                <input type="date" class="form-control" id="endDate" name="end_date" required>
+            </div>
+            <!--
+            <div class="form-check mb-3">
+                <input type="checkbox" class="form-check-input" id="permanentEvent" name="permanent_event">
+                <label class="form-check-label" for="permanentEvent">Permanent Event</label>
+            </div>
+            -->
+            <div class="mb-3">
+                <label for="theme" class="form-label">Theme:</label>
+                <select class="form-select" id="theme" name="theme">
+                    <option value="historical">Historical</option>
+                    <option value="nature">Nature</option>
+                    <option value="major_specific">Major Specific</option>
+                    <option value="silly">Silly</option>
+                </select>
+            </div>
+            <input class="btn btn-primary btn-success" type="submit" href="{% url 'viewcreatedevents' %}" value="Submit">
+       <!-- </form> -->
+    </div>
+</body>
+</html>
