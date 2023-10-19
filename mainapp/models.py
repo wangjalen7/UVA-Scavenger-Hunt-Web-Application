@@ -64,7 +64,7 @@ class TaskCompletion(models.Model):
 
 class Player(models.Model):
     hunt = models.OneToOneField(Event, on_delete=models.CASCADE)
-    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    user = models.ForeignKey(User, on_delete=models.CASCADE, primary_key = True)
     points = models.IntegerField(default=0)
     team = models.CharField(max_length=30, blank=False)
     
