@@ -1,7 +1,7 @@
 from django.shortcuts import render, redirect
 from django.contrib.auth.decorators import login_required
-from .forms import EventForm
-from .models import Event
+from .forms import EventForm, JoinHuntForm
+from .models import Event, Player
 from allauth.account.views import SignupView
 from .forms import AllauthCustomSignupForm
 from django.shortcuts import render
@@ -18,16 +18,16 @@ class CustomSignupView(SignupView):
     form_class = AllauthCustomSignupForm
     template_name = 'account/signup.html'
 
-class ListScavengerHunt(ListView):
-    model = ScavengerHunt
+class ListEvents(ListView):
+    model = Event
     template_name = "public_events.html"
-    context_object_name="scavenger_hunt_list"
+    context_object_name="events_list"
 
     def get_queryset(self):
-        return ScavengerHunt.objects.filter(privacy = "public")
+        return Event.objects.filter(privacy = "U")
     
 def join_hunt(request, hunt_id):
-    scav_hunt = ScavengerHunt.objects.get(id=hunt_id)
+    scav_hunt = Event.objects.get(id=hunt_id)
     player_user = User.objects.get(username=request.user.username)
     if request.method == "POST":
         form = JoinHuntForm(request.POST)

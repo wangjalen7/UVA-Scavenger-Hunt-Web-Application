@@ -2,9 +2,9 @@
 
 <div>
     {%block content%}
-        {% if scavenger_hunt_list %}
+        {% if events_list %}
             <ul>
-            {% for hunt in scavenger_hunt_list %}
+            {% for hunt in events_list %}
             <li><p>Name: {{ hunt.name }}</p>
                 <p>Description: {{ hunt.description }} </p>
                 <p>Start Date: {{hunt.start_date}}</p>
