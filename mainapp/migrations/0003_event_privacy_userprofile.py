@@ -14,7 +14,7 @@ class Migration(migrations.Migration):
 
     operations = [
         migrations.AddField(
-            model_name='event',
+            model_name='Event',
             name='privacy',
             field=models.CharField(choices=[('P', 'Private'), ('U', 'Public')], default='U', max_length=1),
         ),

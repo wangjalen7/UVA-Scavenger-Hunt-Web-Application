@@ -33,6 +33,7 @@
             <td>{{ event.start_date }}</td>
             <td>{{ event.end_date }}</td>
             <td>{{ event.description }}</td>
+            <td>{{ event.privacy }}</td>
             <td>{{ event.get_status_display }}</td>
             <td>
                 <form method="post" action="{% url 'approve_event' event.id %}">
@@ -67,6 +68,7 @@
             <td>{{ event.start_date }}</td>
             <td>{{ event.end_date }}</td>
             <td>{{ event.description }}</td>
+            <td>{{ event.privacy }}</td>
             <td>{{ event.get_status_display }}</td>
             <td>
                 <form method="post" action="{% url 'approve_event' event.id %}">
@@ -102,6 +104,7 @@
             <td>{{ event.start_date }}</td>
             <td>{{ event.end_date }}</td>
             <td>{{ event.description }}</td>
+            <td>{{ event.privacy }}</td>
             <td>{{ event.get_status_display }}</td>
             <td>
                 <form method="post" action="{% url 'approve_event' event.id %}">
