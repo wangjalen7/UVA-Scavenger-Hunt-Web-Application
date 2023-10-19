@@ -32,19 +32,20 @@ def join_hunt(request, event_id):
     if request.method == "POST":
         form = JoinHuntForm(request.POST)
         if form.is_valid():
-            # try:
-            #     queryset = Player.objects.get(hunt=scav_hunt, user=player_user)
-            # except Player.DoesNotExist:
-            #     queryset = None
-            # if queryset != None:
-            #     return render(request,'already_joined.html', context={'message': 'Already Joined'})
-            # else:
+            try:
+                queryset = Player.objects.get(hunt=scav_hunt, user=player_user)
+            except Player.DoesNotExist:
+                queryset = None
+            if queryset == None:
                 player = form.save(commit=False)
                 player.hunt = scav_hunt
                 player.user = request.user
                 player.points = 0
                 player.save()
                 return redirect('/')
+            else:
+                return render(request,'already_joined.html', context={'message': 'Already Joined'})
+                
     else:
         form = JoinHuntForm()
     return render(request, 'join_scavenger_hunt.html', {'form': form, 'hunt': scav_hunt.name, 'user': player_user.username})
