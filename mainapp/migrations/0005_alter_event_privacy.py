@@ -13,6 +13,6 @@ class Migration(migrations.Migration):
         migrations.AlterField(
             model_name='event',
             name='privacy',
-            field=models.CharField(choices=[('P', 'Private'), ('U', 'Public')], default='U', max_length=1),
+            field=models.CharField(choices=[('private', 'Private'), ('public', 'Public')], default='public', max_length=1),
         ),
     ]

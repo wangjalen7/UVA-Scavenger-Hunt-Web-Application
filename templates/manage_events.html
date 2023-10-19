@@ -22,6 +22,7 @@
             <th>Start Date</th>
             <th>End Date</th>
             <th>Description</th>
+            <th>Privacy</th>
             <th>Status</th>
             <th>Actions</th>
         </tr>
@@ -33,7 +34,7 @@
             <td>{{ event.start_date }}</td>
             <td>{{ event.end_date }}</td>
             <td>{{ event.description }}</td>
-            <td>{{ event.privacy }}</td>
+            <td>{{ event.get_privacy_display }}</td>
             <td>{{ event.get_status_display }}</td>
             <td>
                 <form method="post" action="{% url 'approve_event' event.id %}">
@@ -58,7 +59,9 @@
             <th>Start Date</th>
             <th>End Date</th>
             <th>Description</th>
+            <th>Privacy</th>
             <th>Status</th>
+            <th>Actions</th>
         </tr>
     </thead>
     <tbody>
@@ -68,7 +71,7 @@
             <td>{{ event.start_date }}</td>
             <td>{{ event.end_date }}</td>
             <td>{{ event.description }}</td>
-            <td>{{ event.privacy }}</td>
+            <td>{{ event.get_privacy_display }}</td>
             <td>{{ event.get_status_display }}</td>
             <td>
                 <form method="post" action="{% url 'approve_event' event.id %}">
@@ -80,7 +83,6 @@
                     <input type="submit" value="Deny">
                 </form>
             </td>
-            
         </tr>
         {% endfor %}
     </tbody>
@@ -94,7 +96,9 @@
             <th>Start Date</th>
             <th>End Date</th>
             <th>Description</th>
+            <th>Privacy</th>
             <th>Status</th>
+            <th>Actions</th>
         </tr>
     </thead>
     <tbody>
@@ -104,7 +108,7 @@
             <td>{{ event.start_date }}</td>
             <td>{{ event.end_date }}</td>
             <td>{{ event.description }}</td>
-            <td>{{ event.privacy }}</td>
+            <td>{{ event.get_privacy_display }}</td>
             <td>{{ event.get_status_display }}</td>
             <td>
                 <form method="post" action="{% url 'approve_event' event.id %}">
