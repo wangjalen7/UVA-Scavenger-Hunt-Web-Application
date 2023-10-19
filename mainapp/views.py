@@ -26,25 +26,25 @@ class ListEvents(ListView):
     def get_queryset(self):
         return Event.objects.filter(privacy = "U")
     
-def join_hunt(request, hunt_id):
-    scav_hunt = Event.objects.get(id=hunt_id)
+def join_hunt(request, event_id):
+    scav_hunt = Event.objects.get(id=event_id)
     player_user = User.objects.get(username=request.user.username)
     if request.method == "POST":
         form = JoinHuntForm(request.POST)
         if form.is_valid():
-            try:
-                queryset = Player.objects.get(hunt=scav_hunt, user=player_user)
-            except Player.DoesNotExist:
-                queryset = None
-            if queryset == None:
+            # try:
+            #     queryset = Player.objects.get(hunt=scav_hunt, user=player_user)
+            # except Player.DoesNotExist:
+            #     queryset = None
+            # if queryset != None:
+            #     return render(request,'already_joined.html', context={'message': 'Already Joined'})
+            # else:
                 player = form.save(commit=False)
                 player.hunt = scav_hunt
                 player.user = player_user
                 player.points = 0
                 player.save()
                 return redirect('/')
-            else:
-                return render(request,'already_joined.html', context={'message': 'Already Joined'})
     else:
         form = JoinHuntForm()
     return render(request, 'join_scavenger_hunt.html', {'form': form, 'hunt': scav_hunt.name, 'user': player_user.username})

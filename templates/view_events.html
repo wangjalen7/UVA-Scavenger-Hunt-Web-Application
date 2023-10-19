@@ -38,6 +38,10 @@
                     <td>Theme:</td>
                     <td><!-- You can add the theme here --></td>
                 </tr>
+                <tr>
+                    <td>Join Event:</td>
+                    <td><a href = "{% url 'join_hunt' event.id %}">Join</a></td>
+                </tr>
                 {% empty %}
                 <tr>
                     <td colspan="2">You haven't created any events yet.</td>
