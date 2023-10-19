@@ -11,7 +11,7 @@ class Migration(migrations.Migration):
 
     operations = [
         migrations.AddField(
-            model_name='scavengerhunt',
+            model_name='Event',
             name='privacy',
             field=models.CharField(default='private', max_length=30),
         ),

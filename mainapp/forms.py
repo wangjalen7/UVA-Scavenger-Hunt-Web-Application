@@ -26,6 +26,7 @@ class EventForm(forms.ModelForm):
         }
 
 
+
 class JoinHuntForm(forms.ModelForm):
     class Meta:
         model = Player

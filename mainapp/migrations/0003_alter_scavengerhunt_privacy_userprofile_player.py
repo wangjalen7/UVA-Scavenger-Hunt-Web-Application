@@ -14,7 +14,7 @@ class Migration(migrations.Migration):
 
     operations = [
         migrations.AlterField(
-            model_name='scavengerhunt',
+            model_name='Event',
             name='privacy',
             field=models.CharField(blank=True, max_length=30),
         ),
@@ -32,7 +32,7 @@ class Migration(migrations.Migration):
                 ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
                 ('points', models.IntegerField(default=0)),
                 ('team', models.CharField(max_length=30)),
-                ('hunt', models.OneToOneField(on_delete=django.db.models.deletion.CASCADE, to='mainapp.scavengerhunt')),
+                ('hunt', models.OneToOneField(on_delete=django.db.models.deletion.CASCADE, to='mainapp.Event')),
                 ('user', models.OneToOneField(on_delete=django.db.models.deletion.CASCADE, to=settings.AUTH_USER_MODEL)),
             ],
         ),

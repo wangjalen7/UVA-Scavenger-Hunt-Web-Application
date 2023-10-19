@@ -13,6 +13,7 @@ https://docs.djangoproject.com/en/4.2/ref/settings/
 from pathlib import Path
 import os
 import dj_database_url
+import sys
 from decouple import config
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
@@ -102,11 +103,17 @@ WSGI_APPLICATION = 'ScavengerHuntApp.wsgi.application'
 #     }
 # }
 
-
 DATABASE_URL = os.environ.get('DATABASE_URL') or config('DATABASE_URL', default='')
 DATABASES = {
     'default': dj_database_url.config(default=DATABASE_URL)
 }
+
+# Switch to SQLite if running tests
+if 'test' in sys.argv:
+    DATABASES['default'] = {
+        'ENGINE': 'django.db.backends.sqlite3',
+        'NAME': 'only4test.sqlite'
+    }
 
 
 
