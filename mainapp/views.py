@@ -28,7 +28,7 @@ class ListEvents(ListView):
     
 def join_hunt(request, event_id):
     scav_hunt = Event.objects.get(id=event_id)
-    player_user = User.objects.get(username=request.user.username)
+    player_user = request.user
     if request.method == "POST":
         form = JoinHuntForm(request.POST)
         if form.is_valid():
@@ -41,7 +41,7 @@ def join_hunt(request, event_id):
             # else:
                 player = form.save(commit=False)
                 player.hunt = scav_hunt
-                player.user = player_user
+                player.user = request.user
                 player.points = 0
                 player.save()
                 return redirect('/')
