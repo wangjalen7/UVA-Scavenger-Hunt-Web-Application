@@ -75,9 +75,9 @@ def view_my_events(request):
 
 @login_required
 def manage_events(request):
-    events_pending = Event.objects.filter(status='pending')
-    events_approved = Event.objects.filter(status='approved')
-    events_denied = Event.objects.filter(status='denied')
+    events_pending = Event.objects.filter(status='pending', privacy='U')
+    events_approved = Event.objects.filter(status='approved', privacy='U')
+    events_denied = Event.objects.filter(status='denied', privacy='U')
 
     context = {
         'events_pending': events_pending,
