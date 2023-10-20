@@ -61,7 +61,7 @@ class EventFormTests(TestCase):
         self.assertEqual(event.status, 'pending')
 
 
-class JoinHuntTestCase(TestCase):
+class JoinEventTestCase(TestCase):
 
     def setUp(self):
         self.user = User.objects.create_user('testuserjalen', 'testuser@example.com', 'testpassword123')
@@ -75,15 +75,15 @@ class JoinHuntTestCase(TestCase):
             description='A test event'
         )
 
-    def test_join_hunt(self):
+    def test_join_event(self):
         self.client.login(username='testuserjalen', password='testpassword123')
         data = {
             'team': 'Team A',
         }
-        response = self.client.post(reverse('join_hunt', args=[self.event.id]), data)
+        response = self.client.post(reverse('join_event', args=[self.event.id]), data)
         self.assertEqual(response.status_code, 302)
         player = Player.objects.get(user=self.user)
-        self.assertEqual(player.hunt, self.event)
+        self.assertEqual(player.event, self.event)
         self.assertEqual(player.team, 'Team A')
 
 

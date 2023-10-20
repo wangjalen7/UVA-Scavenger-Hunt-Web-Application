@@ -27,7 +27,7 @@ class EventForm(forms.ModelForm):
 
 
 
-class JoinHuntForm(forms.ModelForm):
+class JoinEventForm(forms.ModelForm):
     class Meta:
         model = Player
         fields = ['team']
