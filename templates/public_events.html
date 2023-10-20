@@ -1,0 +1,20 @@
+{%load static%}
+
+<div>
+    {%block content%}
+        {% if events_list %}
+            <ul>
+            {% for hunt in events_list %}
+            <li><p>Name: {{ hunt.name }}</p>
+                <p>Description: {{ hunt.description }} </p>
+                <p>Start Date: {{hunt.start_date}}</p>
+                <p>End Date: {{hunt.start_date}}</p>
+                <p>Creator: {{hunt.creator}}</p>
+                <a href = "{% url 'join_hunt' hunt.id %}">Join</a></li>
+            {% endfor %}
+            </ul>
+        {% else %}
+            <p>No public events are available.</p>
+        {% endif %}
+    {%endblock%}
+</div>

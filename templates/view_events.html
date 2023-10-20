@@ -1,30 +1,51 @@
+<!DOCTYPE html>
+<html>
 {% extends "base.html" %}
 {% load static %}
 {% block content %}
-<h2>{{ title }}</h2>
-
-<table border="1">
-    <thead>
-        <tr>
-            <th>Name</th>
-            <th>Start Date</th>
-            <th>End Date</th>
-            <th>Description</th>
-            <th>Status</th>
-            <th>Privacy</th>
-        </tr>
-    </thead>
-    <tbody>
-    {% for event in events %}
-        <tr>
-            <td>{{ event.name }}</td>
-            <td>{{ event.start_date }}</td>
-            <td>{{ event.end_date }}</td>
-            <td>{{ event.description }}</td>
-            <td>{{ event.get_status_display }}</td>
-            <td>{{ event.get_privacy_display }}</td>
-        </tr>
-    {% endfor %}
-    </tbody>
-</table>
+<body>
+    <div class="container">
+        <h1 style="font-size: 70px;">My Created Events</h1>
+    </div>
+    <div class="container-fluid">
+        <table border="1">
+            <thead>
+            {% for event in events %}
+                <tr>
+                    <th colspan="2">Event Name: {{ event.name }}</th>
+                </tr>
+                <tr>
+                    <td> Status:</td>
+                    <td>{{ event.get_status_display }}</td>
+                </tr>
+                <tr>
+                    <td>Description:</td>
+                    <td>{{ event.description }}</td>
+                </tr>
+                <tr>
+                    <td>Start Date:</td>
+                    <td>{{ event.start_date }}</td>
+                </tr>
+                <tr>
+                    <td>End Date:</td>
+                    <td>{{ event.end_date }}</td>
+                </tr>
+                <tr>
+                    <td>Privacy:</td>
+                    <td>{{ event.get_privacy_display }}</td>
+                </tr>
+                <tr>
+                    <td>Theme:</td>
+                    <td><!-- You can add the theme here --></td>
+                </tr>
+                {% empty %}
+                <tr>
+                    <td colspan="2">You haven't created any events yet.</td>
+                </tr>
+                {% endfor %}
+            </thead>
+        </table>
+    </div>
+</body>
 {% endblock %}
+</html>
