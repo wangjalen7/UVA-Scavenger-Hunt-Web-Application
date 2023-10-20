@@ -91,6 +91,8 @@ class ManageEventsTestCase(TestCase):
 
     def setUp(self):
         self.user = User.objects.create_user('adminuser', 'adminuser@example.com', 'adminpassword123')
+        self.staff_user.is_staff = True
+        self.staff_user.save()
         self.event = Event.objects.create(
             name='Test Event to Approve',
             start_date='2023-11-01',
