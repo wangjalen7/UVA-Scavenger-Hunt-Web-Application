@@ -60,15 +60,16 @@ class EventFormTests(TestCase):
         self.assertEqual(event.creator, self.user)
         self.assertEqual(event.status, 'pending')
 
+
 class ManageEventsTestCase(TestCase):
 
     def setUp(self):
-        self.user = User.objects.create_user('adminuser', 'adminuser@example.com', 'adminpassword123')
+        self.adminuser = User.objects.create_user('adminuser', 'adminuser@example.com', 'adminpassword123', is_staff=True)
         self.event = Event.objects.create(
             name='Test Event to Approve',
             start_date='2023-11-01',
             end_date='2023-11-10',
-            creator=self.user,
+            creator=self.adminuser,
             status='pending',
             privacy='U',
             description='A test event'
