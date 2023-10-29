@@ -1,0 +1,34 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="container-fluid">
+    <h1>{{ event.name }}</h1>
+
+    <!-- Edit Button for Event Owners -->
+    {% if request.user == event.creator %}
+    <a href="{% url 'event-edit' event.id %}" class="btn btn-primary">Edit Event</a>
+    {% endif %}
+
+    <!-- Tab Navigation Buttons -->
+    <div class="btn-group" role="group" aria-label="Event tabs">
+        <a href="{% url 'event-details' event.id 'about' %}" class="btn btn-secondary{% if tab == 'about' %} active{% endif %}">About</a>
+        <a href="{% url 'event-details' event.id 'leaderboard' %}" class="btn btn-secondary{% if tab == 'leaderboard' %} active{% endif %}">Leaderboard</a>
+        <a href="{% url 'event-details' event.id 'tasks-todo' %}" class="btn btn-secondary{% if tab == 'tasks-todo' %} active{% endif %}">Tasks To Do</a>
+        <a href="{% url 'event-details' event.id 'completed-tasks' %}" class="btn btn-secondary{% if tab == 'completed-tasks' %} active{% endif %}">Completed Tasks</a>
+        <a href="{% url 'event-details' event.id 'all-tasks' %}" class="btn btn-secondary{% if tab == 'all-tasks' %} active{% endif %}">All Tasks</a>
+    </div>
+
+    <!-- Determine the active tab based on the URL -->
+    {% if tab == 'leaderboard' %}
+        {% include 'event_tabs/leaderboard.html' with event=event %}
+    {% elif tab == 'tasks-todo' %}
+        {% include 'event_tabs/tasks_todo.html' with event=event %}
+    {% elif tab == 'completed-tasks' %}
+        {% include 'event_tabs/completed_tasks.html' with event=event %}
+    {% elif tab == 'about' %}
+        {% include 'event_tabs/about.html' with event=event %}
+    {% elif tab == 'all-tasks' %}
+        {% include 'event_tabs/all-tasks.html' with event=event %}
+    {% endif %}
+</div>
+{% endblock %}

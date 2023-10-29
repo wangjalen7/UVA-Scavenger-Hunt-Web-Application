@@ -1,6 +1,6 @@
 from allauth.account.forms import SignupForm
 from django import forms
-from .models import Event, Player
+from .models import Event, Player, Task
 
 class AllauthCustomSignupForm(SignupForm):
     first_name = forms.CharField(max_length=30, label='First Name', required=True)
@@ -31,3 +31,9 @@ class JoinEventForm(forms.ModelForm):
     class Meta:
         model = Player
         fields = ['team']
+
+
+class TaskForm(forms.ModelForm):
+    class Meta:
+        model = Task
+        fields = ['name', 'task', 'hint', 'latitude', 'longitude']

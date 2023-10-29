@@ -1,12 +1,10 @@
 from django.shortcuts import render, redirect
 from django.contrib.auth.decorators import login_required
-from .forms import EventForm, JoinEventForm
-from .models import Event, Player
+from .forms import EventForm, JoinEventForm, TaskForm
+from .models import Event, Player, Theme
 from allauth.account.views import SignupView
 from .forms import AllauthCustomSignupForm
-from django.shortcuts import render
-from django.shortcuts import redirect
-# from django.views.generic import ListView
+from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth.models import User
 from django.core.exceptions import PermissionDenied
 
@@ -73,6 +71,20 @@ def view_my_events(request):
     events = Event.objects.filter(creator=request.user)
     return render(request, 'view_events.html', {'events': events, 'title': "My Events"})
 
+from django.shortcuts import render
+from django.views import View
+from .models import Event
+
+def event_details(request, event_id, tab='about'):
+    event = get_object_or_404(Event, pk=event_id)
+    context = {
+        'event': event,
+        'tab': tab,
+    }
+    return render(request, 'event_details.html', context)
+
+
+
 @staff_only
 @login_required
 def manage_events(request):
@@ -103,3 +115,24 @@ def deny_event(request, event_id):
     event.status = "denied"
     event.save()
     return redirect('manage_events')
+
+def create_task(request, theme_id):
+    hunt = get_object_or_404(Theme, theme=theme_id)
+
+    if request.method == 'POST':
+        form = TaskForm(request.POST)
+        if form.is_valid():
+            task = form.save(commit=False)
+            task.save()
+            hunt.tasks.add(task)
+            return redirect(reversed('task-list'))
+    else:
+        form = TaskForm()
+
+    context = {
+        'form': form,
+        'hunt': hunt,
+    }
+
+    return render(request, 'task_form.html', context)
+
