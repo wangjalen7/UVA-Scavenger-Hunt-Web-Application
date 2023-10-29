@@ -12,7 +12,7 @@
             <thead>
             {% for event in events %}
                 <tr>
-                    <th colspan="2">Event Name: <a href="{% url 'event-about' event.id %}">{{ event.name }}</a></th>
+                    <th colspan="2">Event Name: <a href="{% url 'event-details' event.id 'about' %}">{{ event.name }}</a></th>
                 </tr>
                 <tr>
                     <td> Status:</td>
