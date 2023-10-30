@@ -22,8 +22,10 @@ class Task(models.Model):
 class Theme(models.Model):
     name = models.CharField(max_length=255)
     description = models.TextField()
-    tasks = models.ManyToManyField(Task) 
-    theme = models.CharField(max_length=255)
+    tasks = models.ManyToManyField(Task)
+        
+    def __str__(self):
+        return self.name
 
 class Event(models.Model):
     STATUS_CHOICES = (
@@ -42,7 +44,7 @@ class Event(models.Model):
     creator = models.ForeignKey(User, on_delete=models.CASCADE)
     status = models.CharField(choices=STATUS_CHOICES, default='pending', max_length=10)
     privacy = models.CharField(max_length=1, choices=PRIVACY_CHOICES, default='U')
-    theme = models.ForeignKey(Theme, on_delete=models.CASCADE, null=True, blank=True)
+    theme = models.ForeignKey(Theme, on_delete=models.CASCADE, null=True)
 
     def __str__(self):
         return self.name

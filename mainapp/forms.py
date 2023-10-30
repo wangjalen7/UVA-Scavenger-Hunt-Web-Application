@@ -1,6 +1,7 @@
 from allauth.account.forms import SignupForm
 from django import forms
-from .models import Event, Player, Task
+from .models import Event, Player, Task, Theme, Team
+from django.forms import modelformset_factory
 
 class AllauthCustomSignupForm(SignupForm):
     first_name = forms.CharField(max_length=30, label='First Name', required=True)
@@ -18,11 +19,12 @@ from django.forms.widgets import DateInput
 class EventForm(forms.ModelForm):
     class Meta:
         model = Event
-        fields = ['name', 'start_date', 'end_date', 'privacy', 'description', 'privacy']
+        fields = ['name', 'start_date', 'end_date', 'privacy', 'description', 'privacy', 'theme']
         widgets = {
             'start_date': DateInput(attrs={'type': 'date'}),
             'end_date': DateInput(attrs={'type': 'date'}),
             'privacy': forms.Select(choices=Event.PRIVACY_CHOICES),
+            'theme': forms.Select(choices=[theme for theme in Theme.objects.all()]),
         }
 
 
@@ -37,3 +39,31 @@ class TaskForm(forms.ModelForm):
     class Meta:
         model = Task
         fields = ['name', 'task', 'hint', 'latitude', 'longitude']
+
+
+
+
+class ThemeForm(forms.ModelForm):
+    class Meta:
+        model = Theme
+        fields = ['name', 'description']
+
+TaskFormSet = modelformset_factory(
+    Task,
+    fields=('name', 'task', 'hint', 'latitude', 'longitude'),
+    extra=1,
+    can_delete=True
+)
+
+
+class JoinTeamForm(forms.ModelForm):
+    class Meta:
+        model = Team
+        fields = ['id']  # This field will be populated from the hidden input in the template.
+
+class CreateTeamForm(forms.Form):
+    new_team_name = forms.CharField(
+        label='New Team Name',
+        max_length=255,
+        widget=forms.TextInput(attrs={'placeholder': 'Enter new team name'})
+    )

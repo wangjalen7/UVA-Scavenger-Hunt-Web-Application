@@ -1,0 +1,17 @@
+{% extends "base.html" %}
+
+{% block content %}
+<h2>Join {{ event.name }} Hunt</h2>
+<p>User: {{ user }}</p>
+{% if is_member %}
+    <p>You have already joined this event.</p>
+{% else %}
+
+    <h3>create a new team:</h3>
+    <form method="post">
+        {% csrf_token %}
+        <input type="text" name="new_team_name" placeholder="Enter new team name">
+        <button type="submit" name="action" value="create_team" class="btn btn-primary">Create Team</button>
+    </form>
+{% endif %}
+{% endblock %}

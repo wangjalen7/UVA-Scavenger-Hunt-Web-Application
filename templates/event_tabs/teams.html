@@ -1,0 +1,11 @@
+<h2>Teams</h2>
+
+<a href="{% url 'create_team' event.id %}" class="btn btn-primary">Create Team</a>
+
+<ul>
+    {% for team in teams %}
+        <li>
+            <a href="{% url 'team_details' event.id team.id %}">{{ team.name }}</a>
+        </li>
+    {% endfor %}
+</ul>

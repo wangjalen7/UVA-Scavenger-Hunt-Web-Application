@@ -35,12 +35,18 @@ urlpatterns = [
     path('view_public_events/', views.view_public_events, name='view_public_events'),
     path('view_my_events/', views.view_my_events, name='view_my_events'),
     path('manage_events/', views.manage_events, name='manage_events'),
-    path('approve_hunt/<int:event_id>/', views.approve_event, name='approve_event'),
-    path('deny_hunt/<int:event_id>/', views.deny_event, name='deny_event'),
-    #path('publicevents/', views.ListScavengerHunt.as_view(), name='public_events'),
-    path('join_event/<int:event_id>', views.join_event, name='join_event'),
+    path('approve_event/<int:event_id>/', views.approve_event, name='approve_event'),
+    path('deny_event/<int:event_id>/', views.deny_event, name='deny_event'),
     path('create_task/<str:theme_id>/', views.create_task, name='create_task'),
-    path('event/<int:event_id>/<str:tab>/', views.event_details, name='event-details'),
-    path('event/<int:event_id>/', views.event_details, name='event-details'),
+    path('create_theme/', views.create_theme, name='create_theme'),
+
+    path('event/<int:event_id>/create_team/', views.create_team, name='create_team'),
+    path('event/<int:event_id>/team/<int:team_id>/', views.team_details, name='team_details'),
+    path('event/<int:event_id>/join_team/<int:team_id>/', views.join_team, name='join_team'),
+    path('event/<int:event_id>/<str:tab>/', views.event_details, name='event_details'),
+    path('event/<int:event_id>/', views.event_details, name='event_details'),
+    
+   
+    path('error/', views.error, name='error'),
 ]
 
