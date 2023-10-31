@@ -12,24 +12,27 @@ class UserProfile(models.Model):
         return self.user.username
 
 
+
+
+
+class Theme(models.Model):
+    title = models.CharField(max_length=255)
+    description = models.TextField()
+
+    def __str__(self):
+        return self.title
+    
+
 class Task(models.Model):
     name = models.CharField(max_length=255)
     task = models.TextField()
     hint = models.TextField()
     latitude = models.FloatField(null=True, blank=True)
     longitude = models.FloatField(null=True, blank=True)
+    theme = models.ForeignKey(Theme, on_delete=models.CASCADE, related_name='tasks')
 
     def __str__(self):
         return self.name
-
-
-class Theme(models.Model):
-    title = models.CharField(max_length=255)
-    description = models.TextField()
-    tasks = models.TextField()
-
-    def __str__(self):
-        return self.title
 
 
 class Event(models.Model):

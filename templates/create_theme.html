@@ -3,20 +3,75 @@
 {% extends "base.html" %}
 {% load static %}
 {% block content %}
+
 <body>
     <div class="container text-center">
         <h1 style="font-size: 70px;">Create Theme</h1>
     </div>
     <div class="container-fluid text-center">
         <form method="post" action="{% url 'create_theme' %}" class="mt-4">
-           {% csrf_token %}
+            {% csrf_token %}
             <div class="card-body">
                 {{ form.non_form_errors }}
                 {{ form.as_p }}
+                {{ formset.management_form }}
+                <div id="task-forms">
+                    {% for form in formset %}
+                    <div class="task-form">
+                        {{ form.as_p }}
+                    </div>
+                    {% endfor %}
+                </div>
+                <button type="button" id="delete-last-task" class="btn btn-warning">Delete Last Task</button>
+
+                <button type="button" id="add-task" class="btn btn-info">Add Task</button>
             </div>
-            <button type="submit" class="btn btn-primary">Create</button>
-       </form>
+            <button type="submit" class="btn btn-primary">Create Theme</button>
+        </form>
     </div>
+
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            const formsetPrefix = '{{ formset.prefix }}';
+            let formIndex = document.querySelector('#id_' + formsetPrefix + '-TOTAL_FORMS').value;
+            const addTaskButton = document.getElementById('add-task');
+            const taskFormsDiv = document.getElementById('task-forms');
+
+            addTaskButton.addEventListener('click', function () {
+                let newForm = taskFormsDiv.children[0].cloneNode(true);
+                let formRegex = RegExp(`id_${formsetPrefix}-\\d+-`, 'g');
+
+                newForm.innerHTML = newForm.innerHTML.replace(formRegex, `id_${formsetPrefix}-${formIndex}-`);
+                taskFormsDiv.appendChild(newForm);
+                formIndex++;
+
+                // Update the total form count
+                document.querySelector('#id_' + formsetPrefix + '-TOTAL_FORMS').value = formIndex;
+            });
+        });
+
+
+        document.addEventListener('DOMContentLoaded', function () {
+    document.getElementById('delete-last-task').addEventListener('click', function () {
+        const taskForms = document.querySelectorAll('#task-forms .task-form');
+        if (taskForms.length > 1) { // Ensure there's more than one task form
+            const lastFormIndex = taskForms.length - 1;
+            const lastForm = taskForms[lastFormIndex];
+            // Hide and mark the last form as deleted
+            lastForm.style.display = 'none';
+            lastForm.querySelector('input[type="checkbox"]').checked = true;
+            // Remove the form from the DOM
+            lastForm.remove();
+        }
+    });
+});
+
+    </script>
+
+
+
 </body>
 {% endblock %}
+
 </html>

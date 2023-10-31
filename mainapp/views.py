@@ -1,6 +1,6 @@
 from django.shortcuts import render, redirect
 from django.contrib.auth.decorators import login_required
-from .forms import EventForm, TaskForm, ThemeForm, JoinTeamForm, CreateTeamForm
+from .forms import EventForm, TaskForm, ThemeForm, JoinTeamForm, CreateTeamForm, TaskFormSet
 from .models import Event, Theme, Task, Team
 from allauth.account.views import SignupView
 from .forms import AllauthCustomSignupForm
@@ -9,7 +9,7 @@ from django.contrib.auth.models import User
 from django.core.exceptions import PermissionDenied
 import logging
 from django.contrib import messages
-from django.http import HttpResponse
+
 
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger('ScavengerHuntApp')
@@ -179,14 +179,19 @@ def deny_event(request, event_id):
 @staff_only
 @login_required
 def create_theme(request):
-    if request.method == "POST":
+    if request.method == 'POST':
         form = ThemeForm(request.POST)
-        if form.is_valid():
-            form.save()
-            return redirect('/')
+        formset = TaskFormSet(request.POST)
+        if form.is_valid() and formset.is_valid():
+            theme = form.save()
+            formset.instance = theme
+            formset.save()
+            return redirect('some_view')
     else:
         form = ThemeForm()
-    return render(request, 'create_theme.html', {'form': form})
+        formset = TaskFormSet()
+    return render(request, 'create_theme.html', {'form': form, 'formset': formset})
+
 
 def create_task(request, theme_id):
     hunt = get_object_or_404(Theme, theme=theme_id)
