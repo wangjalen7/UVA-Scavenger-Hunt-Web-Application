@@ -31,6 +31,9 @@ def staff_only(function):
 def index(request):
     return render(request, 'index.html', {'user': request.user})
 
+class MapView(View):
+    template_name = "map.html"
+# leave for now
 def create_task(request):
     
     if request.method == "POST":
