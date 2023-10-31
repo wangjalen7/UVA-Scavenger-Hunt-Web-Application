@@ -47,7 +47,7 @@ li a:hover:not(.active) {
             <a href="{% url 'index' %}">
               <img src="https://static.vecteezy.com/system/resources/previews/009/385/543/non_2x/magnifying-glass-clipart-design-illustration-free-png.png" alt="Home" style="width:120px;">
           </a>
-            <li><a href="#">{{ user.username }}</a></li>
+            <li><a href="{% url 'profile' %}">{{ user.username }}</a></li>
             <li><a href="{% url 'view_public_events' %}">Public Events</a></li>
             <li><a href="{% url 'create_event' %}">Create Events</a></li>
             <li><a href="{% url 'manage_events' %}">Manage Events</a></li>
@@ -61,7 +61,7 @@ li a:hover:not(.active) {
                 ScavHunt App
             </a>
         </li>
-            <li><a href="#">{{ user.username }}</a></li>
+            <li><a href="{% url 'profile' %}">{{ user.username }}</a></li>
             <li><a href="{% url 'view_public_events' %}">Public Events</a></li>
             <li><a href="{% url 'create_event' %}">Create Events</a></li>
             <li><a href="{% url 'view_my_events' %}">My Events</a></li>
