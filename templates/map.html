@@ -6,13 +6,14 @@
 <script src="https://polyfill.io/v3/polyfill.min.js?features=default"></script>
 
 <script>
-    let map
+    let map;
     function initMap(){
         map = new google.maps.Map(document.getElementByID("map"), 
         {center:{lat: -34.397, lng: 150.644}, 
         zoom: 8,
     }
     );
+    }
 
     window.initMap = initMap
 </script>
@@ -26,3 +27,5 @@
         </div>
     </div>
 </div>
+
+{% endblock %}

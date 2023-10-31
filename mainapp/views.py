@@ -64,7 +64,7 @@ def create_task(request):
                 pass
     else:
         form = TaskForm()
-    return render(request, 'map.html', {'form': form, })
+    return render(request, 'map.html')
 
 class CustomSignupView(SignupView):
     form_class = AllauthCustomSignupForm
