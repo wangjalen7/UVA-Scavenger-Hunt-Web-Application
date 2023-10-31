@@ -8,6 +8,7 @@ from django.shortcuts import render
 from django.shortcuts import redirect
 from django.views.generic import ListView
 from django.contrib.auth.models import User
+from django.db.models import Sum
 
 @login_required
 def index(request):
@@ -100,3 +101,10 @@ def deny_event(request, event_id):
     event.status = "denied"
     event.save()
     return redirect('manage_events')
+
+@login_required
+def leaderboard(request,):
+    leaders = User.objects.alias(
+        total_points=Sum('player__points')
+    ).order_by('-total_points')
+    return render(request, 'leaderboard.html', {'leaders': leaders})

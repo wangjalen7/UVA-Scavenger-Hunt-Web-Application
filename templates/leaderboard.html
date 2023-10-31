@@ -1,0 +1,17 @@
+{% extends "base.html" %}
+{% load static %}
+{% block content %}
+
+<!DOCTYPE html>
+<html>
+
+<table>
+    <th><td>User</td><td>Points</td></th>
+  {% for leader in leaders %}
+      <tr><td>{{ leader.username }}</td><td>{{ leader.total_points }}</td></tr>
+  {% endfor %}
+  </table>
+  
+</html>
+
+{% endblock %}

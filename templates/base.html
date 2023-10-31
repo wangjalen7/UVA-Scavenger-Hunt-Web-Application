@@ -50,6 +50,7 @@ li a:hover:not(.active) {
             <li><a href="{% url 'create_event' %}">Create Events</a></li>
             <li><a href="{% url 'manage_events' %}">Manage Events</a></li>
             <li><a href="{% url 'index' %}">Return to index</a></li>
+            <li><a href="{% url 'leaderboard' %}">Leaderboard</a></li>
         </ul>
     {% else %}
         <ul>
@@ -59,6 +60,7 @@ li a:hover:not(.active) {
             <li><a href="{% url 'create_event' %}">Create Events</a></li>
             <li><a href="{% url 'view_my_events' %}">My Events</a></li>
             <li><a href="{% url 'index' %}">Return to index</a></li>
+            <li><a href="{% url 'leaderboard' %}">Leaderboard</a></li>
         </ul>
     {% endif %}
 
