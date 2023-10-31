@@ -15,9 +15,7 @@ class UserProfile(models.Model):
 class Task(models.Model):
     name = models.CharField(max_length=255)
     description = models.TextField()
-    #location = models.CharField(max_length=255)
-    longitude = models.FloatField(default = False)
-    latitude = models.FloatField(default = False)
+    location = models.CharField(max_length=255)
 
     def __str__(self):
         return self.name

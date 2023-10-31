@@ -48,5 +48,5 @@ class ThemeForm(forms.ModelForm):
 class TaskForm(forms.ModelForm):
     class Meta:
         model = Task
-        fields = ['name', 'description']
+        fields = ['name', 'description', 'location']
 
