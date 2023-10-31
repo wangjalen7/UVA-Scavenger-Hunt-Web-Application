@@ -1,6 +1,10 @@
 from allauth.account.forms import SignupForm
 from django import forms
 from .models import Event, Player
+from .models import HuntTemplate
+from .models import Theme
+from django.forms.widgets import DateInput
+
 
 class AllauthCustomSignupForm(SignupForm):
     first_name = forms.CharField(max_length=30, label='First Name', required=True)
@@ -13,7 +17,6 @@ class AllauthCustomSignupForm(SignupForm):
         user.save()
         return user
 
-from django.forms.widgets import DateInput
 
 class EventForm(forms.ModelForm):
     class Meta:
@@ -26,8 +29,18 @@ class EventForm(forms.ModelForm):
         }
 
 
-
 class JoinEventForm(forms.ModelForm):
     class Meta:
         model = Player
         fields = ['team']
+
+
+# class HuntTemplateForm(forms.ModelForm):
+#     class Meta:
+#         model = HuntTemplate
+#         fields = ['name', 'description', 'tasks', 'theme']
+
+class ThemeForm(forms.ModelForm):
+    class Meta:
+        model = Theme
+        fields = ['title', 'description', 'tasks']

@@ -38,6 +38,7 @@ urlpatterns = [
     path('approve_hunt/<int:event_id>/', views.approve_event, name='approve_event'),
     path('deny_hunt/<int:event_id>/', views.deny_event, name='deny_event'),
     #path('publicevents/', views.ListScavengerHunt.as_view(), name='public_events'),
-    path('join_event/<int:event_id>', views.join_event, name='join_event')
+    path('join_event/<int:event_id>', views.join_event, name='join_event'),
+    path('create-theme/', views.create_theme, name='create_theme'),
 ]
 

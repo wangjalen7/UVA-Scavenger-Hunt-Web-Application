@@ -1,6 +1,6 @@
 from django.shortcuts import render, redirect
 from django.contrib.auth.decorators import login_required
-from .forms import EventForm, JoinEventForm
+from .forms import EventForm, JoinEventForm, ThemeForm
 from .models import Event, Player
 from allauth.account.views import SignupView
 from .forms import AllauthCustomSignupForm
@@ -10,12 +10,19 @@ from django.shortcuts import redirect
 from django.contrib.auth.models import User
 from django.core.exceptions import PermissionDenied
 
+
+# from .models import HuntTemplate
+# from .forms import HuntTemplateForm
+
+
 def staff_only(function):
     def _inner(request, *args, **kwargs):
         if not request.user.is_authenticated or not request.user.is_staff:
             raise PermissionDenied
         return function(request, *args, **kwargs)
+
     return _inner
+
 
 @login_required
 def index(request):
@@ -25,6 +32,7 @@ def index(request):
 class CustomSignupView(SignupView):
     form_class = AllauthCustomSignupForm
     template_name = 'account/signup.html'
+
 
 def join_event(request, event_id):
     event = Event.objects.get(id=event_id)
@@ -44,10 +52,11 @@ def join_event(request, event_id):
                 player.save()
                 return redirect('/')
             else:
-                return render(request,'already_joined.html', context={'message': 'Already Joined'})
+                return render(request, 'already_joined.html', context={'message': 'Already Joined'})
     else:
         form = JoinEventForm()
     return render(request, 'join_event.html', {'form': form, 'event': event.name, 'user': player_user.username})
+
 
 @login_required
 def create_event(request):
@@ -63,15 +72,18 @@ def create_event(request):
         form = EventForm()
     return render(request, 'create_event.html', {'form': form})
 
+
 @login_required
 def view_public_events(request):
     events = Event.objects.filter(status='approved', privacy='U')
     return render(request, 'view_events.html', {'events': events, 'title': "Public Events"})
 
+
 @login_required
 def view_my_events(request):
     events = Event.objects.filter(creator=request.user)
     return render(request, 'view_events.html', {'events': events, 'title': "My Events"})
+
 
 @staff_only
 @login_required
@@ -88,6 +100,7 @@ def manage_events(request):
 
     return render(request, 'manage_events.html', context)
 
+
 @staff_only
 @login_required
 def approve_event(request, event_id):
@@ -96,6 +109,7 @@ def approve_event(request, event_id):
     event.save()
     return redirect('manage_events')
 
+
 @staff_only
 @login_required
 def deny_event(request, event_id):
@@ -103,3 +117,17 @@ def deny_event(request, event_id):
     event.status = "denied"
     event.save()
     return redirect('manage_events')
+
+
+@staff_only
+@login_required
+def create_theme(request):
+    if request.method == "POST":
+        form = ThemeForm(request.POST)
+        if form.is_valid():
+            form.save()
+            return redirect('/')
+    else:
+        form = ThemeForm()
+    return render(request, 'create_theme.html', {'form': form})
+
