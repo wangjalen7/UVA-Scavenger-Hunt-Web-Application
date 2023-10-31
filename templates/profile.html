@@ -3,8 +3,11 @@
 {% extends "base.html" %}
 {% load static %}
 {% block content %}
-
 <body>
+    <h1>User Profile</h1>
+
+    <p>Username: {{ user.username }}</p>
+    <a href="{% url 'change_username' %}">Change Username</a>
 
 </body>
 {% endblock %}

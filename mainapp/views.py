@@ -1,7 +1,7 @@
 from django.shortcuts import render, redirect
 from django.contrib.auth.decorators import login_required
 from .forms import EventForm, JoinEventForm
-from .models import Event, Player
+from .models import Event, Player, UserProfile
 from allauth.account.views import SignupView
 from .forms import AllauthCustomSignupForm
 from django.shortcuts import render
@@ -49,6 +49,23 @@ def join_event(request, event_id):
         form = JoinEventForm()
     return render(request, 'join_event.html', {'form': form, 'event': event.name, 'user': player_user.username})
 
+
+@login_required
+def change_username(request):
+    username_error = ""
+    if request.method == 'POST':
+        new_username = request.POST.get('new_username')
+        user = request.user
+
+        # Check if the new username is already in use
+        if User.objects.filter(username=new_username).exclude(pk=user.pk).exists():
+            username_error = 'This username is already in use. Please choose a different one.'
+        else:
+            user.username = new_username
+            user.save()
+            return redirect('profile')
+
+    return render(request, 'change_username.html', {'user': request.user, 'username_error': username_error})
 @login_required
 def create_event(request):
     if request.method == "POST":
