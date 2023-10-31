@@ -1,12 +1,7 @@
 from django.shortcuts import render, redirect
 from django.contrib.auth.decorators import login_required
-<<<<<<< HEAD
-from .forms import EventForm, JoinEventForm, ThemeForm
-from .models import Event, Player
-=======
-from .forms import EventForm, JoinEventForm, TaskForm, ThemeForm, TaskFormSet, JoinTeamForm, CreateTeamForm
-from .models import Event, Player, Theme, Task, Team
->>>>>>> create/view-tasks
+from .forms import EventForm, TaskForm, ThemeForm, JoinTeamForm, CreateTeamForm
+from .models import Event, Theme, Task, Team
 from allauth.account.views import SignupView
 from .forms import AllauthCustomSignupForm
 from django.shortcuts import render, redirect, get_object_or_404
@@ -44,47 +39,6 @@ class CustomSignupView(SignupView):
     template_name = 'account/signup.html'
 
 
-<<<<<<< HEAD
-def join_event(request, event_id):
-    event = Event.objects.get(id=event_id)
-    player_user = User.objects.get(username=request.user.username)
-    if request.method == "POST":
-        form = JoinEventForm(request.POST)
-        if form.is_valid():
-            try:
-                queryset = Player.objects.get(event=event, user=player_user)
-            except Player.DoesNotExist:
-                queryset = None
-            if queryset == None:
-                player = form.save(commit=False)
-                player.event = event
-                player.user = player_user
-                player.points = 0
-                player.save()
-                return redirect('/')
-            else:
-                return render(request, 'already_joined.html', context={'message': 'Already Joined'})
-=======
-def create_theme(request):
-    if request.method == 'POST':
-        form = ThemeForm(request.POST)
-        formset = TaskFormSet(request.POST, queryset=Task.objects.none())
-        if form.is_valid() and formset.is_valid():
-            theme = form.save()
-            tasks = formset.save(commit=False)
-            for task in tasks:
-                task.save()
-                theme.tasks.add(task)
-            return redirect('create_event')
->>>>>>> create/view-tasks
-    else:
-        form = ThemeForm()
-        formset = TaskFormSet(queryset=Task.objects.none())
-    return render(request, 'create_theme.html', {'form': form, 'formset': formset})
-
-
-
-
 @login_required
 def create_event(request):
     if request.method == "POST":
@@ -112,8 +66,6 @@ def view_my_events(request):
     return render(request, 'view_events.html', {'events': events, 'title': "My Events"})
 
 
-<<<<<<< HEAD
-=======
 @login_required
 def event_details(request, event_id, tab='about'):
     event = Event.objects.get(pk=event_id)
@@ -175,7 +127,7 @@ def create_team(request, event_id):
             return redirect('event_details', event_id=event_id, tab='about')
     
 
-    if Team.objects.filter(members=request.user).exists():
+    if Team.objects.filter(members=request.user, event=event).exists():
         return render(request, 'error.html', context = {'message': 'You have already joined a team'})
 
     create_team_form = CreateTeamForm()
@@ -190,7 +142,6 @@ def create_team(request, event_id):
 def error(request):
      return render(request, 'error.html', context = {'message': 'You have already joined this team'})
 
->>>>>>> create/view-tasks
 @staff_only
 @login_required
 def manage_events(request):
@@ -224,7 +175,6 @@ def deny_event(request, event_id):
     event.save()
     return redirect('manage_events')
 
-<<<<<<< HEAD
 
 @staff_only
 @login_required
@@ -237,7 +187,7 @@ def create_theme(request):
     else:
         form = ThemeForm()
     return render(request, 'create_theme.html', {'form': form})
-=======
+
 def create_task(request, theme_id):
     hunt = get_object_or_404(Theme, theme=theme_id)
 
@@ -257,5 +207,4 @@ def create_task(request, theme_id):
     }
 
     return render(request, 'task_form.html', context)
->>>>>>> create/view-tasks
 
