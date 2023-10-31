@@ -5,13 +5,33 @@
 <!DOCTYPE html>
 <html>
 
-<table>
-    <th><td>User</td><td>Points</td></th>
+<head>
+  <title>Bootstrap Example</title>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
+</head>
+<body>
+
+<h2>Leaderboard</h2>
+
+<table class="table-hover">
+  <thead>
+    <tr>
+      <th>User</th>
+      <th>Points</th>
+    </tr>
+  </thead>
+  <tbody>
   {% for leader in leaders %}
-      <tr><td>{{ leader.username }}</td><td>{{ leader.total_points }}</td></tr>
+      <tr><td>{{ leader.username }}</td></tr>
+      <tr><td>{{ leader.total_points }}</td></tr>
   {% endfor %}
+  </tbody>
   </table>
   
 </html>
-
+</body>
 {% endblock %}

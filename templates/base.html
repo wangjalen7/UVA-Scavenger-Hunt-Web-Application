@@ -44,26 +44,31 @@ li a:hover:not(.active) {
 <body>
     {% if user.is_staff %}
         <ul>
-            <img src="https://static.vecteezy.com/system/resources/previews/009/385/543/non_2x/magnifying-glass-clipart-design-illustration-free-png.png" alt="" style="width:120px;" >  
+            <a href="{% url 'index' %}">
+              <img src="https://static.vecteezy.com/system/resources/previews/009/385/543/non_2x/magnifying-glass-clipart-design-illustration-free-png.png" alt="Home" style="width:120px;">
+          </a>
             <li><a href="#">{{ user.username }}</a></li>
             <li><a href="{% url 'view_public_events' %}">Public Events</a></li>
             <li><a href="{% url 'create_event' %}">Create Events</a></li>
+            <li><a href="{% url 'create_theme' %}">Create Theme</a></li>
             <li><a href="{% url 'manage_events' %}">Manage Events</a></li>
             <li><a href="{% url 'index' %}">Return to index</a></li>
-            <li><a href="{% url 'leaderboard' %}">Leaderboard</a></li>
         </ul>
     {% else %}
         <ul>
-            <img src="https://static.vecteezy.com/system/resources/previews/009/385/543/non_2x/magnifying-glass-clipart-design-illustration-free-png.png" alt="" style="width:120px;" >  
+          <li>
+            <a href="{% url 'index' %}">
+                <img src="https://static.vecteezy.com/system/resources/previews/009/385/543/non_2x/magnifying-glass-clipart-design-illustration-free-png.png" alt="Home" style="width:120px;">
+                ScavHunt App
+            </a>
+        </li>
             <li><a href="#">{{ user.username }}</a></li>
             <li><a href="{% url 'view_public_events' %}">Public Events</a></li>
             <li><a href="{% url 'create_event' %}">Create Events</a></li>
             <li><a href="{% url 'view_my_events' %}">My Events</a></li>
-            <li><a href="{% url 'index' %}">Return to index</a></li>
             <li><a href="{% url 'leaderboard' %}">Leaderboard</a></li>
         </ul>
     {% endif %}
-
 
 
 <div style="margin-left:25%;padding:1px 16px;height:1000px;">

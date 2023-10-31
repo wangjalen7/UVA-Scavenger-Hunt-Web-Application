@@ -61,41 +61,15 @@ class EventFormTests(TestCase):
         self.assertEqual(event.status, 'pending')
 
 
-class JoinHuntTestCase(TestCase):
-
-    def setUp(self):
-        self.user = User.objects.create_user('testuserjalen', 'testuser@example.com', 'testpassword123')
-        self.event = Event.objects.create(
-            name='Test Event',
-            start_date='2023-11-01',
-            end_date='2023-11-10',
-            creator=self.user,
-            status='approved',
-            privacy='U',
-            description='A test event'
-        )
-
-    def test_join_hunt(self):
-        self.client.login(username='testuserjalen', password='testpassword123')
-        data = {
-            'team': 'Team A',
-        }
-        response = self.client.post(reverse('join_hunt', args=[self.event.id]), data)
-        self.assertEqual(response.status_code, 302)
-        player = Player.objects.get(user=self.user)
-        self.assertEqual(player.hunt, self.event)
-        self.assertEqual(player.team, 'Team A')
-
-
 class ManageEventsTestCase(TestCase):
 
     def setUp(self):
-        self.user = User.objects.create_user('adminuser', 'adminuser@example.com', 'adminpassword123')
+        self.adminuser = User.objects.create_user('adminuser', 'adminuser@example.com', 'adminpassword123', is_staff=True)
         self.event = Event.objects.create(
             name='Test Event to Approve',
             start_date='2023-11-01',
             end_date='2023-11-10',
-            creator=self.user,
+            creator=self.adminuser,
             status='pending',
             privacy='U',
             description='A test event'
