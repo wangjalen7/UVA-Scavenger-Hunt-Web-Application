@@ -31,8 +31,7 @@ def staff_only(function):
 def index(request):
     return render(request, 'index.html', {'user': request.user})
 
-class MapView(View):
-    template_name = "map.html"
+
 # leave for now
 def create_task(request):
     
@@ -65,7 +64,7 @@ def create_task(request):
                 pass
     else:
         form = TaskForm()
-    return render(request, 'create_task.html', {'form': form, })
+    return render(request, 'map.html', {'form': form, })
 
 class CustomSignupView(SignupView):
     form_class = AllauthCustomSignupForm
