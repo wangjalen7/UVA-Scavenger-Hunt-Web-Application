@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html>
+{% extends "base.html" %}
+{% load static %}
+{% block content %}
+<body>
+    <h1>Change Bio</h1>
+
+    <form method="post">
+        {% csrf_token %}
+        {{ form.as_p }}
+        <button type="submit">Save</button>
+    </form>
+
+    {% if bio_error %}
+        <p class="error-message">{{ bio_error }}</p>
+    {% endif %}
+
+    <a href="{% url 'profile' %}">Back to Profile</a>
+</body>
+{% endblock %}
+</html>

@@ -31,3 +31,6 @@ class JoinEventForm(forms.ModelForm):
     class Meta:
         model = Player
         fields = ['team']
+
+class ChangeBioForm(forms.Form):
+    bio = forms.CharField(widget=forms.Textarea, required=False)
