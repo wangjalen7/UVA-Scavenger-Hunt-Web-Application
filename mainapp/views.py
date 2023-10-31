@@ -1,6 +1,6 @@
 from django.shortcuts import render, redirect
 from django.contrib.auth.decorators import login_required
-from .forms import EventForm, JoinEventForm, ThemeForm
+from .forms import EventForm, JoinEventForm, ThemeForm, TaskForm
 from .models import Event, Player
 from allauth.account.views import SignupView
 from .forms import AllauthCustomSignupForm
@@ -28,6 +28,17 @@ def staff_only(function):
 def index(request):
     return render(request, 'index.html', {'user': request.user})
 
+def create_task(request):
+    google_maps_api_key = 'AIzaSyCamLJi3Ws33i65zxvez9nO9c1AqiFlElk'
+    if request.method == "POST":
+        form = TaskForm(request.POST)
+        if form.is_valid():
+            task = form.save(commit=False)
+            task.save()
+            return redirect('/')
+    else:
+        form = TaskForm()
+    return render(request, 'create_task.html', {'form': form, 'key': google_maps_api_key})
 
 class CustomSignupView(SignupView):
     form_class = AllauthCustomSignupForm

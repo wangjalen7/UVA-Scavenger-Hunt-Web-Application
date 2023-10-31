@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html>
+{% extends "base.html" %}
+{% load static %}
+{% block content %}
+<head>
+    <script src="https://maps.googleapis.com/maps/api/js?key={{ key }}"></script>
+</head>
+<body>
+    <div class="container text-center">
+        <h1 style="font-size: 70px;">Create Task</h1>
+    </div>
+    <div class="container-fluid text-center">
+        <form method="post" action=" {% url 'create_task' %}" class="mt-4">
+           {% csrf_token %}
+            <div class="card-body">
+                {{ form.non_form_errors }}
+                {{ form.as_p }}
+            </div>
+            <button type="submit" class="btn btn-primary">Add Task</button>
+       </form>
+    </div>
+</body>
+<body>
+    <div id="map" style="height: 400px; width: 100%;"></div>
+
+    <script>
+        function initMap() {
+            const mapDiv = document.getElementById('map');
+            const map = new google.maps.Map(mapDiv, {
+                center: { lat: {{ marker_data.lat }}, lng: {{ marker_data.lng }} },
+                zoom: 12
+            });
+
+            const marker = new google.maps.Marker({
+                position: { lat: {{ marker_data.lat }}, lng: {{ marker_data.lng }} },
+                map: map,
+                title: '{{ marker_data.title }}'
+            });
+        }
+    </script>
+
+    <script async defer src="https://maps.googleapis.com/maps/api/js?key={{ key }}&callback=initMap"></script>
+</body>
+{% endblock %}
+</html>
