@@ -1,0 +1,9 @@
+<!-- Tasks To Do Content -->
+<div class="container">
+    <h2>Tasks To Do</h2>
+    <!-- Assume tasks_todo is passed in context -->
+    {% for task in tasks_todo %}
+        <!-- Display each task to do -->
+        <div>{{ task.name }}: {{ task.description }}</div>
+    {% endfor %}
+</div>

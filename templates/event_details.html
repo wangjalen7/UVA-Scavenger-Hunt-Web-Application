@@ -1,0 +1,38 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="container-fluid">
+    <h1>{{ event.name }}</h1>
+
+
+    <!-- Tab Navigation Buttons -->
+    <div class="btn-group" role="group" aria-label="Event tabs">
+        <a href="{% url 'event_details' event.id 'about' %}" class="btn btn-secondary{% if tab == 'about' %} active{% endif %}">About</a>
+        <a href="{% url 'event_details' event.id 'leaderboard' %}" class="btn btn-secondary{% if tab == 'leaderboard' %} active{% endif %}">Leaderboard</a>
+        <a href="{% url 'event_details' event.id 'all_tasks' %}" class="btn btn-secondary{% if tab == 'all_tasks' %} active{% endif %}">All Tasks</a>
+        <a href="{% url 'event_details' event.id 'teams' %}" class="btn btn-secondary{% if tab == 'teams' %} active{% endif %}">Teams</a>
+        {% if is_member %}
+            <!-- These tabs are only visible to members -->
+            <a href="{% url 'event_details' event.id 'tasks_todo' %}" class="btn btn-secondary{% if tab == 'tasks_todo' %} active{% endif %}">Tasks To Do</a>
+            <a href="{% url 'event_details' event.id 'completed_tasks' %}" class="btn btn-secondary{% if tab == 'completed_tasks' %} active{% endif %}">Completed Tasks</a>
+        {% endif %}
+    </div>
+
+    <!-- Determine the active tab based on the URL -->
+    {% if tab == 'leaderboard' %}
+        {% include 'event_tabs/leaderboard.html' with event=event %}
+    {% elif tab == 'tasks_todo' and is_member %}
+        {% include 'event_tabs/tasks_todo.html' with event=event %}
+    {% elif tab == 'completed_tasks' and is_member %}
+        {% include 'event_tabs/completed_tasks.html' with event=event %}
+    {% elif tab == 'all_tasks' %}
+        {% include 'event_tabs/all_tasks.html' with event=event %}
+    {% elif tab == 'about' %}
+        {% include 'event_tabs/about.html' with event=event %}
+    {% elif tab == 'teams' %}
+        {% include 'event_tabs/teams.html' with event=event teams=teams %}
+    {% elif tab == 'team' %}
+        {% include 'event_tabs/team.html' with event=event team=team %}
+    {% endif %}
+</div>
+{% endblock %}

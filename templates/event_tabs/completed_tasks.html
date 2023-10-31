@@ -1,0 +1,9 @@
+<!-- Completed Tasks Content -->
+<div class="container">
+    <h2>Completed Tasks</h2>
+    <!-- Assume completed_tasks is passed in context -->
+    {% for task in completed_tasks %}
+        <!-- Display each completed task -->
+        <div>{{ task.name }}: {{ task.description }}</div>
+    {% endfor %}
+</div>

@@ -14,18 +14,13 @@ class UserProfile(models.Model):
 
 class Task(models.Model):
     name = models.CharField(max_length=255)
-    description = models.TextField()
-    location = models.CharField(max_length=255)
+    task = models.TextField()
+    hint = models.TextField()
+    latitude = models.FloatField(null=True, blank=True)
+    longitude = models.FloatField(null=True, blank=True)
 
     def __str__(self):
         return self.name
-
-
-class HuntTemplate(models.Model):
-    name = models.CharField(max_length=255)
-    description = models.TextField()
-    tasks = models.ManyToManyField(Task)
-    theme = models.CharField(max_length=255)
 
 
 class Theme(models.Model):
@@ -54,6 +49,7 @@ class Event(models.Model):
     creator = models.ForeignKey(User, on_delete=models.CASCADE)
     status = models.CharField(choices=STATUS_CHOICES, default='pending', max_length=10)
     privacy = models.CharField(max_length=1, choices=PRIVACY_CHOICES, default='U')
+    theme = models.ForeignKey(Theme, on_delete=models.CASCADE, null=True)
 
     def __str__(self):
         return self.name
