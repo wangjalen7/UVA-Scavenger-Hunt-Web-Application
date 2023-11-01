@@ -30,17 +30,18 @@ urlpatterns = [
     path('login/', auth_views.LoginView.as_view(), name='login'),
     path('logout/', auth_views.LogoutView.as_view(), name='logout'),
     path('register/', TemplateView.as_view(template_name="register.html"), name='register'),
-    path('home/', TemplateView.as_view(template_name="home.html"), name='home'),
     path('create_event/', views.create_event, name='create_event'),
     path('view_public_events/', views.view_public_events, name='view_public_events'),
     path('view_my_events/', views.view_my_events, name='view_my_events'),
     path('manage_events/', views.manage_events, name='manage_events'),
     path('approve_hunt/<int:event_id>/', views.approve_event, name='approve_event'),
     path('deny_hunt/<int:event_id>/', views.deny_event, name='deny_event'),
+    path('leaderboard/', views.leaderboard, name='leaderboard'),
     #path('publicevents/', views.ListScavengerHunt.as_view(), name='public_events'),
     path('join_event/<int:event_id>', views.join_event, name='join_event'),
     path('create-theme/', views.create_theme, name='create_theme'),
     path('create_task/', views.create_task, name='create_task'), 
     path('map/', views.map_view, name = "map")
+
 ]
 
