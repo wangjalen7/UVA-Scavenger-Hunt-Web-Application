@@ -16,11 +16,6 @@ logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger('ScavengerHuntApp')
 
 
-
-# from .models import HuntTemplate
-# from .forms import HuntTemplateForm
-
-
 def staff_only(function):
     def _inner(request, *args, **kwargs):
         if not request.user.is_authenticated or not request.user.is_staff:
@@ -29,9 +24,6 @@ def staff_only(function):
 
     return _inner
 
-@login_required
-def index(request):
-    return render(request, 'index.html', {'user': request.user})
 
 
 class CustomSignupView(SignupView):
@@ -45,7 +37,7 @@ def create_event(request):
         form = EventForm(request.POST)
         if form.is_valid():
             event = form.save(commit=False)
-            event.creator = request.user  # Set the creator as the current user
+            event.creator = request.user
             event.status = "pending"
             event.save()
             return redirect('/')
@@ -69,14 +61,20 @@ def view_my_events(request):
 @login_required
 def event_details(request, event_id, tab='about'):
     event = Event.objects.get(pk=event_id)
-    # Check if the user is a member of any team in this event
     is_member = Team.objects.filter(event=event, members=request.user).exists()
     teams = Team.objects.filter(event=event)
+
+    theme = event.theme
+
+    tasks = Task.objects.filter(theme=theme)
+
     context = {
         'event': event,
         'is_member': is_member,
         'tab': tab,
         'teams': teams,
+        'tasks': tasks,
+        'theme': theme,
     }
     return render(request, 'event_details.html', context)
 
@@ -95,19 +93,15 @@ def join_team(request, event_id, team_id):
     event = get_object_or_404(Event, pk=event_id)
     team_to_join = get_object_or_404(Team, pk=team_id, event=event)
 
-    # Check if the user is already a member of this team
     if team_to_join.members.filter(id=request.user.id).exists():
         return render(request, 'error.html', context = {'message': 'You have already joined this team'})
 
-    # Check if the user is a member of any other team in this event
     current_team = Team.objects.filter(event=event, members=request.user).first()
     if current_team:
-        # Remove the user from the current team and add to the new team
         current_team.members.remove(request.user)
         team_to_join.members.add(request.user)
         messages.success(request, "You have switched to a new team.")
     else:
-        # Add the user to the new team
         team_to_join.members.add(request.user)
         messages.success(request, "You have successfully joined the team.")
 
@@ -182,40 +176,57 @@ def leaderboard(request,):
     ).order_by('-total_points')[:10]
     return render(request, 'leaderboard.html', {'leaders': leaders})
 
+import json
+
 @staff_only
 @login_required
 def create_theme(request):
     if request.method == 'POST':
         form = ThemeForm(request.POST)
-        formset = TaskFormSet(request.POST)
-        if form.is_valid() and formset.is_valid():
-            theme = form.save()
-            formset.instance = theme
-            formset.save()
-            return redirect('some_view')
+        if form.is_valid():
+            theme = form.save(commit=False)
+            theme.creator = request.user
+            theme.save()
+
+            task_data = json.loads(request.POST.get('tasks_json', '[]'))
+            for task_info in task_data:
+                Task.objects.create(
+                    name=task_info.get('name', ''),
+                    task=task_info.get('task', ''),
+                    hint=task_info.get('hint', ''),
+                    latitude=task_info.get('latitude', ''),
+                    longitude=task_info.get('longitude', ''),
+                    theme=theme
+                )
+            
+            return redirect('home')
+
     else:
-        form = ThemeForm()
-        formset = TaskFormSet()
-    return render(request, 'create_theme.html', {'form': form, 'formset': formset})
+        theme_form = ThemeForm()
+
+    return render(request, 'create_theme.html', {'theme_form': theme_form})
+
+
+
+
 
 
 def create_task(request, theme_id):
-    hunt = get_object_or_404(Theme, theme=theme_id)
+    theme = get_object_or_404(Theme, id=theme_id)
 
     if request.method == 'POST':
         form = TaskForm(request.POST)
         if form.is_valid():
             task = form.save(commit=False)
+            task.theme = theme
             task.save()
-            hunt.tasks.add(task)
-            return redirect(reversed('task-list'))
+            return redirect('home')
     else:
         form = TaskForm()
 
     context = {
         'form': form,
-        'hunt': hunt,
+        'theme': theme.id,
     }
 
-    return render(request, 'task_form.html', context)
-
+    return render(request, 'create_theme.html', context) 

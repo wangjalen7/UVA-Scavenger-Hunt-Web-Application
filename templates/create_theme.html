@@ -9,69 +9,74 @@
         <h1 style="font-size: 70px;">Create Theme</h1>
     </div>
     <div class="container-fluid text-center">
-        <form method="post" action="{% url 'create_theme' %}" class="mt-4">
+        <form method="post" action="{% url 'create_theme' %}" class="mt-4" id="theme-form">
             {% csrf_token %}
             <div class="card-body">
                 {{ form.non_form_errors }}
-                {{ form.as_p }}
-                {{ formset.management_form }}
-                <div id="task-forms">
-                    {% for form in formset %}
-                    <div class="task-form">
-                        {{ form.as_p }}
-                    </div>
-                    {% endfor %}
-                </div>
-                <button type="button" id="delete-last-task" class="btn btn-warning">Delete Last Task</button>
 
+
+                <input type="text" name="title" placeholder="Theme Title" required>
+                <textarea name="description" placeholder="Theme Description" required></textarea>
+
+                <h2>Tasks</h2>
+                <div id="task-container">
+                    <div class="task-inputs">
+                        <input type="text" class="task-name" placeholder="Task Name" required>
+                        <textarea class="task-task" placeholder="Task" required></textarea>
+                        <textarea class="task-hint" placeholder="Task Hint" required></textarea>
+                        <input type="number" class="task-latitude" placeholder="Latitude" required>
+                        <input type="number" class="task-longitude" placeholder="Longitude" required>
+                    </div>
+                </div>
                 <button type="button" id="add-task" class="btn btn-info">Add Task</button>
+                <button type="button" id="delete-task" class="btn btn-warning">Delete Last Task</button>
+
+                <input type="hidden" name="tasks_json" id="tasks-json">
+
+                <button type="submit" class="btn btn-primary">Create Theme</button>
             </div>
-            <button type="submit" class="btn btn-primary">Create Theme</button>
         </form>
     </div>
 
-
     <script>
-        document.addEventListener('DOMContentLoaded', function () {
-            const formsetPrefix = '{{ formset.prefix }}';
-            let formIndex = document.querySelector('#id_' + formsetPrefix + '-TOTAL_FORMS').value;
-            const addTaskButton = document.getElementById('add-task');
-            const taskFormsDiv = document.getElementById('task-forms');
-
-            addTaskButton.addEventListener('click', function () {
-                let newForm = taskFormsDiv.children[0].cloneNode(true);
-                let formRegex = RegExp(`id_${formsetPrefix}-\\d+-`, 'g');
-
-                newForm.innerHTML = newForm.innerHTML.replace(formRegex, `id_${formsetPrefix}-${formIndex}-`);
-                taskFormsDiv.appendChild(newForm);
-                formIndex++;
-
-                // Update the total form count
-                document.querySelector('#id_' + formsetPrefix + '-TOTAL_FORMS').value = formIndex;
-            });
+        document.getElementById('add-task').addEventListener('click', function() {
+            let taskContainer = document.getElementById('task-container');
+            let newTaskDiv = document.createElement('div');
+            newTaskDiv.className = 'task-inputs';
+            newTaskDiv.innerHTML = `
+                <input type="text" class="task-name" placeholder="Task Name" required>
+                <textarea class="task-task" placeholder="Task" required></textarea>
+                <textarea class="task-hint" placeholder="Task Hint" required></textarea>
+                <input type="number" class="task-latitude" placeholder="Latitude" required>
+                <input type="number" class="task-longitude" placeholder="Longitude" required>
+            `;
+            taskContainer.appendChild(newTaskDiv);
         });
 
+        document.getElementById('delete-task').addEventListener('click', function() {
+            let taskContainer = document.getElementById('task-container');
+            if (taskContainer.children.length > 1) {
+                taskContainer.removeChild(taskContainer.lastChild);
+            } else {
+                alert('At least one task must remain.');
+            }
+        });
 
-        document.addEventListener('DOMContentLoaded', function () {
-    document.getElementById('delete-last-task').addEventListener('click', function () {
-        const taskForms = document.querySelectorAll('#task-forms .task-form');
-        if (taskForms.length > 1) { // Ensure there's more than one task form
-            const lastFormIndex = taskForms.length - 1;
-            const lastForm = taskForms[lastFormIndex];
-            // Hide and mark the last form as deleted
-            lastForm.style.display = 'none';
-            lastForm.querySelector('input[type="checkbox"]').checked = true;
-            // Remove the form from the DOM
-            lastForm.remove();
-        }
-    });
-});
-
+        document.getElementById('theme-form').addEventListener('submit', function(event) {
+            let tasks = [];
+            document.querySelectorAll('.task-inputs').forEach(taskDiv => {
+                let task = {
+                    name: taskDiv.querySelector('.task-name').value,
+                    task: taskDiv.querySelector('.task-task').value,
+                    hint: taskDiv.querySelector('.task-hint').value,
+                    latitude: parseFloat(taskDiv.querySelector('.task-latitude').value),
+                    longitude: parseFloat(taskDiv.querySelector('.task-longitude').value)
+                };
+                tasks.push(task);
+            });
+            document.getElementById('tasks-json').value = JSON.stringify(tasks);
+        });
     </script>
-
-
-
 </body>
 {% endblock %}
-
 </html>

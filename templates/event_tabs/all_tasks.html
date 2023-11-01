@@ -1,9 +1,6 @@
-<!-- Tasks To Do Content -->
 <div class="container">
     <h2>All Tasks</h2>
-    <!-- Access tasks through event object -->
-    {% for task in event.theme.tasks.all %}
-        <!-- Display each task to do -->
+    {% for task in tasks %}
         <div>{{ task.name }}: {{ task.task }}</div>
     {% empty %}
         <div>No tasks available</div>

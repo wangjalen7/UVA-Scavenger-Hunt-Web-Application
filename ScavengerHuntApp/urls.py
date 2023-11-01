@@ -16,8 +16,6 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path, include
-from mainapp.views import index
-from django.urls import path, include
 from django.views.generic import TemplateView
 from django.contrib.auth import views as auth_views
 from django.urls import path
@@ -25,10 +23,11 @@ from mainapp import views
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('', index, name='index'),  # Use the index view here
+    path('', TemplateView.as_view(template_name="index.html"), name='home'),  # Use the index view here
     path('accounts/', include('allauth.urls')),
     path('login/', auth_views.LoginView.as_view(), name='login'),
     path('logout/', auth_views.LogoutView.as_view(), name='logout'),
+
     path('register/', TemplateView.as_view(template_name="register.html"), name='register'),
     path('create_event/', views.create_event, name='create_event'),
     path('view_public_events/', views.view_public_events, name='view_public_events'),
@@ -38,10 +37,9 @@ urlpatterns = [
     path('deny_hunt/<int:event_id>/', views.deny_event, name='deny_event'),
     path('leaderboard/', views.leaderboard, name='leaderboard'),
     #path('publicevents/', views.ListScavengerHunt.as_view(), name='public_events'),
-    path('create-theme/', views.create_theme, name='create_theme'),
     path('approve_event/<int:event_id>/', views.approve_event, name='approve_event'),
     path('deny_event/<int:event_id>/', views.deny_event, name='deny_event'),
-    path('create_task/<str:theme_id>/', views.create_task, name='create_task'),
+    path('create_task/<int:theme_id>/', views.create_task, name='create_task'),
     path('create_theme/', views.create_theme, name='create_theme'),
 
     path('event/<int:event_id>/create_team/', views.create_team, name='create_team'),
