@@ -31,6 +31,9 @@ def staff_only(function):
 def index(request):
     return render(request, 'index.html', {'user': request.user})
 
+def map_view(request):
+    key = settings.GOOGLE_API_KEY
+    return render(request, 'map.html', {'key': key})
 
 # leave for now
 def create_task(request):
@@ -38,33 +41,36 @@ def create_task(request):
     if request.method == "POST":
         form = TaskForm(request.POST)
         if form.is_valid():
+            task = form.save(commit=False)
+            task.save()
+            return redirect('/')
 
-            address = form.cleaned_data['location']
-            api_key = 'AIzaSyCamLJi3Ws33i65zxvez9nO9c1AqiFlElk'  # Replace with your actual API key
+            # address = form.cleaned_data['location']
+            # api_key = 'AIzaSyCamLJi3Ws33i65zxvez9nO9c1AqiFlElk'  # Replace with your actual API key
 
-            # Make a request to the Google Geocoding API
-            url = f'https://maps.googleapis.com/maps/api/geocode/json?address={address}&key={api_key}'
-            response = requests.get(url)
-            data = response.json()
+            # # Make a request to the Google Geocoding API
+            # url = f'https://maps.googleapis.com/maps/api/geocode/json?address={address}&key={api_key}'
+            # response = requests.get(url)
+            # data = response.json()
 
-            if data['status'] == 'OK':
-                # Get the latitude and longitude from the API response
-                location = data['results'][0]['geometry']['location']
-                latitude = location['lat']
-                longitude = location['lng']
-                task = form.save(commit=False)
-                task.save()
-                return render(request, 'create_task.html', {
-                    'address': address,
-                    'latitude': latitude,
-                    'longitude': longitude,
-                    'google_maps_api_key': api_key,
-                })
-            else:
-                pass
+            # if data['status'] == 'OK':
+            #     # Get the latitude and longitude from the API response
+            #     location = data['results'][0]['geometry']['location']
+            #     latitude = location['lat']
+            #     longitude = location['lng']
+            #     task = form.save(commit=False)
+            #     task.save()
+            #     return render(request, 'create_task.html', {
+            #         'address': address,
+            #         'latitude': latitude,
+            #         'longitude': longitude,
+            #         'google_maps_api_key': api_key,
+            #     })
+            # else:
+            #     pass
     else:
         form = TaskForm()
-    return render(request, 'map.html')
+    return render(request, 'create_task.html', {'form': form})
 
 class CustomSignupView(SignupView):
     form_class = AllauthCustomSignupForm
