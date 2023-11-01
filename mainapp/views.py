@@ -1,6 +1,6 @@
 from django.shortcuts import render, redirect
 from django.contrib.auth.decorators import login_required
-from .forms import EventForm, JoinEventForm, ThemeForm
+from .forms import EventForm, JoinEventForm, ThemeForm, TaskForm
 from .models import Event, Player
 from allauth.account.views import SignupView
 from .forms import AllauthCustomSignupForm
@@ -10,6 +10,9 @@ from django.shortcuts import redirect
 from django.contrib.auth.models import User
 from django.db.models import Sum
 from django.core.exceptions import PermissionDenied
+import requests
+import googlemaps
+from django.conf import settings # need api key from google to make the request
 
 
 # from .models import HuntTemplate
@@ -28,6 +31,49 @@ def staff_only(function):
 def index(request):
     return render(request, 'index.html', {'user': request.user})
 
+# Title: Django Google Maps Tutorial #4: Placing Markers on a Map
+# URL: https://www.youtube.com/watch?v=sasx2ppol5c&t=685s 
+def map_view(request):
+    key = settings.GOOGLE_API_KEY
+
+    return render(request, 'map.html', {'key': key})
+
+# leave for now
+def create_task(request):
+    
+    if request.method == "POST":
+        form = TaskForm(request.POST)
+        if form.is_valid():
+            task = form.save(commit=False)
+            task.save()
+            return redirect('/')
+
+            # address = form.cleaned_data['location']
+            # api_key = 'AIzaSyCamLJi3Ws33i65zxvez9nO9c1AqiFlElk'  # Replace with your actual API key
+
+            # # Make a request to the Google Geocoding API
+            # url = f'https://maps.googleapis.com/maps/api/geocode/json?address={address}&key={api_key}'
+            # response = requests.get(url)
+            # data = response.json()
+
+            # if data['status'] == 'OK':
+            #     # Get the latitude and longitude from the API response
+            #     location = data['results'][0]['geometry']['location']
+            #     latitude = location['lat']
+            #     longitude = location['lng']
+            #     task = form.save(commit=False)
+            #     task.save()
+            #     return render(request, 'create_task.html', {
+            #         'address': address,
+            #         'latitude': latitude,
+            #         'longitude': longitude,
+            #         'google_maps_api_key': api_key,
+            #     })
+            # else:
+            #     pass
+    else:
+        form = TaskForm()
+    return render(request, 'create_task.html', {'form': form})
 
 class CustomSignupView(SignupView):
     form_class = AllauthCustomSignupForm

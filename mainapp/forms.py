@@ -1,6 +1,6 @@
 from allauth.account.forms import SignupForm
 from django import forms
-from .models import Event, Player
+from .models import Event, Player, Task
 from .models import HuntTemplate
 from .models import Theme
 from django.forms.widgets import DateInput
@@ -44,3 +44,9 @@ class ThemeForm(forms.ModelForm):
     class Meta:
         model = Theme
         fields = ['title', 'description', 'tasks']
+
+class TaskForm(forms.ModelForm):
+    class Meta:
+        model = Task
+        fields = ['name', 'description', 'location']
+

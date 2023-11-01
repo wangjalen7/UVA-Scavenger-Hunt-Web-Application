@@ -1,0 +1,83 @@
+
+<html>
+{% extends "base.html" %}
+{% load static %}
+{% block content %}
+<head>
+    <script src="https://maps.googleapis.com/maps/api/js?key={{ google_maps_api_key }}"></script>
+</head>
+
+<body>
+    <div class="container text-center">
+        <h1 style="font-size: 70px;">Create Task</h1>
+    </div>
+    <div class="container-fluid text-center">
+        <form method="post" action=" {% url 'create_task' %}" class="mt-4">
+           {% csrf_token %}
+            <div class="card-body">
+                {{ form.non_form_errors }}
+                {{ form.as_p }}
+            </div>
+            <button type="submit" class="btn btn-primary">Add Task</button>
+       </form>
+    </div>
+</body>
+<br>
+<!-- <body>
+    <div id="map" style="height: 400px; width: 100%;"></div>
+
+    <script>
+        // function initMap() {
+        //     const mapDiv = document.getElementById('map');
+        //     const x = "{{latitude}}";
+        //     const y = "{{longitude}}";
+        //     const addr = "{{address}}"; 
+        //     const map = new google.maps.Map(mapDiv, {
+        //         center: { lat: x, lng: y, 
+        //         zoom: 12
+        // }});
+
+        //     const marker = new google.maps.Marker({
+        //         position: { lat: "{{ latitude }}", lng: "{{ longitude }}",
+        //         map: map,
+        //         title: addr,
+        //     }});
+
+        // }
+
+        (g=>{var h,a,k,p="The Google Maps JavaScript API",c="google",l="importLibrary",q="__ib__",m=document,b=window;b=b[c]||(b[c]={});var d=b.maps||(b.maps={}),r=new Set,e=new URLSearchParams,u=()=>h||(h=new Promise(async(f,n)=>{await (a=m.createElement("script"));e.set("libraries",[...r]+"");for(k in g)e.set(k.replace(/[A-Z]/g,t=>"_"+t[0].toLowerCase()),g[k]);e.set("callback",c+".maps."+q);a.src=`https://maps.${c}apis.com/maps/api/js?`+e;d[q]=f;a.onerror=()=>h=n(Error(p+" could not load."));a.nonce=m.querySelector("script[nonce]")?.nonce||"";m.head.append(a)}));d[l]?console.warn(p+" only loads once. Ignoring:",g):d[l]=(f,...n)=>r.add(f)&&u().then(()=>d[l](f,...n))})
+        ({key: "AIzaSyCamLJi3Ws33i65zxvez9nO9c1AqiFlElk", v: "beta"});
+
+        let map;
+
+        async function initMap() {
+        // The location of Uluru
+         const position = { lat: -25.344, lng: 131.031 };
+        // Request needed libraries.
+         //@ts-ignore
+         const { Map } = await google.maps.importLibrary("maps");
+         const { AdvancedMarkerElement } = await google.maps.importLibrary("marker");
+
+        // The map, centered at Uluru
+         map = new Map(document.getElementById("map"), {
+         zoom: 4,
+         center: position,
+         mapId: "DEMO_MAP_ID",
+        });
+
+         // The marker, positioned at Uluru
+         const marker = new AdvancedMarkerElement({
+        map: map,
+            position: position,
+            title: "Uluru",
+        });
+        }
+
+initMap();
+    </script>
+
+    <script async defer src="https://maps.googleapis.com/maps/api/js?key={{ google_maps_api_key }}&callback=initMap"></script>
+</body> -->
+
+{% endblock %}
+</html>

@@ -40,6 +40,8 @@ urlpatterns = [
     #path('publicevents/', views.ListScavengerHunt.as_view(), name='public_events'),
     path('join_event/<int:event_id>', views.join_event, name='join_event'),
     path('create-theme/', views.create_theme, name='create_theme'),
+    path('create_task/', views.create_task, name='create_task'), 
+    path('map/', views.map_view, name = "map")
 
 ]
 

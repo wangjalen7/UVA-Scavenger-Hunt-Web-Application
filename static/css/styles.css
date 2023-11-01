@@ -33,3 +33,12 @@ nav a:hover {
 body {
     font-family: Arial, sans-serif;
 }
+
+.mapholder{
+    height: 500px;
+    width: 100%;
+}
+
+#map{
+    height: 100%;
+}
