@@ -3,22 +3,42 @@
 {% block content %}
 
 <!DOCTYPE html>
+<style>
+.mapholder{
+    height: 500px;
+    width: 100%;
+}
+
+#map{
+    height: 100%;
+}
+</style>
+
+    <script>
+        let map;
+        async function initMap(){
+            
+            map = new google.maps.Map(document.getElementById("map"), 
+                {center:{lat: 38.0336, lng: -78.5080}, 
+                zoom: 14,
+            });
+
+            // when the time comes to loop over the coordinates of the tasks we can do
+            // locations.forEach(function (location)){, etc.
+            var marker = new google.maps.Marker({
+                position: {lat: 38.032009, lng: -78.51080}, 
+                map: map, 
+                title: "hint: search for xyz in this building to complete this task!", 
+            });
+        }
+    
+        window.initMap = initMap
+    </script>
 <html>
 <div class = "pageholder">
 <h1>Google Maps</h1>
 <script src="https://polyfill.io/v3/polyfill.min.js?features=default"></script>
 
-<script>
-    let map;
-    async function initMap(){
-        map = new google.maps.Map(document.getElementById("map"), 
-            {center:{lat: -34.397, lng: 150.644}, 
-            zoom: 8,
-        });
-    }
-
-    window.initMap = initMap
-</script>
 <div class = "linkholder">
     <div class="mapholder">
         <div id="map"> </div>

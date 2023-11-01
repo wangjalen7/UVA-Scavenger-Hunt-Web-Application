@@ -33,6 +33,7 @@ def index(request):
 
 def map_view(request):
     key = settings.GOOGLE_API_KEY
+
     return render(request, 'map.html', {'key': key})
 
 # leave for now
