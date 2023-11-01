@@ -31,6 +31,8 @@ def staff_only(function):
 def index(request):
     return render(request, 'index.html', {'user': request.user})
 
+# Title: Django Google Maps Tutorial #4: Placing Markers on a Map
+# URL: https://www.youtube.com/watch?v=sasx2ppol5c&t=685s 
 def map_view(request):
     key = settings.GOOGLE_API_KEY
 
