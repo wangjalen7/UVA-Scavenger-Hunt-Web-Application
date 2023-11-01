@@ -6,6 +6,7 @@ from allauth.account.views import SignupView
 from .forms import AllauthCustomSignupForm
 from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth.models import User
+from django.db.models import Sum
 from django.core.exceptions import PermissionDenied
 import logging
 from django.contrib import messages
@@ -27,7 +28,6 @@ def staff_only(function):
         return function(request, *args, **kwargs)
 
     return _inner
-
 
 @login_required
 def index(request):
@@ -175,6 +175,12 @@ def deny_event(request, event_id):
     event.save()
     return redirect('manage_events')
 
+@login_required
+def leaderboard(request,):
+    leaders = User.objects.alias(
+        total_points=Sum('player__points')
+    ).order_by('-total_points')[:10]
+    return render(request, 'leaderboard.html', {'leaders': leaders})
 
 @staff_only
 @login_required
