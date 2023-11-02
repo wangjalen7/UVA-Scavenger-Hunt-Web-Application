@@ -307,12 +307,3 @@ def join_private_event(request):
         form = JoinPrivateEventForm(request.POST)
         if form.is_valid():
             password_entered = form.cleaned_data['password']
-            try:
-                event = Event.objects.get(password=password_entered, privacy='P')
-                event.participants.add(request.user)
-                return redirect('view_my_events')
-            except Event.DoesNotExist:
-                messages.error(request, 'Invalid password or no such private event exists.')
-    else:
-        form = JoinPrivateEventForm()
-    return render(request, 'join_private_event.html', {'form': form})
