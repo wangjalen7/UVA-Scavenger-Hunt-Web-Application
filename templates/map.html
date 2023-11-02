@@ -27,10 +27,12 @@ URL: https://www.youtube.com/watch?v=sasx2ppol5c&t=685s -->
 
             // when the time comes to loop over the coordinates of the tasks we can do
             // locations.forEach(function (location)){, etc.
+            var latitude = {{ latitude }}; // showing as an error, but it ran the code?
+            var longitude = {{ longitude }};
             var marker = new google.maps.Marker({
-                position: {lat: 38.032009, lng: -78.51080}, 
+                position: {lat: latitude, lng: longitude}, 
                 map: map, 
-                title: "hint: search for xyz in this building to complete this task!", 
+                title: "{{hint}}", 
             });
         }
     
@@ -38,7 +40,8 @@ URL: https://www.youtube.com/watch?v=sasx2ppol5c&t=685s -->
     </script>
 <html>
 <div class = "pageholder">
-<h1>Google Maps</h1>
+<h1>Here's Your Hint For "{{name}}"</h1> <br>
+<!-- <p>Hover over the pin to see the hint!<p> -->
 <script src="https://polyfill.io/v3/polyfill.min.js?features=default"></script>
 
 <div class = "linkholder">

@@ -61,8 +61,8 @@
             const defaultPosition = { lat: -34.397, lng: 150.644 };
             const mapDiv = document.getElementById(`map${taskIndex}`);
             const map = new google.maps.Map(mapDiv, {
-                center: defaultPosition,
-                zoom: 8
+                center:{lat: 38.0336, lng: -78.5080},
+                zoom: 14
             });
     
             maps[taskIndex] = map;
