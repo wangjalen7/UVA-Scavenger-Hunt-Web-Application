@@ -8,8 +8,15 @@
 
     <form method="post">
         {% csrf_token %}
-        {{ form.as_p }}
-        <button type="submit">Save</button>
+            <label for="bio">Bio:</label>
+            <textarea id="bio" name="bio" rows="3" cols="40">
+                {% if bio %}
+                    {{ bio }}
+                {% else %}
+                    Nothing here yet
+                {% endif %}
+            </textarea>
+            <button type="submit">Save</button>
     </form>
 
     {% if bio_error %}

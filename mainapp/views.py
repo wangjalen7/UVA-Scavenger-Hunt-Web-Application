@@ -83,7 +83,7 @@ def change_bio(request):
                 user_profile.save()
                 return redirect('profile')
         else:
-            new_bio = user_profile.bio  # Use the 'user_profile' variable
+            new_bio = user_profile.bio
         return render(request, 'profile/change_bio.html', {'user': request.user, 'bio_error': bio_error, 'bio': new_bio})
 @login_required
 def create_event(request):
