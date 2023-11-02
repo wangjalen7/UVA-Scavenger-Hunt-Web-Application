@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html>
+{% extends "base.html" %}
+{% load static %}
+{% block content %}
+<body>
+    <h1>Change Username</h1>
+
+    <form method="post">
+        {% csrf_token %}
+        <label for="new_username">New Username:</label>
+        <input type="text" id="new_username" name="new_username" value="{{ user.username }}">
+        <button type="submit">Save</button>
+    </form>
+
+    {% if username_error %}
+    <p class="error-message">{{ username_error }}</p>
+    {% endif %}
+
+    <a href="{% url 'profile' %}">Back to Profile</a>
+</body>
+{% endblock %}
+</html>

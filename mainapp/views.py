@@ -1,7 +1,7 @@
 from django.shortcuts import render, redirect
 from django.contrib.auth.decorators import login_required
 from .forms import EventForm, TaskForm, ThemeForm, JoinTeamForm, CreateTeamForm, TaskFormSet
-from .models import Event, Theme, Task, Team
+from .models import Event, Theme, Task, Team, UserProfile, Achievements
 from allauth.account.views import SignupView
 from .forms import AllauthCustomSignupForm
 from django.shortcuts import render, redirect, get_object_or_404
@@ -42,6 +42,42 @@ class CustomSignupView(SignupView):
     template_name = 'account/signup.html'
 
 
+@login_required
+def profile(request):
+    user = request.user
+    achievements = Achievements.objects.filter(user=user)
+    return render(request, 'profile/profile.html', {'user': user, 'achievements': achievements})
+@login_required
+def change_username(request):
+    username_error = ""
+    if request.method == 'POST':
+        new_username = request.POST.get('new_username')
+        user = request.user
+        if User.objects.filter(username=new_username).exclude(pk=user.pk).exists():
+            username_error = 'This username is already in use. Please choose a different one.'
+        else:
+            user.username = new_username
+            user.save()
+            return redirect('profile')
+    return render(request, 'profile/change_username.html', {'user': request.user, 'username_error': username_error})
+@login_required
+def change_bio(request):
+        bio_error = ""
+        try:
+            user_profile = request.user.userprofile
+        except UserProfile.DoesNotExist:
+            user_profile = UserProfile.objects.create(user=request.user)
+        if request.method == 'POST':
+            new_bio = request.POST.get('bio')
+            if len(new_bio) > 250:
+                bio_error = 'Bio must be 250 characters or less.'
+            else:
+                user_profile.bio = new_bio
+                user_profile.save()
+                return redirect('profile')
+        else:
+            new_bio = user_profile.bio
+        return render(request, 'profile/change_bio.html', {'user': request.user, 'bio_error': bio_error, 'bio': new_bio})
 @login_required
 def create_event(request):
     if request.method == "POST":

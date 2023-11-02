@@ -29,6 +29,10 @@ urlpatterns = [
     path('logout/', auth_views.LogoutView.as_view(), name='logout'),
 
     path('register/', TemplateView.as_view(template_name="register.html"), name='register'),
+
+    path('profile/', views.profile, name='profile'),
+    path('profile/change_username/', views.change_username, name='change_username'),
+    path('profile/change_bio/', views.change_bio, name='change_bio'),
     path('create_event/', views.create_event, name='create_event'),
     path('view_public_events/', views.view_public_events, name='view_public_events'),
     path('view_my_events/', views.view_my_events, name='view_my_events'),

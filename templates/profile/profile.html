@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html>
+{% extends "base.html" %}
+{% load static %}
+{% block content %}
+<body>
+    <h1>User Profile</h1>
+
+    <p>Username: {{ user.username }}</p>
+    <a href="{% url 'change_username' %}">Change Username</a>
+
+    <p>Bio: {{ user.userprofile.bio }}</p>
+    <a href="{% url 'change_bio' %}">Change Bio</a>
+
+    <p>Achievements</p>
+    <ul>
+        {% for achievement in achievements %}
+            <li>{{ achievement.name }}: {{ achievement.description }}</li>
+        {% empty %}
+            <li>No achievements yet.</li>
+        {% endfor %}
+    </ul>
+</body>
+{% endblock %}
+</html>

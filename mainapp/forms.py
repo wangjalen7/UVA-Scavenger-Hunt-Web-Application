@@ -1,6 +1,6 @@
 from allauth.account.forms import SignupForm
 from django import forms
-from .models import Task, Theme, Team, Event
+from .models import Task, Theme, Team, Event, Player
 from django.forms.widgets import DateInput
 from django.forms import inlineformset_factory
 
@@ -41,6 +41,9 @@ TaskFormSet = inlineformset_factory(
 
 class ThemeForm(forms.ModelForm):
     class Meta:
+        model = Player
+        fields = ['team']
+
         model = Theme
         fields = ['title', 'description']
 
