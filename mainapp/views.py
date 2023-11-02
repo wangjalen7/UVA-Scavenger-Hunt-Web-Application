@@ -31,7 +31,7 @@ def staff_only(function):
 # Title: Django Google Maps Tutorial #4: Placing Markers on a Map
 # URL: https://www.youtube.com/watch?v=sasx2ppol5c&t=685s 
 def map_view(request, task_id):
-    key = settings.GOOGLE_API_KEY
+    key = settings.GOOGLE_MAPS_API_KEY
     task = Task.objects.get(pk=task_id)
 
     return render(request, 'map.html', {'key': key, 'latitude': task.latitude, 'longitude': task.longitude, 'hint': task.hint, 'name': task.name, })
@@ -217,7 +217,7 @@ def create_theme(request):
     else:
         theme_form = ThemeForm()
 
-    return render(request, 'create_theme.html', {'theme_form': theme_form, 'GOOGLE_MAPS_API_KEY': settings.GOOGLE_API_KEY,}) # remember change here for key
+    return render(request, 'create_theme.html', {'theme_form': theme_form, 'GOOGLE_MAPS_API_KEY': settings.GOOGLE_MAPS_API_KEY,}) # remember change here for key
 
 
 
