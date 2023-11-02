@@ -1,7 +1,7 @@
 from django.shortcuts import render, redirect
 from django.contrib.auth.decorators import login_required
 from .forms import EventForm, TaskForm, ThemeForm, JoinTeamForm, CreateTeamForm, TaskFormSet
-from .models import Event, Theme, Task, Team, Player, UserProfile, Achievements
+from .models import Event, Theme, Task, Team, UserProfile, Achievements
 from allauth.account.views import SignupView
 from .forms import AllauthCustomSignupForm
 from django.shortcuts import render, redirect, get_object_or_404
