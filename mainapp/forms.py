@@ -1,6 +1,6 @@
 from allauth.account.forms import SignupForm
 from django import forms
-from .models import Task, Theme, Team, Event
+from .models import Task, Theme, Team, Event, Player
 from django.forms.widgets import DateInput
 from django.forms import inlineformset_factory
 
