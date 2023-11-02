@@ -10,6 +10,9 @@ from django.db.models import Sum
 from django.core.exceptions import PermissionDenied
 import logging
 from django.contrib import messages
+import requests
+import googlemaps
+from django.conf import settings # need api key from google to make the request
 
 
 logging.basicConfig(level=logging.INFO)
@@ -23,6 +26,14 @@ def staff_only(function):
         return function(request, *args, **kwargs)
 
     return _inner
+
+
+# Title: Django Google Maps Tutorial #4: Placing Markers on a Map
+# URL: https://www.youtube.com/watch?v=sasx2ppol5c&t=685s 
+def map_view(request):
+    key = settings.GOOGLE_API_KEY
+
+    return render(request, 'map.html', {'key': key})
 
 
 
@@ -187,8 +198,9 @@ def create_theme(request):
             theme = form.save(commit=False)
             theme.creator = request.user
             theme.save()
-
+            
             task_data = json.loads(request.POST.get('tasks_json', '[]'))
+
             for task_info in task_data:
                 Task.objects.create(
                     name=task_info.get('name', ''),
@@ -204,7 +216,7 @@ def create_theme(request):
     else:
         theme_form = ThemeForm()
 
-    return render(request, 'create_theme.html', {'theme_form': theme_form})
+    return render(request, 'create_theme.html', {'theme_form': theme_form, 'GOOGLE_MAPS_API_KEY': settings.GOOGLE_MAPS_API_KEY,})
 
 
 
@@ -229,4 +241,4 @@ def create_task(request, theme_id):
         'theme': theme.id,
     }
 
-    return render(request, 'create_theme.html', context) 
+    return render(request, 'create_theme.html', context)

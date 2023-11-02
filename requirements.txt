@@ -20,3 +20,5 @@ dj-database-url
 psycopg2
 
 django-bootstrap-v5
+
+googlemaps

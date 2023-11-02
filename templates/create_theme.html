@@ -4,6 +4,17 @@
 {% load static %}
 {% block content %}
 
+<head>
+    
+    <script src="https://maps.googleapis.com/maps/api/js?key={{ GOOGLE_MAPS_API_KEY }}&callback=initMaps" async defer></script>
+    <style>
+        .map {
+            height: 200px;
+            width: 100%;
+        }
+    </style>
+</head>
+
 <body>
     <div class="container text-center">
         <h1 style="font-size: 70px;">Create Theme</h1>
@@ -14,7 +25,6 @@
             <div class="card-body">
                 {{ form.non_form_errors }}
 
-
                 <input type="text" name="title" placeholder="Theme Title" required>
                 <textarea name="description" placeholder="Theme Description" required></textarea>
 
@@ -24,22 +34,68 @@
                         <input type="text" class="task-name" placeholder="Task Name" required>
                         <textarea class="task-task" placeholder="Task" required></textarea>
                         <textarea class="task-hint" placeholder="Task Hint" required></textarea>
-                        <input type="number" class="task-latitude" placeholder="Latitude" required>
-                        <input type="number" class="task-longitude" placeholder="Longitude" required>
+                        <div id="map0" class="map"></div>
+                        <input type="hidden" class="task-latitude" required>
+                        <input type="hidden" class="task-longitude" required>
                     </div>
                 </div>
                 <button type="button" id="add-task" class="btn btn-info">Add Task</button>
                 <button type="button" id="delete-task" class="btn btn-warning">Delete Last Task</button>
 
                 <input type="hidden" name="tasks_json" id="tasks-json">
-
                 <button type="submit" class="btn btn-primary">Create Theme</button>
             </div>
         </form>
     </div>
 
     <script>
+        let maps = [];
+        let markers = [];
+        let mapCount = 0;
+    
+        function initMaps() {
+            addMapToTask(0);
+        }
+    
+        function addMapToTask(taskIndex) {
+            const defaultPosition = { lat: -34.397, lng: 150.644 };
+            const mapDiv = document.getElementById(`map${taskIndex}`);
+            const map = new google.maps.Map(mapDiv, {
+                center: defaultPosition,
+                zoom: 8
+            });
+    
+            maps[taskIndex] = map;
+            markers[taskIndex] = null; // Initialize marker
+    
+            map.addListener('click', function(mapsMouseEvent) {
+                const latLng = mapsMouseEvent.latLng.toJSON();
+                updateTaskCoordinates(taskIndex, latLng.lat, latLng.lng);
+                placeMarker(taskIndex, latLng);
+            });
+        }
+    
+        function placeMarker(taskIndex, latLng) {
+            if (markers[taskIndex]) {
+                // Move existing marker
+                markers[taskIndex].setPosition(latLng);
+            } else {
+                // Create new marker
+                markers[taskIndex] = new google.maps.Marker({
+                    position: latLng,
+                    map: maps[taskIndex]
+                });
+            }
+        }
+    
+        function updateTaskCoordinates(taskIndex, lat, lng) {
+            const taskContainer = document.getElementById(`task-container`).children[taskIndex];
+            taskContainer.querySelector('.task-latitude').value = lat;
+            taskContainer.querySelector('.task-longitude').value = lng;
+        }
+    
         document.getElementById('add-task').addEventListener('click', function() {
+            mapCount++;
             let taskContainer = document.getElementById('task-container');
             let newTaskDiv = document.createElement('div');
             newTaskDiv.className = 'task-inputs';
@@ -47,36 +103,46 @@
                 <input type="text" class="task-name" placeholder="Task Name" required>
                 <textarea class="task-task" placeholder="Task" required></textarea>
                 <textarea class="task-hint" placeholder="Task Hint" required></textarea>
-                <input type="number" class="task-latitude" placeholder="Latitude" required>
-                <input type="number" class="task-longitude" placeholder="Longitude" required>
+                <div id="map${mapCount}" class="map"></div>
+                <input type="hidden" class="task-latitude" required>
+                <input type="hidden" class="task-longitude" required>
             `;
             taskContainer.appendChild(newTaskDiv);
+            addMapToTask(mapCount);
         });
-
+    
         document.getElementById('delete-task').addEventListener('click', function() {
             let taskContainer = document.getElementById('task-container');
             if (taskContainer.children.length > 1) {
                 taskContainer.removeChild(taskContainer.lastChild);
+                markers.pop(); // Remove the marker for the deleted task
+                maps.pop(); // Remove the map for the deleted task
+                mapCount--;
             } else {
                 alert('At least one task must remain.');
             }
         });
-
-        document.getElementById('theme-form').addEventListener('submit', function(event) {
-            let tasks = [];
-            document.querySelectorAll('.task-inputs').forEach(taskDiv => {
-                let task = {
-                    name: taskDiv.querySelector('.task-name').value,
-                    task: taskDiv.querySelector('.task-task').value,
-                    hint: taskDiv.querySelector('.task-hint').value,
-                    latitude: parseFloat(taskDiv.querySelector('.task-latitude').value),
-                    longitude: parseFloat(taskDiv.querySelector('.task-longitude').value)
-                };
-                tasks.push(task);
-            });
-            document.getElementById('tasks-json').value = JSON.stringify(tasks);
+        
+        function gatherTasksData() {
+        let tasks = [];
+        document.querySelectorAll('.task-inputs').forEach((taskDiv, index) => {
+            let task = {
+                name: taskDiv.querySelector('.task-name').value,
+                task: taskDiv.querySelector('.task-task').value,
+                hint: taskDiv.querySelector('.task-hint').value,
+                latitude: markers[index] ? markers[index].getPosition().lat() : '',
+                longitude: markers[index] ? markers[index].getPosition().lng() : ''
+            };
+            tasks.push(task);
         });
-    </script>
+        return tasks;
+    }
+
+    document.getElementById('theme-form').addEventListener('submit', function(event) {
+        const tasksData = gatherTasksData();
+        document.getElementById('tasks-json').value = JSON.stringify(tasksData);
+    });
+</script>
 </body>
 {% endblock %}
 </html>
