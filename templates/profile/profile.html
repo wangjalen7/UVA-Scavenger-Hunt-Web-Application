@@ -12,6 +12,9 @@
     <p>Bio: {{ user.bio }}</p>
     <a href="{% url 'change_bio' %}">Change Bio</a>
 
+    <!-- <p>Leaderboard Position: {{ user_leaderboard_position }}</p> -->
+    <p>Points: {{ user_points }}</p>
+
     <p>Achievements</p>
     <ul>
         {% for achievement in achievements %}
