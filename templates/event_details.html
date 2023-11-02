@@ -24,9 +24,9 @@
     {% elif tab == 'tasks_todo' and is_member %}
         {% include 'event_tabs/tasks_todo.html' with event=event %}
     {% elif tab == 'completed_tasks' and is_member %}
-        {% include 'event_tabs/completed_tasks.html' with event=event %}
+        {% include 'event_tabs/completed_tasks.html' with event=event%}
     {% elif tab == 'all_tasks' %}
-        {% include 'event_tabs/all_tasks.html' with event=event %}
+        {% include 'event_tabs/all_tasks.html' with event=event tasks=tasks%}
     {% elif tab == 'about' %}
         {% include 'event_tabs/about.html' with event=event %}
     {% elif tab == 'teams' %}

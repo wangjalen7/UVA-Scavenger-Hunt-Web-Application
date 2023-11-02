@@ -1,7 +1,11 @@
 <div class="container">
     <h2>All Tasks</h2>
     {% for task in tasks %}
-        <div>{{ task.name }}: {{ task.task }}</div>
+        <div>Name: {{ task.name }} <br> 
+            Task: {{ task.task }} <br> 
+            <a href="{% url 'map' task.id %}" class="btn btn-primary">Hint</a>
+        </div>
+        <br>
     {% empty %}
         <div>No tasks available</div>
     {% endfor %}
