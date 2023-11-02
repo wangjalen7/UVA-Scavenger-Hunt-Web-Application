@@ -59,6 +59,7 @@ class Event(models.Model):
     status = models.CharField(choices=STATUS_CHOICES, default='pending', max_length=10)
     privacy = models.CharField(max_length=1, choices=PRIVACY_CHOICES, default='U')
     theme = models.ForeignKey(Theme, on_delete=models.CASCADE, null=True)
+    password = models.CharField(max_length=255, blank=True, null=True)
 
     def __str__(self):
         return self.name

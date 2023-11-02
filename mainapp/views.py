@@ -1,6 +1,6 @@
 from django.shortcuts import render, redirect
 from django.contrib.auth.decorators import login_required
-from .forms import EventForm, TaskForm, ThemeForm, JoinTeamForm, CreateTeamForm, TaskFormSet
+from .forms import EventForm, TaskForm, ThemeForm, JoinTeamForm, CreateTeamForm, TaskFormSet, JoinPrivateEventForm
 from .models import Event, Theme, Task, Team, UserProfile, Achievements
 from allauth.account.views import SignupView
 from .forms import AllauthCustomSignupForm
@@ -12,8 +12,7 @@ import logging
 from django.contrib import messages
 import requests
 import googlemaps
-from django.conf import settings # need api key from google to make the request
-
+from django.conf import settings  # need api key from google to make the request
 
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger('ScavengerHuntApp')
@@ -36,7 +35,6 @@ def map_view(request):
     return render(request, 'map.html', {'key': key})
 
 
-
 class CustomSignupView(SignupView):
     form_class = AllauthCustomSignupForm
     template_name = 'account/signup.html'
@@ -47,6 +45,8 @@ def profile(request):
     user = request.user
     achievements = Achievements.objects.filter(user=user)
     return render(request, 'profile/profile.html', {'user': user, 'achievements': achievements})
+
+
 @login_required
 def change_username(request):
     username_error = ""
@@ -60,37 +60,59 @@ def change_username(request):
             user.save()
             return redirect('profile')
     return render(request, 'profile/change_username.html', {'user': request.user, 'username_error': username_error})
+
+
 @login_required
 def change_bio(request):
-        bio_error = ""
-        try:
-            user_profile = request.user.userprofile
-        except UserProfile.DoesNotExist:
-            user_profile = UserProfile.objects.create(user=request.user)
-        if request.method == 'POST':
-            new_bio = request.POST.get('bio')
-            if len(new_bio) > 250:
-                bio_error = 'Bio must be 250 characters or less.'
-            else:
-                user_profile.bio = new_bio
-                user_profile.save()
-                return redirect('profile')
+    bio_error = ""
+    try:
+        user_profile = request.user.userprofile
+    except UserProfile.DoesNotExist:
+        user_profile = UserProfile.objects.create(user=request.user)
+    if request.method == 'POST':
+        new_bio = request.POST.get('bio')
+        if len(new_bio) > 250:
+            bio_error = 'Bio must be 250 characters or less.'
         else:
-            new_bio = user_profile.bio
-        return render(request, 'profile/change_bio.html', {'user': request.user, 'bio_error': bio_error, 'bio': new_bio})
+            user_profile.bio = new_bio
+            user_profile.save()
+            return redirect('profile')
+    else:
+        new_bio = user_profile.bio
+    return render(request, 'profile/change_bio.html', {'user': request.user, 'bio_error': bio_error, 'bio': new_bio})
+
+
 @login_required
 def create_event(request):
     if request.method == "POST":
         form = EventForm(request.POST)
         if form.is_valid():
             event = form.save(commit=False)
+
+            # Check if event is private and password is not provided
+            if event.privacy == 'P' and not event.password:
+                form.add_error('password', 'Password is required for private events.')
+                return render(request, 'create_event.html', {'form': form})
+
+            # Check if event is public and password is provided
+            if event.privacy == 'U' and event.password:
+                form.add_error('password', 'Public events cannot have a password.')
+                return render(request, 'create_event.html', {'form': form})
+
             event.creator = request.user
-            event.status = "pending"
+
+            if event.privacy == 'P':
+                event.status = "approved"
+            else:
+                event.status = "pending"
+
             event.save()
             return redirect('/')
     else:
         form = EventForm()
+
     return render(request, 'create_event.html', {'form': form})
+
 
 
 @login_required
@@ -134,14 +156,13 @@ def team_details(request, event_id, team_id):
     return render(request, 'event_details.html', {'event': event, 'team': team, 'members': members, 'tab': 'team'})
 
 
-
 @login_required
 def join_team(request, event_id, team_id):
     event = get_object_or_404(Event, pk=event_id)
     team_to_join = get_object_or_404(Team, pk=team_id, event=event)
 
     if team_to_join.members.filter(id=request.user.id).exists():
-        return render(request, 'error.html', context = {'message': 'You have already joined this team'})
+        return render(request, 'error.html', context={'message': 'You have already joined this team'})
 
     current_team = Team.objects.filter(event=event, members=request.user).first()
     if current_team:
@@ -154,10 +175,11 @@ def join_team(request, event_id, team_id):
 
     return redirect('event_details', event_id=event_id, tab='about')
 
+
 @login_required
 def create_team(request, event_id):
     event = get_object_or_404(Event, pk=event_id)
-    
+
     if request.method == 'POST':
         form = CreateTeamForm(request.POST)
         if form.is_valid():
@@ -166,10 +188,9 @@ def create_team(request, event_id):
             new_team.members.add(request.user)
             messages.success(request, "Team created successfully.")
             return redirect('event_details', event_id=event_id, tab='about')
-    
 
     if Team.objects.filter(members=request.user, event=event).exists():
-        return render(request, 'error.html', context = {'message': 'You have already joined a team'})
+        return render(request, 'error.html', context={'message': 'You have already joined a team'})
 
     create_team_form = CreateTeamForm()
     context = {
@@ -181,7 +202,8 @@ def create_team(request, event_id):
 
 @login_required
 def error(request):
-     return render(request, 'error.html', context = {'message': 'You have already joined this team'})
+    return render(request, 'error.html', context={'message': 'You have already joined this team'})
+
 
 @staff_only
 @login_required
@@ -216,14 +238,17 @@ def deny_event(request, event_id):
     event.save()
     return redirect('manage_events')
 
+
 @login_required
-def leaderboard(request,):
+def leaderboard(request, ):
     leaders = User.objects.alias(
         total_points=Sum('player__points')
     ).order_by('-total_points')[:10]
     return render(request, 'leaderboard.html', {'leaders': leaders})
 
+
 import json
+
 
 @staff_only
 @login_required
@@ -234,7 +259,7 @@ def create_theme(request):
             theme = form.save(commit=False)
             theme.creator = request.user
             theme.save()
-            
+
             task_data = json.loads(request.POST.get('tasks_json', '[]'))
 
             for task_info in task_data:
@@ -246,17 +271,14 @@ def create_theme(request):
                     longitude=task_info.get('longitude', ''),
                     theme=theme
                 )
-            
+
             return redirect('home')
 
     else:
         theme_form = ThemeForm()
 
-    return render(request, 'create_theme.html', {'theme_form': theme_form, 'GOOGLE_MAPS_API_KEY': settings.GOOGLE_MAPS_API_KEY,})
-
-
-
-
+    return render(request, 'create_theme.html',
+                  {'theme_form': theme_form, 'GOOGLE_MAPS_API_KEY': settings.GOOGLE_MAPS_API_KEY, })
 
 
 def create_task(request, theme_id):
@@ -278,3 +300,19 @@ def create_task(request, theme_id):
     }
 
     return render(request, 'create_theme.html', context)
+
+
+def join_private_event(request):
+    if request.method == "POST":
+        form = JoinPrivateEventForm(request.POST)
+        if form.is_valid():
+            password_entered = form.cleaned_data['password']
+            try:
+                event = Event.objects.get(password=password_entered, privacy='P')
+                event.participants.add(request.user)
+                return redirect('view_my_events')
+            except Event.DoesNotExist:
+                messages.error(request, 'Invalid password or no such private event exists.')
+    else:
+        form = JoinPrivateEventForm()
+    return render(request, 'join_private_event.html', {'form': form})

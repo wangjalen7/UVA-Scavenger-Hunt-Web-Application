@@ -36,7 +36,11 @@
                 </tr>
                 <tr>
                     <td>Theme:</td>
-                    <td>{{ event.theme}}</td>
+                    <td>{{ event.theme.title }}</td>
+                </tr>
+                <tr>
+                    <td>Password:</td>
+                    <td>{{ event.password }}</td>
                 </tr>
                 {% empty %}
                 <tr>
