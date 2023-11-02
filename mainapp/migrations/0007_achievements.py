@@ -9,7 +9,7 @@ class Migration(migrations.Migration):
 
     dependencies = [
         migrations.swappable_dependency(settings.AUTH_USER_MODEL),
-        ('mainapp', '0006_rename_hunt_player_event_alter_event_privacy'),
+        ('mainapp', '0003_remove_theme_test'),
     ]
 
     operations = [
