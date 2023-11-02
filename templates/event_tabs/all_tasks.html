@@ -1,0 +1,8 @@
+<div class="container">
+    <h2>All Tasks</h2>
+    {% for task in tasks %}
+        <div>{{ task.name }}: {{ task.task }}</div>
+    {% empty %}
+        <div>No tasks available</div>
+    {% endfor %}
+</div>

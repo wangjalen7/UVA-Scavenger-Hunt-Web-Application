@@ -1,0 +1,8 @@
+<!-- event_teams.html -->
+<h2>Team Members</h2>
+<a href="{% url 'join_team' event.id team.id %}" class="btn btn-secondary">Join Team</a>
+<ul>
+    {% for user in members %}
+    <li><h3>{{ user }}</h3></li>
+    {% endfor %}
+</ul>

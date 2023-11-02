@@ -1,22 +1,22 @@
 from django.shortcuts import render, redirect
 from django.contrib.auth.decorators import login_required
-from .forms import EventForm, JoinEventForm, ThemeForm, TaskForm
-from .models import Event, Player
+from .forms import EventForm, TaskForm, ThemeForm, JoinTeamForm, CreateTeamForm, TaskFormSet
+from .models import Event, Theme, Task, Team
 from allauth.account.views import SignupView
 from .forms import AllauthCustomSignupForm
-from django.shortcuts import render
-from django.shortcuts import redirect
-# from django.views.generic import ListView
+from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth.models import User
 from django.db.models import Sum
 from django.core.exceptions import PermissionDenied
+import logging
+from django.contrib import messages
 import requests
 import googlemaps
 from django.conf import settings # need api key from google to make the request
 
 
-# from .models import HuntTemplate
-# from .forms import HuntTemplateForm
+logging.basicConfig(level=logging.INFO)
+logger = logging.getLogger('ScavengerHuntApp')
 
 
 def staff_only(function):
@@ -27,9 +27,6 @@ def staff_only(function):
 
     return _inner
 
-@login_required
-def index(request):
-    return render(request, 'index.html', {'user': request.user})
 
 # Title: Django Google Maps Tutorial #4: Placing Markers on a Map
 # URL: https://www.youtube.com/watch?v=sasx2ppol5c&t=685s 
@@ -38,70 +35,11 @@ def map_view(request):
 
     return render(request, 'map.html', {'key': key})
 
-# leave for now
-def create_task(request):
-    
-    if request.method == "POST":
-        form = TaskForm(request.POST)
-        if form.is_valid():
-            task = form.save(commit=False)
-            task.save()
-            return redirect('/')
 
-            # address = form.cleaned_data['location']
-            # api_key = 'AIzaSyCamLJi3Ws33i65zxvez9nO9c1AqiFlElk'  # Replace with your actual API key
-
-            # # Make a request to the Google Geocoding API
-            # url = f'https://maps.googleapis.com/maps/api/geocode/json?address={address}&key={api_key}'
-            # response = requests.get(url)
-            # data = response.json()
-
-            # if data['status'] == 'OK':
-            #     # Get the latitude and longitude from the API response
-            #     location = data['results'][0]['geometry']['location']
-            #     latitude = location['lat']
-            #     longitude = location['lng']
-            #     task = form.save(commit=False)
-            #     task.save()
-            #     return render(request, 'create_task.html', {
-            #         'address': address,
-            #         'latitude': latitude,
-            #         'longitude': longitude,
-            #         'google_maps_api_key': api_key,
-            #     })
-            # else:
-            #     pass
-    else:
-        form = TaskForm()
-    return render(request, 'create_task.html', {'form': form})
 
 class CustomSignupView(SignupView):
     form_class = AllauthCustomSignupForm
     template_name = 'account/signup.html'
-
-
-def join_event(request, event_id):
-    event = Event.objects.get(id=event_id)
-    player_user = User.objects.get(username=request.user.username)
-    if request.method == "POST":
-        form = JoinEventForm(request.POST)
-        if form.is_valid():
-            try:
-                queryset = Player.objects.get(event=event, user=player_user)
-            except Player.DoesNotExist:
-                queryset = None
-            if queryset == None:
-                player = form.save(commit=False)
-                player.event = event
-                player.user = player_user
-                player.points = 0
-                player.save()
-                return redirect('/')
-            else:
-                return render(request, 'already_joined.html', context={'message': 'Already Joined'})
-    else:
-        form = JoinEventForm()
-    return render(request, 'join_event.html', {'form': form, 'event': event.name, 'user': player_user.username})
 
 
 @login_required
@@ -110,7 +48,7 @@ def create_event(request):
         form = EventForm(request.POST)
         if form.is_valid():
             event = form.save(commit=False)
-            event.creator = request.user  # Set the creator as the current user
+            event.creator = request.user
             event.status = "pending"
             event.save()
             return redirect('/')
@@ -130,6 +68,84 @@ def view_my_events(request):
     events = Event.objects.filter(creator=request.user)
     return render(request, 'view_events.html', {'events': events, 'title': "My Events"})
 
+
+@login_required
+def event_details(request, event_id, tab='about'):
+    event = Event.objects.get(pk=event_id)
+    is_member = Team.objects.filter(event=event, members=request.user).exists()
+    teams = Team.objects.filter(event=event)
+
+    theme = event.theme
+
+    tasks = Task.objects.filter(theme=theme)
+
+    context = {
+        'event': event,
+        'is_member': is_member,
+        'tab': tab,
+        'teams': teams,
+        'tasks': tasks,
+        'theme': theme,
+    }
+    return render(request, 'event_details.html', context)
+
+
+@login_required
+def team_details(request, event_id, team_id):
+    event = get_object_or_404(Event, pk=event_id)
+    team = get_object_or_404(Team, pk=team_id, event=event)
+    members = team.members.all()
+    return render(request, 'event_details.html', {'event': event, 'team': team, 'members': members, 'tab': 'team'})
+
+
+
+@login_required
+def join_team(request, event_id, team_id):
+    event = get_object_or_404(Event, pk=event_id)
+    team_to_join = get_object_or_404(Team, pk=team_id, event=event)
+
+    if team_to_join.members.filter(id=request.user.id).exists():
+        return render(request, 'error.html', context = {'message': 'You have already joined this team'})
+
+    current_team = Team.objects.filter(event=event, members=request.user).first()
+    if current_team:
+        current_team.members.remove(request.user)
+        team_to_join.members.add(request.user)
+        messages.success(request, "You have switched to a new team.")
+    else:
+        team_to_join.members.add(request.user)
+        messages.success(request, "You have successfully joined the team.")
+
+    return redirect('event_details', event_id=event_id, tab='about')
+
+@login_required
+def create_team(request, event_id):
+    event = get_object_or_404(Event, pk=event_id)
+    
+    if request.method == 'POST':
+        form = CreateTeamForm(request.POST)
+        if form.is_valid():
+            new_team_name = form.cleaned_data['new_team_name']
+            new_team = Team.objects.create(name=new_team_name, event=event)
+            new_team.members.add(request.user)
+            messages.success(request, "Team created successfully.")
+            return redirect('event_details', event_id=event_id, tab='about')
+    
+
+    if Team.objects.filter(members=request.user, event=event).exists():
+        return render(request, 'error.html', context = {'message': 'You have already joined a team'})
+
+    create_team_form = CreateTeamForm()
+    context = {
+        'event': event,
+        'create_team_form': create_team_form,
+    }
+    return render(request, 'create_team.html', context)
+
+
+@login_required
+def error(request):
+     return render(request, 'error.html', context = {'message': 'You have already joined this team'})
 
 @staff_only
 @login_required
@@ -171,15 +187,58 @@ def leaderboard(request,):
     ).order_by('-total_points')[:10]
     return render(request, 'leaderboard.html', {'leaders': leaders})
 
+import json
+
 @staff_only
 @login_required
 def create_theme(request):
-    if request.method == "POST":
+    if request.method == 'POST':
         form = ThemeForm(request.POST)
         if form.is_valid():
-            form.save()
-            return redirect('/')
-    else:
-        form = ThemeForm()
-    return render(request, 'create_theme.html', {'form': form})
+            theme = form.save(commit=False)
+            theme.creator = request.user
+            theme.save()
+            
+            task_data = json.loads(request.POST.get('tasks_json', '[]'))
 
+            for task_info in task_data:
+                Task.objects.create(
+                    name=task_info.get('name', ''),
+                    task=task_info.get('task', ''),
+                    hint=task_info.get('hint', ''),
+                    latitude=task_info.get('latitude', ''),
+                    longitude=task_info.get('longitude', ''),
+                    theme=theme
+                )
+            
+            return redirect('home')
+
+    else:
+        theme_form = ThemeForm()
+
+    return render(request, 'create_theme.html', {'theme_form': theme_form, 'GOOGLE_MAPS_API_KEY': settings.GOOGLE_MAPS_API_KEY,})
+
+
+
+
+
+
+def create_task(request, theme_id):
+    theme = get_object_or_404(Theme, id=theme_id)
+
+    if request.method == 'POST':
+        form = TaskForm(request.POST)
+        if form.is_valid():
+            task = form.save(commit=False)
+            task.theme = theme
+            task.save()
+            return redirect('home')
+    else:
+        form = TaskForm()
+
+    context = {
+        'form': form,
+        'theme': theme.id,
+    }
+
+    return render(request, 'create_theme.html', context)
