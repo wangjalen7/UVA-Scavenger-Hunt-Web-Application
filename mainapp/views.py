@@ -1,7 +1,7 @@
 from django.shortcuts import render, redirect
 from django.contrib.auth.decorators import login_required
 from .forms import EventForm, TaskForm, ThemeForm, JoinTeamForm, CreateTeamForm, TaskFormSet
-from .models import Event, Theme, Task, Team, UserProfile, Achievements
+from .models import Event, Theme, Task, Team, UserProfile, Achievements, Player, UserProfile
 from allauth.account.views import SignupView
 from .forms import AllauthCustomSignupForm
 from django.shortcuts import render, redirect, get_object_or_404
@@ -46,7 +46,13 @@ class CustomSignupView(SignupView):
 def profile(request):
     user = request.user
     achievements = Achievements.objects.filter(user=user)
-    return render(request, 'profile/profile.html', {'user': user, 'achievements': achievements})
+    user_points = Player.objects.filter(user=user).aggregate(total_points=Sum('points'))['total_points'] or 0
+
+    return render(request, 'profile/profile.html', {
+        'user': user,
+        'achievements': achievements,
+        'user_points': user_points,
+    })
 @login_required
 def change_username(request):
     username_error = ""
@@ -221,7 +227,9 @@ def leaderboard(request,):
     leaders = User.objects.alias(
         total_points=Sum('player__points')
     ).order_by('-total_points')[:10]
+
     return render(request, 'leaderboard.html', {'leaders': leaders})
+
 
 import json
 
