@@ -26,10 +26,14 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # SECURITY WARNING: keep the secret key used in production secret!
 SECRET_KEY = 'django-insecure-*#e4@jz&u2%5l&h685pt2288!o8k!!s$xbt-aktnp(d#zijh0b'
 
+# Google Maps API Key (need to store this more securely)
+GOOGLE_MAPS_API_KEY = os.environ.get('GOOGLE_MAPS_API_KEY') or config(
+    'GOOGLE_MAPS_API_KEY', default='')
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['localhost','127.0.0.1','scavenger-hunt-app.herokuapp.com', 'scavenger-hunt-app-1c0405daa9d6.herokuapp.com']
+ALLOWED_HOSTS = ['localhost', '127.0.0.1', 'scavenger-hunt-app.herokuapp.com',
+                 'scavenger-hunt-app-1c0405daa9d6.herokuapp.com']
 
 
 # Application definition
@@ -51,7 +55,7 @@ INSTALLED_APPS = [
 ]
 
 
-SOCIALACCOUNT_LOGIN_ON_GET=True
+SOCIALACCOUNT_LOGIN_ON_GET = True
 
 ACCOUNT_FORMS = {'signup': 'mainapp.forms.AllauthCustomSignupForm'}
 
@@ -103,7 +107,8 @@ WSGI_APPLICATION = 'ScavengerHuntApp.wsgi.application'
 #     }
 # }
 
-DATABASE_URL = os.environ.get('DATABASE_URL') or config('DATABASE_URL', default='')
+DATABASE_URL = os.environ.get('DATABASE_URL') or config(
+    'DATABASE_URL', default='')
 DATABASES = {
     'default': dj_database_url.config(default=DATABASE_URL)
 }
@@ -114,8 +119,6 @@ if 'test' in sys.argv:
         'ENGINE': 'django.db.backends.sqlite3',
         'NAME': 'only4test.sqlite'
     }
-
-
 
 
 # Password validation
@@ -175,12 +178,35 @@ SOCIALACCOUNT_PROVIDERS = {
     }
 }
 
+LOGGING = {
+    'version': 1,
+    'disable_existing_loggers': False,
+    'handlers': {
+        'console': {
+            'class': 'logging.StreamHandler',
+        },
+    },
+    'loggers': {
+        'django': {
+            'handlers': ['console'],
+            'level': 'INFO',
+        },
+        'ScavengerHuntApp': {
+            'handlers': ['console'],
+            'level': 'INFO',
+            'propagate': True,
+        },
+
+    },
+}
+
+
 SITE_ID = 3
 
 LOGIN_URL = 'login'
 LOGIN_REDIRECT_URL = 'login'
-LOGIN_REDIRECT_URL='/'
-LOGOUT_REDIRECT_URL='/'
+LOGIN_REDIRECT_URL = '/'
+LOGOUT_REDIRECT_URL = '/'
 
 ACCOUNT_AUTHENTICATION_METHOD = 'email'
 ACCOUNT_EMAIL_REQUIRED = True
@@ -192,7 +218,7 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 # SHERRIFF
 # Activate Django-Heroku.
-# Use this code to avoid the psycopg2 / django-heroku error!  
+# Use this code to avoid the psycopg2 / django-heroku error!
 # Do NOT import django-heroku above!
 try:
     if 'HEROKU' in os.environ:

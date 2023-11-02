@@ -1,0 +1,9 @@
+<!-- Leaderboard Content -->
+<div class="container">
+    <h2>Leaderboard</h2>
+    <!-- Assume leaderboard_data is passed in context -->
+    {% for entry in leaderboard_data %}
+        <!-- Display each leaderboard entry -->
+        <div>{{ entry.name }}: {{ entry.points }}</div>
+    {% endfor %}
+</div>

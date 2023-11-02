@@ -5,14 +5,14 @@
 {% block content %}
 <body>
     <div class="container">
-        <h1 style="font-size: 70px;">My Created Events</h1>
+        <h1 style="font-size: 70px;">Events</h1>
     </div>
     <div class="container-fluid">
         <table border="1">
             <thead>
             {% for event in events %}
                 <tr>
-                    <th colspan="2">Event Name: {{ event.name }}</th>
+                    <th colspan="2">Event Name: <a href="{% url 'event_details' event.id 'about' %}">{{ event.name }}</a></th>
                 </tr>
                 <tr>
                     <td> Status:</td>
@@ -36,7 +36,7 @@
                 </tr>
                 <tr>
                     <td>Theme:</td>
-                    <td><!-- You can add the theme here --></td>
+                    <td>{{ event.theme}}</td>
                 </tr>
                 {% empty %}
                 <tr>
