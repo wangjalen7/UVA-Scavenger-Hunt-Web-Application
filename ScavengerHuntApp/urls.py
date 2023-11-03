@@ -51,7 +51,7 @@ urlpatterns = [
     path('event/<int:event_id>/join_team/<int:team_id>/', views.join_team, name='join_team'),
     path('event/<int:event_id>/<str:tab>/', views.event_details, name='event_details'),
     path('event/<int:event_id>/', views.event_details, name='event_details'),
-    
+    path('achievement/', views.change_name_achievement, name='achievement' ),
    
     path('error/', views.error, name='error'),
 ]

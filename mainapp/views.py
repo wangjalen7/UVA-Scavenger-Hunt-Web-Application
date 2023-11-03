@@ -1,7 +1,7 @@
 from django.shortcuts import render, redirect
 from django.contrib.auth.decorators import login_required
 from .forms import EventForm, TaskForm, ThemeForm, JoinTeamForm, CreateTeamForm, TaskFormSet
-from .models import Event, Theme, Task, Team, UserProfile, Achievements
+from .models import Event, Theme, Task, Team, UserProfile, Achievement, AchievementEarned, Player
 from allauth.account.views import SignupView
 from .forms import AllauthCustomSignupForm
 from django.shortcuts import render, redirect, get_object_or_404
@@ -13,7 +13,7 @@ from django.contrib import messages
 import requests
 import googlemaps
 from django.conf import settings # need api key from google to make the request
-
+import datetime
 
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger('ScavengerHuntApp')
@@ -45,21 +45,27 @@ class CustomSignupView(SignupView):
 @login_required
 def profile(request):
     user = request.user
-    achievements = Achievements.objects.filter(user=user)
+    achievements = AchievementEarned.objects.filter(user=user)
     return render(request, 'profile/profile.html', {'user': user, 'achievements': achievements})
+
 @login_required
 def change_username(request):
     username_error = ""
     if request.method == 'POST':
         new_username = request.POST.get('new_username')
         user = request.user
+        
         if User.objects.filter(username=new_username).exclude(pk=user.pk).exists():
             username_error = 'This username is already in use. Please choose a different one.'
         else:
             user.username = new_username
             user.save()
+
+            change_name_achievement(user)
+
             return redirect('profile')
     return render(request, 'profile/change_username.html', {'user': request.user, 'username_error': username_error})
+
 @login_required
 def change_bio(request):
         bio_error = ""
@@ -78,6 +84,7 @@ def change_bio(request):
         else:
             new_bio = user_profile.bio
         return render(request, 'profile/change_bio.html', {'user': request.user, 'bio_error': bio_error, 'bio': new_bio})
+
 @login_required
 def create_event(request):
     if request.method == "POST":
@@ -254,11 +261,6 @@ def create_theme(request):
 
     return render(request, 'create_theme.html', {'theme_form': theme_form, 'GOOGLE_MAPS_API_KEY': settings.GOOGLE_MAPS_API_KEY,})
 
-
-
-
-
-
 def create_task(request, theme_id):
     theme = get_object_or_404(Theme, id=theme_id)
 
@@ -278,3 +280,31 @@ def create_task(request, theme_id):
     }
 
     return render(request, 'create_theme.html', context)
+
+# @login_required
+# def create_event_achievement(request):
+#     #if user created event, earn this achievement
+#     name = "Cartographer"
+#     description = "Created first Scavenger Hunt"
+#     achievement = Achievements.objects.create(
+#         name=name,
+#         description=description,
+#         points=5,
+#         earned=True,
+#         user=request.user
+#     )
+#     if request.user
+
+@login_required
+def change_name_achievement(user):
+    #user = request.user
+    if not AchievementEarned.objects.filter(user=user, achievement__name="Call Sign").exists():
+        achievement = Achievement.objects.get(name="Call Sign")
+        achievement.points = 5
+        achievement.description = "Changed username"
+        user_achievement = AchievementEarned(user=user, achievement=achievement)
+        user_achievement.save()
+
+        user.userprofile.points += achievement.points
+        user.userprofile.save()
+    

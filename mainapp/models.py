@@ -5,18 +5,12 @@ from django.db import models
 class UserProfile(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE)
     bio = models.TextField(blank=True, null=True)
-
+    points = models.IntegerField(default=0)
     # profile_pic
 
     def __str__(self):
         return self.user.username
-class Achievements(models.Model):
-    user = models.OneToOneField(User, on_delete=models.CASCADE)
-    name = models.CharField(max_length=255)
-    description = models.TextField()
 
-    def __str__(self):
-        return self.name
 
 
 
@@ -88,3 +82,18 @@ class Player(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE)
     points = models.IntegerField(default=0)
     team = models.CharField(max_length=30, blank=False)
+
+class Achievement(models.Model):
+    name = models.CharField(max_length=255)
+    description = models.CharField(max_length=255)
+    points = models.IntegerField(default=0)
+    #achiever = models.ManyToManyField(to=User, through='AchievementEarned', related_name='achievements') 
+    def __str__(self):
+        return self.name
+
+class AchievementEarned(models.Model):
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    achievement = models.ForeignKey(Achievement, on_delete=models.CASCADE, null=True)
+    #date_reached = models.DateField(null=True)
+    #achievement = models.ForeignKey(to=Achievement, on_delete=models.CASCADE)
+    #achiever = models.ForeignKey(to=User, on_delete=models.CASCADE)
