@@ -5,18 +5,13 @@ from django.db import models
 class UserProfile(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE)
     bio = models.TextField(blank=True, null=True)
-
+    points = models.IntegerField(default=0)
+    achievements = models.JSONField()
     # profile_pic
 
     def __str__(self):
         return self.user.username
-class Achievements(models.Model):
-    user = models.OneToOneField(User, on_delete=models.CASCADE)
-    name = models.CharField(max_length=255)
-    description = models.TextField()
 
-    def __str__(self):
-        return self.name
 
 
 
@@ -88,3 +83,15 @@ class Player(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE)
     points = models.IntegerField(default=0)
     team = models.CharField(max_length=30, blank=False)
+
+class Achievement(models.Model):
+    name = models.CharField(max_length=255)
+    description = models.CharField(max_length=255)
+    points = models.IntegerField(default=0)
+    def __str__(self):
+        return self.name
+
+class AchievementEarned(models.Model):
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    achievement = models.ForeignKey(Achievement, on_delete=models.CASCADE, null=True)
+    
