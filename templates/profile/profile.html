@@ -14,8 +14,8 @@
 
     <p>Achievements</p>
     <ul>
-        {% for achievement in achievement %}
-            <li>{{ achievement.name }}: {{ achievement.description }}</li>
+        {% for achievement in achievements %}
+            <li>{{ achievement.achievement.name }}: {{ achievement.achievement.description }}</li>
         {% empty %}
             <li>No achievements yet.</li>
         {% endfor %}

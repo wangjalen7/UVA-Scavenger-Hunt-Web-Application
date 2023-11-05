@@ -51,6 +51,7 @@ def profile(request):
 @login_required
 def change_username(request):
     username_error = ""
+    
     if request.method == 'POST':
         new_username = request.POST.get('new_username')
         user = request.user
@@ -80,6 +81,8 @@ def change_bio(request):
             else:
                 user_profile.bio = new_bio
                 user_profile.save()
+
+                change_description_achievement(request.user)
                 return redirect('profile')
         else:
             new_bio = user_profile.bio
@@ -226,7 +229,7 @@ def deny_event(request, event_id):
 @login_required
 def leaderboard(request,):
     leaders = User.objects.alias(
-        total_points=Sum('player__points')
+        total_points=Sum('userprofile__points')
     ).order_by('-total_points')[:10]
     return render(request, 'leaderboard.html', {'leaders': leaders})
 
@@ -295,16 +298,25 @@ def create_task(request, theme_id):
 #     )
 #     if request.user
 
-@login_required
+#@login_required
 def change_name_achievement(user):
     #user = request.user
     if not AchievementEarned.objects.filter(user=user, achievement__name="Call Sign").exists():
-        achievement = Achievement.objects.get(name="Call Sign")
-        achievement.points = 5
-        achievement.description = "Changed username"
+        achievement = Achievement.objects.create(name="Call Sign", points=5, description="Changed username")
         user_achievement = AchievementEarned(user=user, achievement=achievement)
         user_achievement.save()
 
         user.userprofile.points += achievement.points
+        user.userprofile.achievements.append(achievement)
         user.userprofile.save()
     
+def change_description_achievement(user):
+    #user = request.user
+    if not AchievementEarned.objects.filter(user=user, achievement__name="Traveler’s Journal").exists():
+        achievement = Achievement.objects.create(name="Traveler’s Journal", points=5, description="Changed description")
+        user_achievement = AchievementEarned(user=user, achievement=achievement)
+        user_achievement.save()
+
+        user.userprofile.points += achievement.points
+        user.userprofile.achievements.append(achievement)
+        user.userprofile.save()
