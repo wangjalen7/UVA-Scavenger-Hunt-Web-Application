@@ -6,7 +6,7 @@ class UserProfile(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE)
     bio = models.TextField(blank=True, null=True)
     points = models.IntegerField(default=0)
-    achievements = models.JSONField()
+    achievements = models.JSONField(null=True)
     # profile_pic
 
     def __str__(self):
