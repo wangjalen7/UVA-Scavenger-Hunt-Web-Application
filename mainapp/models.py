@@ -1,13 +1,25 @@
 from django.contrib.auth.models import User
+from django.contrib.postgres.fields import ArrayField
 from django.db import models
 
+
+class Achievement(models.Model):
+    name = models.CharField(max_length=255)
+    description = models.CharField(max_length=255)
+    points = models.IntegerField(default=0)
+    def __str__(self):
+        return self.name
+
+class AchievementEarned(models.Model):
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    achievement = models.ForeignKey(Achievement, on_delete=models.CASCADE, null=True)
+    
 
 class UserProfile(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE)
     bio = models.TextField(blank=True, null=True)
     points = models.IntegerField(default=0)
-    achievements = models.JSONField(null=True)
-    # profile_pic
+    achievements = models.ManyToManyField(AchievementEarned)
 
     def __str__(self):
         return self.user.username
@@ -84,14 +96,5 @@ class Player(models.Model):
     points = models.IntegerField(default=0)
     team = models.CharField(max_length=30, blank=False)
 
-class Achievement(models.Model):
-    name = models.CharField(max_length=255)
-    description = models.CharField(max_length=255)
-    points = models.IntegerField(default=0)
-    def __str__(self):
-        return self.name
 
-class AchievementEarned(models.Model):
-    user = models.ForeignKey(User, on_delete=models.CASCADE)
-    achievement = models.ForeignKey(Achievement, on_delete=models.CASCADE, null=True)
-    
+

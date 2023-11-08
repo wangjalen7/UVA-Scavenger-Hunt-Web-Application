@@ -97,6 +97,7 @@ def create_event(request):
             event.creator = request.user
             event.status = "pending"
             event.save()
+            create_hunt_achievement(request.user)
             return redirect('/')
     else:
         form = EventForm()
@@ -158,8 +159,10 @@ def join_team(request, event_id, team_id):
         current_team.members.remove(request.user)
         team_to_join.members.add(request.user)
         messages.success(request, "You have switched to a new team.")
+        #join_hunt_achievement(request.user)
     else:
         team_to_join.members.add(request.user)
+        join_hunt_achievement(request.user)
         messages.success(request, "You have successfully joined the team.")
 
     return redirect('event_details', event_id=event_id, tab='about')
@@ -175,6 +178,7 @@ def create_team(request, event_id):
             new_team = Team.objects.create(name=new_team_name, event=event)
             new_team.members.add(request.user)
             messages.success(request, "Team created successfully.")
+            create_team_achievement(request.user)
             return redirect('event_details', event_id=event_id, tab='about')
     
 
@@ -228,9 +232,10 @@ def deny_event(request, event_id):
 
 @login_required
 def leaderboard(request,):
+    #leaders = User.objects.exclude(userprofile__points__isnull=True)
     leaders = User.objects.alias(
         total_points=Sum('userprofile__points')
-    ).order_by('-total_points')[:10]
+    ).exclude(userprofile__points__isnull=True).order_by('-total_points')[:10]
     return render(request, 'leaderboard.html', {'leaders': leaders})
 
 import json
@@ -284,39 +289,63 @@ def create_task(request, theme_id):
 
     return render(request, 'create_theme.html', context)
 
-# @login_required
-# def create_event_achievement(request):
-#     #if user created event, earn this achievement
-#     name = "Cartographer"
-#     description = "Created first Scavenger Hunt"
-#     achievement = Achievements.objects.create(
-#         name=name,
-#         description=description,
-#         points=5,
-#         earned=True,
-#         user=request.user
-#     )
-#     if request.user
-
-#@login_required
 def change_name_achievement(user):
-    #user = request.user
     if not AchievementEarned.objects.filter(user=user, achievement__name="Call Sign").exists():
         achievement = Achievement.objects.create(name="Call Sign", points=5, description="Changed username")
         user_achievement = AchievementEarned(user=user, achievement=achievement)
         user_achievement.save()
 
-        user.userprofile.points += achievement.points
-        user.userprofile.achievements.append(achievement)
+        user.userprofile.points += user_achievement.achievement.points
+        user.userprofile.achievements.add(user_achievement)
         user.userprofile.save()
     
 def change_description_achievement(user):
-    #user = request.user
     if not AchievementEarned.objects.filter(user=user, achievement__name="Traveler’s Journal").exists():
         achievement = Achievement.objects.create(name="Traveler’s Journal", points=5, description="Changed description")
         user_achievement = AchievementEarned(user=user, achievement=achievement)
         user_achievement.save()
 
-        user.userprofile.points += achievement.points
-        user.userprofile.achievements.append(achievement)
+        user.userprofile.points += user_achievement.achievement.points
+        user.userprofile.achievements.add(user_achievement)
+        user.userprofile.save()
+
+#NOT IMPLEMENTED YET
+def first_place_achievement(user):
+    if not AchievementEarned.objects.filter(user=user, achievement__name="Fame and Fortune").exists():
+        achievement = Achievement.objects.create(name="Fame and Fortune", points=10, description="Earned 1st place on leaderboard")
+        user_achievement = AchievementEarned(user=user, achievement=achievement)
+        user_achievement.save()
+
+        user.userprofile.points += user_achievement.achievement.points
+        user.userprofile.achievements.add(user_achievement)
+        user.userprofile.save()
+
+def join_hunt_achievement(user):
+    if not AchievementEarned.objects.filter(user=user, achievement__name="Up to the Challenge").exists():
+        achievement = Achievement.objects.create(name="Up to the Challenge", points=5, description="Joined 1st scavenger hunt")
+        user_achievement = AchievementEarned(user=user, achievement=achievement)
+        user_achievement.save()
+
+        user.userprofile.points += user_achievement.achievement.points
+        user.userprofile.achievements.add(user_achievement)
+        user.userprofile.save()
+
+def create_hunt_achievement(user):
+    if not AchievementEarned.objects.filter(user=user, achievement__name="Cartographer").exists():
+        achievement = Achievement.objects.create(name="Cartographer", points=5, description="Created 1st scavenger hunt")
+        user_achievement = AchievementEarned(user=user, achievement=achievement)
+        user_achievement.save()
+
+        user.userprofile.points += user_achievement.achievement.points
+        user.userprofile.achievements.add(user_achievement)
+        user.userprofile.save()
+
+def create_team_achievement(user):
+    if not AchievementEarned.objects.filter(user=user, achievement__name="Expedition Leader").exists():
+        achievement = Achievement.objects.create(name="Expedition Leader", points=5, description="Created 1st team")
+        user_achievement = AchievementEarned(user=user, achievement=achievement)
+        user_achievement.save()
+
+        user.userprofile.points += user_achievement.achievement.points
+        user.userprofile.achievements.add(user_achievement)
         user.userprofile.save()
