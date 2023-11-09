@@ -62,7 +62,8 @@ def change_username(request):
             user.username = new_username
             user.save()
 
-            change_name_achievement(user)
+            #change_name_achievement(user)
+            test_x_achievement(user)
 
             return redirect('profile')
     return render(request, 'profile/change_username.html', {'user': request.user, 'username_error': username_error})
@@ -82,7 +83,7 @@ def change_bio(request):
                 user_profile.bio = new_bio
                 user_profile.save()
 
-                change_description_achievement(request.user)
+                #change_description_achievement(request.user)
                 return redirect('profile')
         else:
             new_bio = user_profile.bio
@@ -97,7 +98,7 @@ def create_event(request):
             event.creator = request.user
             event.status = "pending"
             event.save()
-            create_hunt_achievement(request.user)
+            #create_hunt_achievement(request.user)
             return redirect('/')
     else:
         form = EventForm()
@@ -162,7 +163,7 @@ def join_team(request, event_id, team_id):
         #join_hunt_achievement(request.user)
     else:
         team_to_join.members.add(request.user)
-        join_hunt_achievement(request.user)
+        #join_hunt_achievement(request.user)
         messages.success(request, "You have successfully joined the team.")
 
     return redirect('event_details', event_id=event_id, tab='about')
@@ -178,7 +179,7 @@ def create_team(request, event_id):
             new_team = Team.objects.create(name=new_team_name, event=event)
             new_team.members.add(request.user)
             messages.success(request, "Team created successfully.")
-            create_team_achievement(request.user)
+            #create_team_achievement(request.user)
             return redirect('event_details', event_id=event_id, tab='about')
     
 
@@ -232,7 +233,6 @@ def deny_event(request, event_id):
 
 @login_required
 def leaderboard(request,):
-    #leaders = User.objects.exclude(userprofile__points__isnull=True)
     leaders = User.objects.alias(
         total_points=Sum('userprofile__points')
     ).exclude(userprofile__points__isnull=True).order_by('-total_points')[:10]
@@ -343,6 +343,16 @@ def create_hunt_achievement(user):
 def create_team_achievement(user):
     if not AchievementEarned.objects.filter(user=user, achievement__name="Expedition Leader").exists():
         achievement = Achievement.objects.create(name="Expedition Leader", points=5, description="Created 1st team")
+        user_achievement = AchievementEarned(user=user, achievement=achievement)
+        user_achievement.save()
+
+        user.userprofile.points += user_achievement.achievement.points
+        user.userprofile.achievements.add(user_achievement)
+        user.userprofile.save()
+
+def test_x_achievement(user):
+    if not AchievementEarned.objects.filter(user=user, achievement__name="Test x").exists():
+        achievement = Achievement.objects.create(name="Test x", points=5, description="EX")
         user_achievement = AchievementEarned(user=user, achievement=achievement)
         user_achievement.save()
 

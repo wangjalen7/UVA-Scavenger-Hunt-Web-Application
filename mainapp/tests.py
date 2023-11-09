@@ -4,7 +4,7 @@ from django.urls import reverse
 from .forms import EventForm
 from unittest.mock import Mock, patch
 from django.test import TestCase
-from .models import Event, Player, Theme, Team, Task
+from .models import Event, Player, Theme, Team, Task, UserProfile
 
 
 class UserSignupTestCase(TestCase):
