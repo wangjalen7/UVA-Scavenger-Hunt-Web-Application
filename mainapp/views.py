@@ -289,62 +289,86 @@ def create_task(request, theme_id):
     return render(request, 'create_theme.html', context)
 
 def change_name_achievement(user):
+    try:
+        user_profile = user.userprofile
+    except UserProfile.DoesNotExist:
+        user_profile = UserProfile.objects.create(user=user)
     if not AchievementEarned.objects.filter(user=user, achievement__name="Call Sign").exists():
         achievement = Achievement.objects.create(name="Call Sign", points=5, description="Changed username")
         user_achievement = AchievementEarned(user=user, achievement=achievement)
         user_achievement.save()
 
-        user.userprofile.points += user_achievement.achievement.points
-        user.userprofile.achievements.add(user_achievement)
-        user.userprofile.save()
+        user_profile.points += user_achievement.achievement.points
+        user_profile.achievements.add(user_achievement)
+        user_profile.save()
     
 def change_description_achievement(user):
+    try:
+        user_profile = user.userprofile
+    except UserProfile.DoesNotExist:
+        user_profile = UserProfile.objects.create(user=user)
     if not AchievementEarned.objects.filter(user=user, achievement__name="Traveler’s Journal").exists():
         achievement = Achievement.objects.create(name="Traveler’s Journal", points=5, description="Changed description")
         user_achievement = AchievementEarned(user=user, achievement=achievement)
         user_achievement.save()
 
-        user.userprofile.points += user_achievement.achievement.points
-        user.userprofile.achievements.add(user_achievement)
-        user.userprofile.save()
+        user_profile.points += user_achievement.achievement.points
+        user_profile.achievements.add(user_achievement)
+        user_profile.save()
 
 #NOT IMPLEMENTED YET
 def first_place_achievement(user):
+    try:
+        user_profile = user.userprofile
+    except UserProfile.DoesNotExist:
+        user_profile = UserProfile.objects.create(user=user)
     if not AchievementEarned.objects.filter(user=user, achievement__name="Fame and Fortune").exists():
         achievement = Achievement.objects.create(name="Fame and Fortune", points=10, description="Earned 1st place on leaderboard")
         user_achievement = AchievementEarned(user=user, achievement=achievement)
         user_achievement.save()
 
-        user.userprofile.points += user_achievement.achievement.points
-        user.userprofile.achievements.add(user_achievement)
-        user.userprofile.save()
+        user_profile.points += user_achievement.achievement.points
+        user_profile.achievements.add(user_achievement)
+        user_profile.save()
 
 def join_hunt_achievement(user):
+    try:
+        user_profile = user.userprofile
+    except UserProfile.DoesNotExist:
+        user_profile = UserProfile.objects.create(user=user)
     if not AchievementEarned.objects.filter(user=user, achievement__name="Up to the Challenge").exists():
         achievement = Achievement.objects.create(name="Up to the Challenge", points=5, description="Joined 1st scavenger hunt")
         user_achievement = AchievementEarned(user=user, achievement=achievement)
         user_achievement.save()
 
-        user.userprofile.points += user_achievement.achievement.points
-        user.userprofile.achievements.add(user_achievement)
-        user.userprofile.save()
+        user_profile.points += user_achievement.achievement.points
+        user_profile.achievements.add(user_achievement)
+        user_profile.save()
 
 def create_hunt_achievement(user):
+    try:
+        user_profile = user.userprofile
+    except UserProfile.DoesNotExist:
+        user_profile = UserProfile.objects.create(user=user)
     if not AchievementEarned.objects.filter(user=user, achievement__name="Cartographer").exists():
         achievement = Achievement.objects.create(name="Cartographer", points=5, description="Created 1st scavenger hunt")
         user_achievement = AchievementEarned(user=user, achievement=achievement)
         user_achievement.save()
 
-        user.userprofile.points += user_achievement.achievement.points
-        user.userprofile.achievements.add(user_achievement)
-        user.userprofile.save()
+        user_profile.points += user_achievement.achievement.points
+        user_profile.achievements.add(user_achievement)
+        user_profile.save()
 
 def create_team_achievement(user):
+    try:
+        user_profile = user.userprofile
+    except UserProfile.DoesNotExist:
+        user_profile = UserProfile.objects.create(user=user)
     if not AchievementEarned.objects.filter(user=user, achievement__name="Expedition Leader").exists():
         achievement = Achievement.objects.create(name="Expedition Leader", points=5, description="Created 1st team")
         user_achievement = AchievementEarned(user=user, achievement=achievement)
         user_achievement.save()
 
-        user.userprofile.points += user_achievement.achievement.points
-        user.userprofile.achievements.add(user_achievement)
-        user.userprofile.save()
+        user_profile.points += user_achievement.achievement.points
+        user_profile.achievements.add(user_achievement)
+        user_profile.save()

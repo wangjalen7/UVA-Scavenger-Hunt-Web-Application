@@ -11,13 +11,13 @@
 
     <p>Points: {{ user.userprofile.points }}</p>
 
-    <p>Bio: {{ user.bio }}</p>
+    <p>Bio: {{ user.userprofile.bio }}</p>
     <a href="{% url 'change_bio' %}">Change Bio</a>
 
     <p>Achievements</p>
     <ul>
         {% for achievement in achievements %}
-            <li>{{ achievement.achievement.name }}: {{ achievement.achievement.description }}: {{ achievement.achievement.points }}pts</li>
+            <li>{{ achievement.achievement.name }}: {{ achievement.achievement.description }} - {{ achievement.achievement.points }}pts</li>
         {% empty %}
             <li>No achievements yet.</li>
         {% endfor %}
