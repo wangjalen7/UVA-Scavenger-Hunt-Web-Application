@@ -26,8 +26,6 @@ class UserProfile(models.Model):
 
 
 
-
-
 class Theme(models.Model):
     title = models.CharField(max_length=255)
     description = models.TextField()
@@ -84,10 +82,11 @@ class UserEvent(models.Model):
 
 
 class TaskCompletion(models.Model):
-    task = models.CharField(max_length=255)
+    task = models.ForeignKey(Task, on_delete=models.CASCADE)
     completed_by = models.ForeignKey(User, on_delete=models.CASCADE)
     team = models.ForeignKey(Team, on_delete=models.CASCADE, null=True)
     date_completed = models.DateTimeField(auto_now_add=True)
+
 
 
 class Player(models.Model):

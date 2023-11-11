@@ -1,12 +1,18 @@
+
+{% extends "base.html" %}
+
+{% block content %}
+{% include "event_tabs/event_menu.html" %}
 <div class="container">
     <h2>All Tasks</h2>
     {% for task in tasks %}
-        <div>Name: {{ task.name }} <br> 
-            Task: {{ task.task }} <br> 
-            <a href="{% url 'map' task.id %}" class="btn btn-primary">Hint</a>
-        </div>
-        <br>
+    <div>Name: {{ task.name }} <br>
+        Task: {{ task.task }} <br>
+        <a href="{% url 'map' task.id %}" class="btn btn-primary">Hint</a>
+    </div>
+    <br>
     {% empty %}
-        <div>No tasks available</div>
+    <div>No tasks available</div>
     {% endfor %}
 </div>
+{% endblock %}

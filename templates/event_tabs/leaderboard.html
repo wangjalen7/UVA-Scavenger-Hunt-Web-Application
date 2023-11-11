@@ -1,9 +1,15 @@
+
+{% extends "base.html" %}
+
+{% block content %}
+{% include "event_tabs/event_menu.html" %}
 <!-- Leaderboard Content -->
 <div class="container">
     <h2>Leaderboard</h2>
     <!-- Assume leaderboard_data is passed in context -->
     {% for entry in leaderboard_data %}
-        <!-- Display each leaderboard entry -->
-        <div>{{ entry.name }}: {{ entry.points }}</div>
+    <!-- Display each leaderboard entry -->
+    <div>{{ entry.name }}: {{ entry.points }}</div>
     {% endfor %}
 </div>
+{% endblock %}
