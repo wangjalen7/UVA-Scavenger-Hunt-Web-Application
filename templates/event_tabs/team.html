@@ -1,8 +1,38 @@
-<!-- event_teams.html -->
-<h2>Team Members</h2>
-<a href="{% url 'join_team' event.id team.id %}" class="btn btn-secondary">Join Team</a>
+{% extends "base.html" %}
+
+{% block content %}
+{% include "event_tabs/event_menu.html" %}
+
+{% if request.user in team.members.all %}
+    <!-- User is a member of this team -->
+    <h3>My Team</h3>
+    <form action="{% url 'leave_team' event.id team.id %}" method="post" id="leave-team-form">
+        {% csrf_token %}
+        <button type="button" class="btn btn-secondary" onclick="confirmLeaveTeam()">Leave Team</button>
+    </form>
+{% else %}
+    <!-- User is not a member of this team -->
+    <h3>{{ team.name }}</h3>
+    <form action="{% url 'join_team' event.id team.id %}" method="post">
+        {% csrf_token %}
+        <button type="submit" class="btn btn-secondary">Join Team</button>
+    </form>
+{% endif %}
+
 <ul>
-    {% for user in members %}
-    <li><h3>{{ user }}</h3></li>
+    {% for user in team.members.all %}
+    <li>
+        <h3>{{ user.username }}</h3> <!-- Assuming you want to display the username -->
+    </li>
     {% endfor %}
 </ul>
+
+<script>
+    function confirmLeaveTeam() {
+        var confirmAction = confirm("Are you sure you want to leave this team?");
+        if (confirmAction) {
+            document.getElementById("leave-team-form").submit();
+        }
+    }
+    </script>
+{% endblock %}

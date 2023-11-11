@@ -1,6 +1,7 @@
 {% extends "base.html" %}
 
 {% block content %}
+{% include "achievement_msg.html" %}
 <div class="container-fluid">
     <h1>{{ event.name }}</h1>
 
@@ -9,10 +10,11 @@
     <div class="btn-group" role="group" aria-label="Event tabs">
         <a href="{% url 'event_details' event.id 'about' %}" class="btn btn-secondary{% if tab == 'about' %} active{% endif %}">About</a>
         <a href="{% url 'event_details' event.id 'leaderboard' %}" class="btn btn-secondary{% if tab == 'leaderboard' %} active{% endif %}">Leaderboard</a>
-        <a href="{% url 'event_details' event.id 'all_tasks' %}" class="btn btn-secondary{% if tab == 'all_tasks' %} active{% endif %}">All Tasks</a>
+        <!-- <a href="{% url 'event_details' event.id 'all_tasks' %}" class="btn btn-secondary{% if tab == 'all_tasks' %} active{% endif %}">All Tasks</a> -->
         <a href="{% url 'event_details' event.id 'teams' %}" class="btn btn-secondary{% if tab == 'teams' %} active{% endif %}">Teams</a>
-        {% if is_member %}
+        {% if is_team_member %}
             <!-- These tabs are only visible to members -->
+            <a href="{% url 'event_details' event.id 'my_team' %}" class="btn btn-secondary{% if tab == 'my_team' %} active{% endif %}">My Team</a>
             <a href="{% url 'event_details' event.id 'tasks_todo' %}" class="btn btn-secondary{% if tab == 'tasks_todo' %} active{% endif %}">Tasks To Do</a>
             <a href="{% url 'event_details' event.id 'completed_tasks' %}" class="btn btn-secondary{% if tab == 'completed_tasks' %} active{% endif %}">Completed Tasks</a>
         {% endif %}

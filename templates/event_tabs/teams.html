@@ -1,11 +1,19 @@
-<h2>Teams</h2>
 
-<a href="{% url 'create_team' event.id %}" class="btn btn-primary">Create Team</a>
+{% extends "base.html" %}
 
-<ul>
-    {% for team in teams %}
+{% block content %}
+{% include "event_tabs/event_menu.html" %}
+<div class="container">
+    <h2>Teams</h2>
+
+    <a href="{% url 'create_team' event.id %}" class="btn btn-primary">Create Team</a>
+
+    <ul>
+        {% for team in teams %}
         <li>
-            <a href="{% url 'team_details' event.id team.id %}">{{ team.name }}</a>
+            <a href="{% url 'event_team' event.id team.id %}">{{ team.name }}</a>
         </li>
-    {% endfor %}
-</ul>
+        {% endfor %}
+    </ul>
+</div>
+{% endblock %}

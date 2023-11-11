@@ -3,13 +3,16 @@
 {% extends "base.html" %}
 {% load static %}
 {% block content %}
+{% include "achievement_msg.html" %}
 <body>
     <h1>User Profile</h1>
 
     <p>Username: {{ user.username }}</p>
     <a href="{% url 'change_username' %}">Change Username</a>
 
-    <p>Bio: {{ user.bio }}</p>
+    <p>Points: {{ user.userprofile.points }}</p>
+
+    <p>Bio: {{ user.userprofile.bio }}</p>
     <a href="{% url 'change_bio' %}">Change Bio</a>
 
     <!-- <p>Leaderboard Position: {{ user_leaderboard_position }}</p> -->
@@ -18,7 +21,7 @@
     <p>Achievements</p>
     <ul>
         {% for achievement in achievements %}
-            <li>{{ achievement.achievement.name }}: {{ achievement.achievement.description }}</li>
+            <li>{{ achievement.achievement.name }}: {{ achievement.achievement.description }} - {{ achievement.achievement.points }}pts</li>
         {% empty %}
             <li>No achievements yet.</li>
         {% endfor %}

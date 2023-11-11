@@ -12,22 +12,40 @@ git che{% extends "base.html" %}
   <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
   <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
   <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
+
+  <style>
+    #leaderboard td, #leaderboard th {
+      padding: 12px;
+    }
+        
+    #leaderboard tr:hover {background-color: #ddd;}
+    
+    #leaderboard th {
+      padding-top: 12px;
+      padding-bottom: 12px;
+      text-align: left;
+    }
+    </style>
 </head>
 <body>
 
 <h2>Leaderboard</h2>
 
-<table class="table-hover">
+<table class="table-hover", id="leaderboard">
   <thead>
     <tr>
+      <th>Place</th>
       <th>User</th>
       <th>Points</th>
     </tr>
   </thead>
   <tbody>
   {% for leader in leaders %}
-      <tr><td>{{ leader.username }}</td></tr>
-      <tr><td>{{ leader.points }}</td></tr>
+      <tr>
+        <td>{{ forloop.counter }}</td>
+        <td>{{ leader.username }}</td>
+        <td>{{ leader.userprofile.points }}</td>
+      </tr>
   {% endfor %}
   </tbody>
   </table>

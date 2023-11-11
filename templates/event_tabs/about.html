@@ -1,3 +1,8 @@
+<!-- about.html -->
+{% extends "base.html" %}
+
+{% block content %}
+{% include "event_tabs/event_menu.html" %}
 <!-- About Content -->
 <div class="container">
     <h2>About</h2>
@@ -5,4 +10,28 @@
     <p>Date: {{ event.start_date }} to {{ event.end_date }}</p>
     <p>Description: {{ event.description }}</p>
     <p>{{ about_info }}</p>
+
+
+    <div>
+        {% if is_event_member %}
+        <form action="{% url 'leave_event' event.id %}" method="post" id="leave-event-form">
+            {% csrf_token %}
+            <button type="submit" class="btn btn-primary" onclick="return confirmLeaveEvent();">Leave Event</button>
+        </form>
+        {% else %}
+        <form action="{% url 'join_event' event.id %}" method="post">
+            {% csrf_token %}
+            <button type="submit" class="btn btn-primary">Join Event</button>
+        </form>
+        {% endif %}
+    </div>
+
+    <script>
+        function confirmLeaveEvent() {
+            return confirm("Are you sure you want to leave this event?");
+        }
+    </script>
+
 </div>
+
+{% endblock %}

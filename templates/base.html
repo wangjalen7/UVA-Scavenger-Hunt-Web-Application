@@ -70,13 +70,19 @@ li a:hover:not(.active) {
         </ul>
     {% endif %}
 
+    <div style="margin-left:25%;padding:1px 16px;height:1000px;">
+        <!-- Include the achievement_msg.html for displaying messages -->
+        {% include "achievement_msg.html" %}
 
-<div style="margin-left:25%;padding:1px 16px;height:1000px;">
-    {% block content %}
-    {% endblock %}
-</div>
+        <!-- Main content block -->
+        {% block content %}
+        {% endblock %}
+    </div>
 
+    <!-- Include the achievement.html at the bottom -->
+    {% include "achievement.html" %}
 </body>
+
 {% else %}
   <p>You are not logged in</p>
   <a href="{% url 'login' %}">Log In</a>

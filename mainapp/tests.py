@@ -4,9 +4,9 @@ from django.urls import reverse
 from .forms import EventForm
 from unittest.mock import Mock, patch
 from django.test import TestCase
-from .models import Event, Player, Theme, Team, Task
+from .models import Event, Player, Theme, Team, Task, UserProfile
 
-
+# User Signup Test Case
 class UserSignupTestCase(TestCase):
 
     def test_signup_form(self):
@@ -24,8 +24,9 @@ class UserSignupTestCase(TestCase):
         self.assertEqual(user.first_name, 'Test')
         self.assertEqual(user.last_name, 'User')
 
-
+# Task Creation Test Case
 class TaskCreationTestCase(TestCase):
+
     def setUp(self):
         self.admin_user = User.objects.create_superuser(
             'admin_task_creator', 'admin@example.com', 'adminpassword')
@@ -33,31 +34,25 @@ class TaskCreationTestCase(TestCase):
             title='Adventure Theme', description='Exciting adventure tasks')
 
     def test_create_task(self):
-        self.client.login(username='admin_task_creator',
-                          password='adminpassword')
+        self.client.login(username='admin_task_creator', password='adminpassword')
         data = {
             'name': 'Find a Historic Landmark',
             'task': 'Locate and take a photo with a well-known historic landmark in your city.',
-            'hint': 'Some hint',  # Add a hint here
+            'hint': 'Some hint',
             'theme': self.theme.id
         }
-
-        response = self.client.post(
-            reverse('create_task', args=[self.theme.id]), data)
-        if response.status_code != 302:
-            print("Form errors:", response.context['form'].errors)
-
+        response = self.client.post(reverse('create_task', args=[self.theme.id]), data)
         self.assertEqual(response.status_code, 302)
         task = Task.objects.get(name='Find a Historic Landmark')
         self.assertEqual(task.theme, self.theme)
         self.assertEqual(task.task, 'Locate and take a photo with a well-known historic landmark in your city.')
 
-
+# Theme Creation Test Case
 class ThemeCreationTestCase(TestCase):
+
     def setUp(self):
         self.admin_user = User.objects.create_superuser(
             'admin_theme_creator', 'admin@example.com', 'adminpassword')
-
         self.tasks = [
             {
                 'name': 'Find a Historic Landmark',
@@ -76,31 +71,24 @@ class ThemeCreationTestCase(TestCase):
         ]
 
     def test_create_theme_with_tasks(self):
-        self.client.login(username='admin_theme_creator',
-                          password='adminpassword')
+        self.client.login(username='admin_theme_creator', password='adminpassword')
         theme_data = {
             'title': 'Adventure Theme',
             'description': 'Exciting adventure tasks',
             'tasks_json': json.dumps(self.tasks)
         }
-
         response = self.client.post(reverse('create_theme'), theme_data)
-
-        if response.status_code != 302:
-            print("Theme Form Errors:", response.context['form'].errors)
-
         self.assertEqual(response.status_code, 302)
         theme = Theme.objects.get(title='Adventure Theme')
         for task in self.tasks:
             self.assertTrue(theme.tasks.filter(name=task['name']).exists())
 
-
+# Event Form Test Case
 class EventFormTests(TestCase):
 
     @patch('mainapp.models.Event')
     def test_event_form_valid_data(self, MockEvent):
-        theme = Theme.objects.create(
-            title='Test Theme', description='Test Theme Description')
+        theme = Theme.objects.create(title='Test Theme', description='Test Theme Description')
         form = EventForm(data={
             'name': 'Test Event',
             'start_date': '2023-01-01',
@@ -117,13 +105,11 @@ class EventFormTests(TestCase):
         self.assertEqual(len(form.errors), 6)
 
     def setUp(self):
-        self.user = User.objects.create_user(
-            'testuserjalen', 'testuser@example.com', 'testpassword123')
+        self.user = User.objects.create_user('testuserjalen', 'testuser@example.com', 'testpassword123')
 
     def test_create_event(self):
         self.client.login(username='testuserjalen', password='testpassword123')
-        theme = Theme.objects.create(
-            title='Test Theme', description='Test Theme Description')
+        theme = Theme.objects.create(title='Test Theme', description='Test Theme Description')
         data = {
             'name': 'Test Event',
             'start_date': '2023-11-01',
@@ -139,12 +125,11 @@ class EventFormTests(TestCase):
         self.assertEqual(event.status, 'pending')
         self.assertEqual(event.theme, theme)
 
-
+# Event Participation Test Case
 class EventParticipationTestCase(TestCase):
 
     def setUp(self):
-        self.user = User.objects.create_user(
-            'participant', 'participant@example.com', 'participant123')
+        self.user = User.objects.create_user('participant', 'participant@example.com', 'participant123')
         self.event = Event.objects.create(
             name='Participation Event',
             start_date='2023-12-01',
@@ -156,30 +141,31 @@ class EventParticipationTestCase(TestCase):
         )
         self.team = Team.objects.create(name='Test Team', event=self.event)
 
-    def test_join_event(self):
+    def test_join_event_and_team(self):
         self.client.login(username='participant', password='participant123')
 
-        # User joins a team
-        response = self.client.post(
-            reverse('join_team', args=[self.event.id, self.team.id]))
-        self.assertEqual(response.status_code, 302)
+        # Join the event first
+        join_event_response = self.client.post(reverse('join_event', args=[self.event.id]))
+        self.assertEqual(join_event_response.status_code, 302)
+
+        # Then try joining a team within the event
+        join_team_response = self.client.post(reverse('join_team', args=[self.event.id, self.team.id]))
+        self.assertEqual(join_team_response.status_code, 302)
         self.assertTrue(self.team.members.filter(id=self.user.id).exists())
 
-        # Create a second team and try to join it
-        another_team = Team.objects.create(
-            name='Another Team', event=self.event)
-        response = self.client.post(
-            reverse('join_team', args=[self.event.id, another_team.id]))
-        # Assuming it redirects to an error page or similar
-        self.assertNotEqual(response.status_code, 302)
-        self.assertFalse(another_team.members.filter(id=self.user.id).exists())
+        #Join another team in the same event
+        another_team = Team.objects.create(name='Another Team', event=self.event)
+        join_another_team_response = self.client.post(reverse('join_team', args=[self.event.id, another_team.id]))
+        self.assertEqual(join_another_team_response.status_code, 302)
+        self.assertFalse(self.team.members.filter(id=self.user.id).exists())
+        self.assertTrue(another_team.members.filter(id=self.user.id).exists())
 
 
-class EventParticipationTestCase(TestCase):
+# Event Viewing Test Case
+class EventViewingTestCase(TestCase):
 
     def setUp(self):
-        self.user = User.objects.create_user(
-            'participant', 'participant@example.com', 'participant123')
+        self.user = User.objects.create_user('participant', 'participant@example.com', 'participant123')
         self.event = Event.objects.create(
             name='Participation Event',
             start_date='2023-12-01',
@@ -192,13 +178,10 @@ class EventParticipationTestCase(TestCase):
 
     def test_view_event(self):
         self.client.login(username='participant', password='participant123')
-
-        # User views event details
-        response = self.client.get(
-            reverse('event_details', args=[self.event.id]))
+        response = self.client.get(reverse('event_about', args=[self.event.id]))
         self.assertEqual(response.status_code, 200)
 
-
+# Manage Events Test Case
 class ManageEventsTestCase(TestCase):
 
     def setUp(self):
@@ -216,16 +199,29 @@ class ManageEventsTestCase(TestCase):
 
     def test_approve_event(self):
         self.client.login(username='adminuser', password='adminpassword123')
-        response = self.client.post(
-            reverse('approve_event', args=[self.event.id]))
+        response = self.client.post(reverse('approve_event', args=[self.event.id]))
         self.assertEqual(response.status_code, 302)
         self.event.refresh_from_db()
         self.assertEqual(self.event.status, 'approved')
 
     def test_reject_event(self):
         self.client.login(username='adminuser', password='adminpassword123')
-        response = self.client.post(
-            reverse('deny_event', args=[self.event.id]))
+        response = self.client.post(reverse('deny_event', args=[self.event.id]))
         self.assertEqual(response.status_code, 302)
         self.event.refresh_from_db()
         self.assertEqual(self.event.status, 'denied')
+
+# Name Change Achievement Test Case
+class NameChangeAchievementTestCase(TestCase):
+
+    def setUp(self):
+        self.user = User.objects.create_user('participant', 'participant@example.com', 'participant123')
+
+    def test_change_name(self):
+        self.client.login(username='participant', password='participant123')
+        new_name = 'participant2'
+        response = self.client.post(reverse('change_username'), {'new_username': new_name})
+        self.assertEqual(response.status_code, 302)
+        self.user.refresh_from_db() 
+        self.assertEqual(self.user.username, new_name)
+
