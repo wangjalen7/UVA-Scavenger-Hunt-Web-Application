@@ -1,9 +1,18 @@
-<!-- Tasks To Do Content -->
+
+{% extends "base.html" %}
+
+{% block content %}
+{% include "event_tabs/event_menu.html" %}
 <div class="container">
-    <h2>Tasks To Do</h2>
-    <!-- Assume tasks_todo is passed in context -->
+    <h2>Tasks Todo</h2>
     {% for task in tasks_todo %}
-        <!-- Display each task to do -->
-        <div>{{ task.name }}: {{ task.description }}</div>
+    <div>Name: {{ task.name }} <br>
+        Task: {{ task.task }} <br>
+        <a href="{% url 'map' task.id %}" class="btn btn-primary">Hint</a>
+    </div>
+    <br>
+    {% empty %}
+    <div>No tasks todo</div>
     {% endfor %}
 </div>
+{% endblock %}

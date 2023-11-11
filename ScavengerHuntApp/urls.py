@@ -46,13 +46,37 @@ urlpatterns = [
     path('create_task/<int:theme_id>', views.create_task, name='create_task'),
     path('create_theme/', views.create_theme, name='create_theme'),
     path('map/<int:task_id>', views.map_view, name = "map"),
+
+
+
+    path('event/<int:event_id>/', views.event_about, name='event_about'),  # Default to 'about' tab
+    path('event/<int:event_id>/leaderboard/', views.event_leaderboard, name='event_leaderboard'),
+    path('event/<int:event_id>/tasks/', views.event_tasks, name='event_tasks'),  # All tasks
+    path('event/<int:event_id>/teams/', views.event_teams, name='event_teams'),
+    path('event/<int:event_id>/team/<int:team_id>', views.event_team, name='event_team'),  # My team
+    path('event/<int:event_id>/tasks/todo/', views.event_tasks_todo, name='event_tasks_todo'),
+    path('event/<int:event_id>/tasks/completed/', views.event_completed_tasks, name='event_completed_tasks'),
+
+
+    path('event/<int:event_id>/join/', views.join_event, name='join_event'),
+    path('event/<int:event_id>/leave/', views.leave_event, name='leave_event'),
     path('event/<int:event_id>/create_team/', views.create_team, name='create_team'),
-    path('event/<int:event_id>/team/<int:team_id>/', views.team_details, name='team_details'),
-    path('event/<int:event_id>/join_team/<int:team_id>/', views.join_team, name='join_team'),
-    path('event/<int:event_id>/<str:tab>/', views.event_details, name='event_details'),
-    path('event/<int:event_id>/', views.event_details, name='event_details'),
+    path('event/<int:event_id>/leave_team/<int:team_id>', views.leave_team, name='leave_team'),
+    path('event/<int:event_id>/team/<int:team_id>/join/', views.join_team, name='join_team'),
+
+
+    # path('event/<int:event_id>/create_team/', views.create_team, name='create_team'),
+    # path('event/<int:event_id>/leave_team/', views.leave_team, name='leave_team'),
+    # path('event/<int:event_id>/team/<int:team_id>/', views.team_details, name='team_details'),
+    # path('event/<int:event_id>/join_team/<int:team_id>/', views.join_team, name='join_team'),
+    # path('event/<int:event_id>/<str:tab>/', views.event_details, name='event_details'),
+    # path('event/<int:event_id>/', views.event_details, name='event_details'),
+    # path('join_event/<int:event_id>/', views.join_event, name='join_event'),
+    # path('leave_event/<int:event_id>/', views.leave_event, name='leave_event'),
+
+
+
     path('achievement/', views.change_name_achievement, name='achievement' ),
    
-    path('error/', views.error, name='error'),
 ]
 
