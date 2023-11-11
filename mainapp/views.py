@@ -47,14 +47,12 @@ class CustomSignupView(SignupView):
 def profile(request):
     user = request.user
     achievements = AchievementEarned.objects.filter(user=user)
-    return render(request, 'profile/profile.html', {'user': user, 'achievements': achievements})
-    #user_points = Player.objects.filter(user=user).aggregate(total_points=Sum('points'))['total_points'] or 0
+    user_points = Player.objects.filter(user=user).aggregate(total_points=Sum('points'))['total_points'] or 0
+    return render(request, 'profile/profile.html', {
+        'user': user,
+        'achievements': achievements,
+        'user_points': user_points})
 
-    # return render(request, 'profile/profile.html', {
-    #     'user': user,
-    #     'achievements': achievements,
-    #     'user_points': user_points,
-    # })
 @login_required
 def change_username(request):
     username_error = ""
