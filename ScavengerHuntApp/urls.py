@@ -64,18 +64,6 @@ urlpatterns = [
     path('event/<int:event_id>/leave_team/<int:team_id>', views.leave_team, name='leave_team'),
     path('event/<int:event_id>/team/<int:team_id>/join/', views.join_team, name='join_team'),
 
-
-    # path('event/<int:event_id>/create_team/', views.create_team, name='create_team'),
-    # path('event/<int:event_id>/leave_team/', views.leave_team, name='leave_team'),
-    # path('event/<int:event_id>/team/<int:team_id>/', views.team_details, name='team_details'),
-    # path('event/<int:event_id>/join_team/<int:team_id>/', views.join_team, name='join_team'),
-    # path('event/<int:event_id>/<str:tab>/', views.event_details, name='event_details'),
-    # path('event/<int:event_id>/', views.event_details, name='event_details'),
-    # path('join_event/<int:event_id>/', views.join_event, name='join_event'),
-    # path('leave_event/<int:event_id>/', views.leave_event, name='leave_event'),
-
-
-
     path('achievement/', views.change_name_achievement, name='achievement' ),
    
 ]
