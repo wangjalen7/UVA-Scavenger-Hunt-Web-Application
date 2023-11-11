@@ -4,7 +4,7 @@ from django.urls import reverse
 from .forms import EventForm
 from unittest.mock import Mock, patch
 from django.test import TestCase
-from .models import Event, Player, Theme, Team, Task
+from .models import Event, Player, Theme, Team, Task, UserProfile
 
 
 class UserSignupTestCase(TestCase):
@@ -229,3 +229,17 @@ class ManageEventsTestCase(TestCase):
         self.assertEqual(response.status_code, 302)
         self.event.refresh_from_db()
         self.assertEqual(self.event.status, 'denied')
+
+# class NameChangeAchievementTestCase(TestCase):
+
+#     def setUp(self):
+#         self.user = User.objects.create_user(
+#             'participant', 'participant@example.com', 'participant123')
+    
+#     def test_change_name(self):
+#         self.client.login(username='participant', password='participant123')
+#         new_name = 'participant2'
+#         response = self.client.post(
+#             reverse('change_username', new_name))
+#         self.assertEqual(response.status_code, 302)
+#         self.assertEqual(self.user.username, 'participant2')
