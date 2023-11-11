@@ -10,6 +10,7 @@
     <p>Username: {{ user.username }}</p>
     <a href="{% url 'change_username' %}">Change Username</a>
 
+    <p>Leaderboard Position: {{ user_position }}</p>
     <p>Points: {{ user.userprofile.points }}</p>
 
     <p>Bio: {{ user.userprofile.bio }}</p>
