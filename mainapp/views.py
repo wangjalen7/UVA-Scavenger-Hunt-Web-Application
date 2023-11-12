@@ -140,10 +140,9 @@ def event_about(request, event_id):
 def event_leaderboard(request, event_id):
     event = get_object_or_404(Event, pk=event_id)
     is_team_member = Team.objects.filter(event=event, members=request.user).exists()
-    teams = Team.objects.filter(event=event)
     my_team = Team.objects.filter(event=event, members=request.user).first()
-
-    context = {'event': event, 'is_team_member': is_team_member, 'teams': teams, 'my_team': my_team, }
+    teams = Team.objects.filter(event=event_id).order_by('-points')
+    context = {'event': event, 'is_team_member': is_team_member, 'my_team': my_team, 'teams': teams}
     return render(request, 'event_tabs/leaderboard.html', context)
 
 
@@ -415,11 +414,8 @@ def leaderboard(request, ):
         total_points=Sum('userprofile__points')
     ).exclude(userprofile__points__isnull=True).order_by('-total_points')[:10]
     return render(request, 'leaderboard.html', {'leaders': leaders})
-@login_required
-def event_leaderboard(request, event_id):
-    event = get_object_or_404(Event, id=event_id)
-    teams = Team.objects.filter(event=event_id).order_by('-points')
-    return render(request, 'event_tabs/leaderboard.html', {'event': event, 'teams': teams})
+
+
 @staff_only
 @login_required
 def create_theme(request):
