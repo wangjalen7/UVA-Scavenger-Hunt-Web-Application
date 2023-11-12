@@ -9,12 +9,14 @@
         <a href="{% url 'event_teams' event.id %}"
             class="btn btn-secondary{% if tab == 'teams' %} active{% endif %}">Teams</a>
         {% if is_team_member %}
-        <a href="{% url 'event_team' event.id my_team.id %}"
-            class="btn btn-secondary{% if tab == 'my_team' %} active{% endif %}">My Team</a>
-        <a href="{% url 'event_tasks_todo' event.id %}"
-            class="btn btn-secondary{% if tab == 'tasks_todo' %} active{% endif %}">Tasks To Do</a>
-        <a href="{% url 'event_completed_tasks' event.id %}"
-            class="btn btn-secondary{% if tab == 'completed_tasks' %} active{% endif %}">Completed Tasks</a>
+            <a href="{% url 'event_team' event.id my_team.id %}"
+                class="btn btn-secondary{% if tab == 'my_team' %} active{% endif %}">My Team</a>
+            <a href="{% url 'event_all_tasks' event.id %}"
+                class="btn btn-secondary{% if tab == 'all_tasks' %} active{% endif %}">All Tasks</a>
+            <a href="{% url 'event_tasks_todo' event.id %}"
+                class="btn btn-secondary{% if tab == 'tasks_todo' %} active{% endif %}">Tasks To Do</a>
+            <a href="{% url 'event_completed_tasks' event.id %}"
+                class="btn btn-secondary{% if tab == 'completed_tasks' %} active{% endif %}">Completed Tasks</a>
         {% endif %}
     </div>
 </div>

@@ -4,6 +4,7 @@ from .models import Task, Theme, Team, Event, Player
 from django.forms.widgets import DateInput
 from django.forms import inlineformset_factory
 
+
 class AllauthCustomSignupForm(SignupForm):
     first_name = forms.CharField(max_length=30, label='First Name', required=True)
     last_name = forms.CharField(max_length=30, label='Last Name', required=True)
@@ -26,18 +27,20 @@ class EventForm(forms.ModelForm):
             'privacy': forms.Select(choices=Event.PRIVACY_CHOICES),
         }
 
+
 class TaskForm(forms.ModelForm):
     class Meta:
         model = Task
-        fields = ['name', 'task', 'hint', 'latitude', 'longitude', 'theme']
+        fields = ['name', 'task', 'hint', 'latitude', 'longitude', 'theme', 'secret_key']
 
 
 TaskFormSet = inlineformset_factory(
-    Theme, Task, 
+    Theme, Task,
     fields=('name', 'task', 'hint', 'latitude', 'longitude'),
     extra=1,
     can_delete=True  # Ensure this is True
 )
+
 
 class ThemeForm(forms.ModelForm):
     class Meta:
@@ -52,6 +55,7 @@ class JoinTeamForm(forms.ModelForm):
     class Meta:
         model = Team
         fields = ['id']  # This field will be populated from the hidden input in the template.
+
 
 class CreateTeamForm(forms.Form):
     new_team_name = forms.CharField(

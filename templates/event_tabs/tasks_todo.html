@@ -1,18 +1,23 @@
-
 {% extends "base.html" %}
 
 {% block content %}
 {% include "event_tabs/event_menu.html" %}
 <div class="container">
-    <h2>Tasks Todo</h2>
+    <h2>Tasks To Do</h2>
     {% for task in tasks_todo %}
-    <div>Name: {{ task.name }} <br>
-        Task: {{ task.task }} <br>
-        <a href="{% url 'map' task.id %}" class="btn btn-primary">Hint</a>
-    </div>
-    <br>
+        <div>
+            <h3>{{ task.name }}</h3>
+            <p>{{ task.task }}</p>
+            <a href="{% url 'map' task.id %}" class="btn btn-primary">Hint</a>
+            <form method="post" action="{% url 'check_task_secret_key' event.id task.id %}">
+                {% csrf_token %}
+                <input type="text" name="secret_key" placeholder="Enter Secret Key" required>
+                <button type="submit" class="btn btn-success">Submit Key</button>
+            </form>
+        </div>
+        <br>
     {% empty %}
-    <div>No tasks todo</div>
+        <div>No tasks to do</div>
     {% endfor %}
 </div>
 {% endblock %}

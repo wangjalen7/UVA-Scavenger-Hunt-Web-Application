@@ -1,18 +1,20 @@
-
 {% extends "base.html" %}
 
 {% block content %}
 {% include "event_tabs/event_menu.html" %}
 <div class="container">
     <h2>Completed Tasks</h2>
-    {% for task in tasks_completed %}
-    <div>Name: {{ task.name }} <br>
-        Task: {{ task.task }} <br>
-        <a href="{% url 'map' task.id %}" class="btn btn-primary">Hint</a>
-    </div>
-    <br>
+    {% for task in completed_tasks %}
+        <div>
+            <h3>{{ task.name }}</h3>
+            <p>{{ task.task }}</p>
+            <a href="{% url 'map' task.id %}" class="btn btn-primary">Hint</a>
+            <!-- Optionally, display the secret key for completed tasks -->
+            <p><strong>Secret Key:</strong> {{ task.secret_key }}</p>
+        </div>
+        <br>
     {% empty %}
-    <div>No tasks completed</div>
+        <div>No tasks completed</div>
     {% endfor %}
 </div>
 {% endblock %}

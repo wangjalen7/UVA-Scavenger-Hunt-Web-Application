@@ -1,18 +1,25 @@
-
 {% extends "base.html" %}
 
 {% block content %}
 {% include "event_tabs/event_menu.html" %}
 <div class="container">
     <h2>All Tasks</h2>
-    {% for task in tasks %}
-    <div>Name: {{ task.name }} <br>
-        Task: {{ task.task }} <br>
-        <a href="{% url 'map' task.id %}" class="btn btn-primary">Hint</a>
-    </div>
-    <br>
+    {% for task in all_tasks %}
+        <div>
+            <h3>{{ task.name }}</h3>
+            <p>{{ task.task }}</p>
+            <a href="{% url 'map' task.id %}" class="btn btn-primary">Hint</a>
+
+            <!-- Check if the task is completed and display status accordingly -->
+            {% if task.id in completed_tasks_ids %}
+                <p><strong>Status:</strong> Completed</p>
+            {% else %}
+                <p><strong>Status:</strong> Incomplete</p>
+            {% endif %}
+        </div>
+        <br>
     {% empty %}
-    <div>No tasks available</div>
+        <div>No tasks available</div>
     {% endfor %}
 </div>
 {% endblock %}
