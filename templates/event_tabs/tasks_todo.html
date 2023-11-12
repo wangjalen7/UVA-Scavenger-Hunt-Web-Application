@@ -8,7 +8,7 @@
         <div>
             <h3>{{ task.name }}</h3>
             <p>{{ task.task }}</p>
-            <a href="{% url 'map' task.id %}" class="btn btn-primary">Hint</a>
+            <a href="{% url 'hint' event.id task.id %}" class="btn btn-primary">Hint</a>
             <form method="post" action="{% url 'check_task_secret_key' event.id task.id %}">
                 {% csrf_token %}
                 <input type="text" name="secret_key" placeholder="Enter Secret Key" required>

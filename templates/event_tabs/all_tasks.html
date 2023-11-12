@@ -8,7 +8,7 @@
         <div>
             <h3>{{ task.name }}</h3>
             <p>{{ task.task }}</p>
-            <a href="{% url 'map' task.id %}" class="btn btn-primary">Hint</a>
+            <a href="{% url 'hint' event.id task.id %}" class="btn btn-primary">Hint</a>
 
             <!-- Check if the task is completed and display status accordingly -->
             {% if task.id in completed_tasks_ids %}

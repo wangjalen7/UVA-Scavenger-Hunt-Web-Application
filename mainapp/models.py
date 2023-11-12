@@ -77,6 +77,9 @@ class Team(models.Model):
     members = models.ManyToManyField(User, related_name='teams')
     points = models.IntegerField(default=0)
 
+    class Meta:
+        unique_together = ('name', 'event')
+
     def __str__(self):
         return self.name
 
