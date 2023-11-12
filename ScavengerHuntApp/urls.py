@@ -46,7 +46,7 @@ urlpatterns = [
     path('deny_event/<int:event_id>/', views.deny_event, name='deny_event'),
     path('create_task/<int:theme_id>', views.create_task, name='create_task'),
     path('create_theme/', views.create_theme, name='create_theme'),
-    path('map/<int:task_id>', views.map_view, name="map"),
+    path('event/<int:event_id>/hint/<int:task_id>', views.hint_view, name="hint"),
 
     path('event/<int:event_id>/', views.event_about, name='event_about'),  # Default to 'about' tab
     path('event/<int:event_id>/leaderboard/', views.event_leaderboard, name='event_leaderboard'),

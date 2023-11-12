@@ -92,6 +92,7 @@ Link: https://chat.openai.com/share/f2f2591e-18bc-4ebf-b6d6-db23ce038802 -->
                 src="https://maps.googleapis.com/maps/api/js?key={{key}}&callback=initMap">
             </script>
         <button onclick="calculateDirections()" class="btn btn-primary">Find Route To Hint</button>
+        <button onclick="location.href='{% url 'event_all_tasks' event.id %}'" class="btn btn-primary">Back to Tasks</button>
     </div>
 </div>
 </div>

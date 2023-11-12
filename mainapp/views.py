@@ -32,13 +32,14 @@ def staff_only(function):
 
 # Title: Django Google Maps Tutorial #4: Placing Markers on a Map
 # URL: https://www.youtube.com/watch?v=sasx2ppol5c&t=685s 
-def map_view(request, task_id):
+def hint_view(request, event_id, task_id):
     key = settings.GOOGLE_MAPS_API_KEY
+    event = Event.objects.get(pk=event_id)
     task = Task.objects.get(pk=task_id)
 
     return render(request, 'map.html',
                   {'key': key, 'latitude': task.latitude, 'longitude': task.longitude, 'hint': task.hint,
-                   'name': task.name, })
+                   'name': task.name, 'event': event, })
 
 
 class CustomSignupView(SignupView):
@@ -331,6 +332,12 @@ def create_team(request, event_id):
         form = CreateTeamForm(request.POST)
         if form.is_valid():
             new_team_name = form.cleaned_data['new_team_name']
+
+            # Check if a team with the same name already exists for this event
+            if Team.objects.filter(name=new_team_name, event=event).exists():
+                messages.error(request, "A team with this name already exists in the event.")
+                return redirect('create_team', event_id=event_id)
+
             new_team = Team.objects.create(name=new_team_name, event=event)
             new_team.members.add(request.user)
             messages.success(request, "Team created successfully.")
@@ -350,19 +357,18 @@ def create_team(request, event_id):
     return render(request, 'create_team.html', context)
 
 
+
 @login_required
 def leave_team(request, event_id, team_id):
     team = get_object_or_404(Team, id=team_id)
 
     # Check if user is part of the team
     if not team.members.filter(id=request.user.id).exists():
-        print("hello1")
         messages.error(request, "You are not part of this team.")
         return redirect('event_about', event_id=event_id)
 
     if request.method == 'POST':
         team.members.remove(request.user)
-        print("hello2")
 
         # Delete the team if this was the last member
         if team.members.count() == 0:
@@ -370,8 +376,7 @@ def leave_team(request, event_id, team_id):
             messages.success(request, "Team has been disbanded as you were the last member.")
         else:
             messages.success(request, "You have successfully left the team.")
-    print("hello3")
-    return redirect('event_team', event_id=event_id, team_id=team_id)
+    return redirect('event_about', event_id=event_id)
 
 
 @staff_only
