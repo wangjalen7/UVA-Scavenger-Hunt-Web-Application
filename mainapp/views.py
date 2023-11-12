@@ -141,8 +141,8 @@ def event_leaderboard(request, event_id):
     event = get_object_or_404(Event, pk=event_id)
     is_team_member = Team.objects.filter(event=event, members=request.user).exists()
     my_team = Team.objects.filter(event=event, members=request.user).first()
-    # Add leaderboard logic here
-    context = {'event': event, 'is_team_member': is_team_member, 'my_team': my_team, }
+    teams = Team.objects.filter(event=event_id).order_by('-points')
+    context = {'event': event, 'is_team_member': is_team_member, 'my_team': my_team, 'teams': teams}
     return render(request, 'event_tabs/leaderboard.html', context)
 
 
@@ -602,13 +602,25 @@ def check_task_secret_key(request, event_id, task_id):
         entered_key = request.POST.get('secret_key')
         print("Entered key:", entered_key)  # Debugging
         print("Actual key:", task.secret_key)  # Debugging
+        completion, created = TaskCompletion.objects.get_or_create(task=task, team=my_team)
+        if created:
+            my_team.points += 5
+            my_team.save()
 
-        if task.secret_key == entered_key:
-            # Use get_or_create to avoid creating duplicate entries
-            TaskCompletion.objects.get_or_create(task=task, team=my_team)
-            messages.success(request, 'Task completed successfully!')
+            request.user.userprofile.points += 5
+            request.user.userprofile.save()
+            messages.success(request, 'Task completed successfully! You earned 5 points.')
         else:
-            messages.error(request, 'Incorrect secret key!')
+            messages.warning(request, 'You have already completed this task.')
+
+    else:
+        messages.error(request, 'Incorrect secret key!')
+        # if task.secret_key == entered_key:
+        #     # Use get_or_create to avoid creating duplicate entries
+        #     TaskCompletion.objects.get_or_create(task=task, team=my_team)
+        #     messages.success(request, 'Task completed successfully!')
+        # else:
+        #     messages.error(request, 'Incorrect secret key!')
 
     return redirect('event_tasks_todo', event_id=event_id)
 

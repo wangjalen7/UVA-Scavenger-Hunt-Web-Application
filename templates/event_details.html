@@ -21,7 +21,7 @@
 
     <!-- Determine the active tab based on the URL -->
     {% if tab == 'leaderboard' %}
-        {% include 'event_tabs/leaderboard.html' with event=event %}
+        {% include 'event_tabs/leaderboard.html' with event_id=event.id %}
     {% elif tab == 'tasks_todo' and is_member %}
         {% include 'event_tabs/tasks_todo.html' with tasks_todo=tasks_todo %}
     {% elif tab == 'completed_tasks' and is_member %}

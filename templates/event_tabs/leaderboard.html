@@ -1,15 +1,26 @@
-
 {% extends "base.html" %}
 
 {% block content %}
 {% include "event_tabs/event_menu.html" %}
-<!-- Leaderboard Content -->
-<div class="container">
-    <h2>Leaderboard</h2>
-    <!-- Assume leaderboard_data is passed in context -->
-    {% for entry in leaderboard_data %}
-    <!-- Display each leaderboard entry -->
-    <div>{{ entry.name }}: {{ entry.points }}</div>
-    {% endfor %}
-</div>
+    <div class="container">
+        <h2>Leaderboard</h2>
+        <table class="table-hover", id="event_leaderboard">
+      <thead>
+        <tr>
+          <th>Place</th>
+          <th>Team</th>
+          <th>Points</th>
+        </tr>
+      </thead>
+      <tbody>
+      {% for team in teams %}
+          <tr>
+            <td>{{ forloop.counter }}</td>
+            <td>{{ team.name }}</td>
+            <td>{{ team.points }}</td>
+          </tr>
+      {% endfor %}
+      </tbody>
+      </table>
+    </div>
 {% endblock %}
