@@ -6,6 +6,7 @@ from unittest.mock import Mock, patch
 from django.test import TestCase
 from .models import Event, Player, Theme, Team, Task, UserProfile
 
+
 # User Signup Test Case
 class UserSignupTestCase(TestCase):
 
@@ -24,6 +25,7 @@ class UserSignupTestCase(TestCase):
         self.assertEqual(user.first_name, 'Test')
         self.assertEqual(user.last_name, 'User')
 
+
 # Task Creation Test Case
 class TaskCreationTestCase(TestCase):
 
@@ -39,13 +41,17 @@ class TaskCreationTestCase(TestCase):
             'name': 'Find a Historic Landmark',
             'task': 'Locate and take a photo with a well-known historic landmark in your city.',
             'hint': 'Some hint',
-            'theme': self.theme.id
+            'theme': self.theme.id,
+            'latitude': 40.7484,
+            'longitude': -73.9857,
+            'secret_key': 'landmark123'
         }
         response = self.client.post(reverse('create_task', args=[self.theme.id]), data)
         self.assertEqual(response.status_code, 302)
         task = Task.objects.get(name='Find a Historic Landmark')
         self.assertEqual(task.theme, self.theme)
         self.assertEqual(task.task, 'Locate and take a photo with a well-known historic landmark in your city.')
+
 
 # Theme Creation Test Case
 class ThemeCreationTestCase(TestCase):
@@ -82,6 +88,7 @@ class ThemeCreationTestCase(TestCase):
         theme = Theme.objects.get(title='Adventure Theme')
         for task in self.tasks:
             self.assertTrue(theme.tasks.filter(name=task['name']).exists())
+
 
 # Event Form Test Case
 class EventFormTests(TestCase):
@@ -125,6 +132,7 @@ class EventFormTests(TestCase):
         self.assertEqual(event.status, 'pending')
         self.assertEqual(event.theme, theme)
 
+
 # Event Participation Test Case
 class EventParticipationTestCase(TestCase):
 
@@ -153,7 +161,7 @@ class EventParticipationTestCase(TestCase):
         self.assertEqual(join_team_response.status_code, 302)
         self.assertTrue(self.team.members.filter(id=self.user.id).exists())
 
-        #Join another team in the same event
+        # Join another team in the same event
         another_team = Team.objects.create(name='Another Team', event=self.event)
         join_another_team_response = self.client.post(reverse('join_team', args=[self.event.id, another_team.id]))
         self.assertEqual(join_another_team_response.status_code, 302)
@@ -180,6 +188,7 @@ class EventViewingTestCase(TestCase):
         self.client.login(username='participant', password='participant123')
         response = self.client.get(reverse('event_about', args=[self.event.id]))
         self.assertEqual(response.status_code, 200)
+
 
 # Manage Events Test Case
 class ManageEventsTestCase(TestCase):
@@ -211,6 +220,7 @@ class ManageEventsTestCase(TestCase):
         self.event.refresh_from_db()
         self.assertEqual(self.event.status, 'denied')
 
+
 # Name Change Achievement Test Case
 class NameChangeAchievementTestCase(TestCase):
 
@@ -222,6 +232,5 @@ class NameChangeAchievementTestCase(TestCase):
         new_name = 'participant2'
         response = self.client.post(reverse('change_username'), {'new_username': new_name})
         self.assertEqual(response.status_code, 302)
-        self.user.refresh_from_db() 
+        self.user.refresh_from_db()
         self.assertEqual(self.user.username, new_name)
-

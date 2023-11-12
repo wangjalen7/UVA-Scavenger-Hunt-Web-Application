@@ -42,7 +42,7 @@ class Task(models.Model):
     latitude = models.FloatField(null=True, blank=True)
     longitude = models.FloatField(null=True, blank=True)
     theme = models.ForeignKey(Theme, on_delete=models.CASCADE, related_name='tasks')
-    secret_key = models.CharField(max_length=100, default='default_key')
+    secret_key = models.CharField(max_length=100)
 
     def __str__(self):
         return self.name
