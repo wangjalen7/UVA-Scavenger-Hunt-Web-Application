@@ -1,7 +1,8 @@
 from django.shortcuts import render, redirect
 from django.contrib.auth.decorators import login_required
 from .forms import EventForm, TaskForm, ThemeForm, JoinTeamForm, CreateTeamForm, TaskFormSet
-from .models import Event, Theme, Task, Team, UserProfile, Achievement, AchievementEarned, Player, UserEvent, TaskCompletion
+from .models import Event, Theme, Task, Team, UserProfile, Achievement, AchievementEarned, Player, UserEvent, \
+    TaskCompletion
 from allauth.account.views import SignupView
 from .forms import AllauthCustomSignupForm
 from django.shortcuts import render, redirect, get_object_or_404
@@ -12,8 +13,9 @@ import logging
 from django.contrib import messages
 import requests
 import googlemaps
-from django.conf import settings # need api key from google to make the request
+from django.conf import settings  # need api key from google to make the request
 import datetime
+import json
 
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger('ScavengerHuntApp')
@@ -34,8 +36,9 @@ def map_view(request, task_id):
     key = settings.GOOGLE_MAPS_API_KEY
     task = Task.objects.get(pk=task_id)
 
-    return render(request, 'map.html', {'key': key, 'latitude': task.latitude, 'longitude': task.longitude, 'hint': task.hint, 'name': task.name, })
-
+    return render(request, 'map.html',
+                  {'key': key, 'latitude': task.latitude, 'longitude': task.longitude, 'hint': task.hint,
+                   'name': task.name, })
 
 
 class CustomSignupView(SignupView):
@@ -50,14 +53,15 @@ def profile(request):
     signup_achievement(request, user)
     return render(request, 'profile/profile.html', {'user': user, 'achievements': achievements})
 
+
 @login_required
 def change_username(request):
     username_error = ""
-    
+
     if request.method == 'POST':
         new_username = request.POST.get('new_username')
         user = request.user
-        
+
         if User.objects.filter(username=new_username).exclude(pk=user.pk).exists():
             username_error = 'This username is already in use. Please choose a different one.'
         else:
@@ -69,26 +73,28 @@ def change_username(request):
             return redirect('profile')
     return render(request, 'profile/change_username.html', {'user': request.user, 'username_error': username_error})
 
+
 @login_required
 def change_bio(request):
-        bio_error = ""
-        try:
-            user_profile = request.user.userprofile
-        except UserProfile.DoesNotExist:
-            user_profile = UserProfile.objects.create(user=request.user)
-        if request.method == 'POST':
-            new_bio = request.POST.get('bio')
-            if len(new_bio) > 250:
-                bio_error = 'Bio must be 250 characters or less.'
-            else:
-                user_profile.bio = new_bio
-                user_profile.save()
-
-                change_description_achievement(request, request.user)
-                return redirect('profile')
+    bio_error = ""
+    try:
+        user_profile = request.user.userprofile
+    except UserProfile.DoesNotExist:
+        user_profile = UserProfile.objects.create(user=request.user)
+    if request.method == 'POST':
+        new_bio = request.POST.get('bio')
+        if len(new_bio) > 250:
+            bio_error = 'Bio must be 250 characters or less.'
         else:
-            new_bio = user_profile.bio
-        return render(request, 'profile/change_bio.html', {'user': request.user, 'bio_error': bio_error, 'bio': new_bio})
+            user_profile.bio = new_bio
+            user_profile.save()
+
+            change_description_achievement(request, request.user)
+            return redirect('profile')
+    else:
+        new_bio = user_profile.bio
+    return render(request, 'profile/change_bio.html', {'user': request.user, 'bio_error': bio_error, 'bio': new_bio})
+
 
 @login_required
 def create_event(request):
@@ -124,8 +130,10 @@ def event_about(request, event_id):
     is_event_member = UserEvent.objects.filter(event=event, user=request.user).exists()
     is_team_member = Team.objects.filter(event=event, members=request.user).exists()
     my_team = Team.objects.filter(event=event, members=request.user).first()
-    context = {'event': event, 'is_event_member': is_event_member, 'is_team_member': is_team_member,'my_team': my_team,}
+    context = {'event': event, 'is_event_member': is_event_member, 'is_team_member': is_team_member,
+               'my_team': my_team, }
     return render(request, 'event_tabs/about.html', context)
+
 
 @login_required
 def event_leaderboard(request, event_id):
@@ -133,17 +141,29 @@ def event_leaderboard(request, event_id):
     is_team_member = Team.objects.filter(event=event, members=request.user).exists()
     my_team = Team.objects.filter(event=event, members=request.user).first()
     # Add leaderboard logic here
-    context = {'event': event, 'is_team_member': is_team_member,'my_team': my_team,}
+    context = {'event': event, 'is_team_member': is_team_member, 'my_team': my_team, }
     return render(request, 'event_tabs/leaderboard.html', context)
+
 
 @login_required
 def event_tasks(request, event_id):
     event = get_object_or_404(Event, pk=event_id)
-    tasks = Task.objects.filter(event=event)
     is_team_member = Team.objects.filter(event=event, members=request.user).exists()
     my_team = Team.objects.filter(event=event, members=request.user).first()
-    context = {'event': event, 'tasks': tasks, 'is_team_member': is_team_member, 'my_team': my_team,}
+    # Filter tasks by the event's theme
+    all_tasks = Task.objects.filter(theme=event.theme)
+
+    completed_tasks_ids = TaskCompletion.objects.filter(team=my_team, task__theme=event.theme).values_list('task_id', flat=True)
+
+    context = {
+        'event': event,
+        'is_team_member': is_team_member,
+        'my_team': my_team,
+        'all_tasks': all_tasks,
+        'completed_tasks_ids': list(completed_tasks_ids),
+    }
     return render(request, 'event_tabs/all_tasks.html', context)
+
 
 @login_required
 def event_teams(request, event_id):
@@ -151,8 +171,9 @@ def event_teams(request, event_id):
     teams = Team.objects.filter(event=event)
     is_team_member = Team.objects.filter(event=event, members=request.user).exists()
     my_team = Team.objects.filter(event=event, members=request.user).first()
-    context = {'event': event, 'teams': teams, 'is_team_member': is_team_member,'my_team': my_team,}
+    context = {'event': event, 'teams': teams, 'is_team_member': is_team_member, 'my_team': my_team, }
     return render(request, 'event_tabs/teams.html', context)
+
 
 @login_required
 def event_team(request, event_id, team_id):
@@ -160,8 +181,9 @@ def event_team(request, event_id, team_id):
     team = get_object_or_404(Team, pk=team_id, event=event)
     is_team_member = Team.objects.filter(event=event, members=request.user).exists()
     my_team = Team.objects.filter(event=event, members=request.user).first()
-    context = {'event': event, 'team': team, 'is_team_member': is_team_member,'my_team': my_team,}
+    context = {'event': event, 'team': team, 'is_team_member': is_team_member, 'my_team': my_team, }
     return render(request, 'event_tabs/team.html', context)
+
 
 @login_required
 def event_tasks_todo(request, event_id):
@@ -173,7 +195,7 @@ def event_tasks_todo(request, event_id):
     all_tasks = Task.objects.filter(theme=event.theme)
 
     # Get completed tasks' IDs for the team
-    completed_tasks_ids = TaskCompletion.objects.filter(team=my_team).values_list('task_id', flat=True)
+    completed_tasks_ids = TaskCompletion.objects.filter(team=my_team, task__theme=event.theme).values_list('task_id', flat=True)
 
     # Filter out completed tasks
     tasks_todo = all_tasks.exclude(id__in=completed_tasks_ids)
@@ -182,6 +204,7 @@ def event_tasks_todo(request, event_id):
         'event': event,
         'is_team_member': is_team_member,
         'my_team': my_team,
+        'all_tasks': all_tasks,
         'tasks_todo': tasks_todo,
     }
 
@@ -193,22 +216,23 @@ def event_completed_tasks(request, event_id):
     event = get_object_or_404(Event, pk=event_id)
     is_team_member = Team.objects.filter(event=event, members=request.user).exists()
     my_team = Team.objects.filter(event=event, members=request.user).first()
-
+    all_tasks = Task.objects.filter(theme=event.theme)
     # Get IDs of tasks completed by the team
-    completed_tasks_ids = TaskCompletion.objects.filter(team=my_team).values_list('task_id', flat=True)
+    completed_tasks_ids = TaskCompletion.objects.filter(team=my_team, task__theme=event.theme).values_list('task_id', flat=True)
 
     # Fetch completed tasks
     completed_tasks = Task.objects.filter(id__in=completed_tasks_ids)
 
     context = {
-        'event': event, 
+        'event': event,
         'is_team_member': is_team_member,
+        'all_tasks': all_tasks,
         'my_team': my_team,
-        'completed_tasks': completed_tasks
+        'completed_tasks': completed_tasks,
+        'completed_task_ids': list(completed_tasks_ids),
     }
 
     return render(request, 'event_tabs/completed_tasks.html', context)
-
 
 
 @login_required
@@ -258,14 +282,12 @@ def leave_event(request, event_id):
     return redirect('event_about', event_id=event_id)
 
 
-
 # @login_required
 # def team_details(request, event_id, team_id):
 #     event = get_object_or_404(Event, pk=event_id)
 #     team = get_object_or_404(Team, pk=team_id, event=event)
 #     members = team.members.all()
 #     return render(request, 'event_details.html', {'event': event, 'team': team, 'members': members, 'tab': 'team'})
-
 
 
 @login_required
@@ -290,7 +312,7 @@ def join_team(request, event_id, team_id):
 
     team_to_join.members.add(request.user)
     messages.success(request, "You have successfully joined the team.")
-    #join_hunt_achievement(request.user)
+    # join_hunt_achievement(request.user)
 
     return redirect('event_team', event_id=event_id, team_id=team_id)
 
@@ -313,10 +335,11 @@ def create_team(request, event_id):
             messages.success(request, "Team created successfully.")
             create_team_achievement(request, request.user)
             return redirect('event_about', event_id=event_id)
-    
+
     if Team.objects.filter(members=request.user, event=event).exists():
         messages.error(request, "You have already joined a team.")
-        return redirect('event_team', event_id=event_id, team_id=Team.objects.filter(members=request.user, event=event).first().id)
+        return redirect('event_team', event_id=event_id,
+                        team_id=Team.objects.filter(members=request.user, event=event).first().id)
 
     create_team_form = CreateTeamForm()
     context = {
@@ -383,14 +406,14 @@ def deny_event(request, event_id):
     event.save()
     return redirect('manage_events')
 
+
 @login_required
-def leaderboard(request,):
+def leaderboard(request, ):
     leaders = User.objects.alias(
         total_points=Sum('userprofile__points')
     ).exclude(userprofile__points__isnull=True).order_by('-total_points')[:10]
     return render(request, 'leaderboard.html', {'leaders': leaders})
 
-import json
 
 @staff_only
 @login_required
@@ -401,7 +424,7 @@ def create_theme(request):
             theme = form.save(commit=False)
             theme.creator = request.user
             theme.save()
-            
+
             task_data = json.loads(request.POST.get('tasks_json', '[]'))
 
             for task_info in task_data:
@@ -411,15 +434,18 @@ def create_theme(request):
                     hint=task_info.get('hint', ''),
                     latitude=task_info.get('latitude', ''),
                     longitude=task_info.get('longitude', ''),
-                    theme=theme
+                    theme=theme,
+                    secret_key = task_info.get('secret_key', '')
                 )
-            
+
             return redirect('home')
 
     else:
         theme_form = ThemeForm()
 
-    return render(request, 'create_theme.html', {'theme_form': theme_form, 'GOOGLE_MAPS_API_KEY': settings.GOOGLE_MAPS_API_KEY,}) # remember change here for key
+    return render(request, 'create_theme.html', {'theme_form': theme_form,
+                                                 'GOOGLE_MAPS_API_KEY': settings.GOOGLE_MAPS_API_KEY, })  # remember change here for key
+
 
 def create_task(request, theme_id):
     theme = get_object_or_404(Theme, id=theme_id)
@@ -442,11 +468,6 @@ def create_task(request, theme_id):
     return render(request, 'create_theme.html', context)
 
 
-
-
-
-
-
 def change_name_achievement(request, user):
     try:
         user_profile = user.userprofile
@@ -460,7 +481,9 @@ def change_name_achievement(request, user):
         user_profile.points += user_achievement.achievement.points
         user_profile.achievements.add(user_achievement)
         user_profile.save()
-        messages.info(request, "Achievement earned! " + achievement.name + ": " + achievement.description + " - " + str(achievement.points) + "pts")
+        messages.info(request, "Achievement earned! " + achievement.name + ": " + achievement.description + " - " + str(
+            achievement.points) + "pts")
+
 
 def change_description_achievement(request, user):
     try:
@@ -475,23 +498,28 @@ def change_description_achievement(request, user):
         user_profile.points += user_achievement.achievement.points
         user_profile.achievements.add(user_achievement)
         user_profile.save()
-        messages.info(request, "Achievement earned! " + achievement.name + ": " + achievement.description + " - " + str(achievement.points) + "pts")
+        messages.info(request, "Achievement earned! " + achievement.name + ": " + achievement.description + " - " + str(
+            achievement.points) + "pts")
 
-#NOT IMPLEMENTED YET
+
+# NOT IMPLEMENTED YET
 def first_place_achievement(request, user):
     try:
         user_profile = user.userprofile
     except UserProfile.DoesNotExist:
         user_profile = UserProfile.objects.create(user=user)
     if not AchievementEarned.objects.filter(user=user, achievement__name="Fame and Fortune").exists():
-        achievement = Achievement.objects.create(name="Fame and Fortune", points=10, description="Earned 1st place on leaderboard")
+        achievement = Achievement.objects.create(name="Fame and Fortune", points=10,
+                                                 description="Earned 1st place on leaderboard")
         user_achievement = AchievementEarned(user=user, achievement=achievement)
         user_achievement.save()
 
         user_profile.points += user_achievement.achievement.points
         user_profile.achievements.add(user_achievement)
         user_profile.save()
-        messages.info(request, "Achievement earned! " + achievement.name + ": " + achievement.description + " +" + str(achievement.points) + "pts")
+        messages.info(request, "Achievement earned! " + achievement.name + ": " + achievement.description + " +" + str(
+            achievement.points) + "pts")
+
 
 def join_hunt_achievement(request, user):
     try:
@@ -499,14 +527,17 @@ def join_hunt_achievement(request, user):
     except UserProfile.DoesNotExist:
         user_profile = UserProfile.objects.create(user=user)
     if not AchievementEarned.objects.filter(user=user, achievement__name="Up to the Challenge").exists():
-        achievement = Achievement.objects.create(name="Up to the Challenge", points=5, description="Joined 1st scavenger hunt")
+        achievement = Achievement.objects.create(name="Up to the Challenge", points=5,
+                                                 description="Joined 1st scavenger hunt")
         user_achievement = AchievementEarned(user=user, achievement=achievement)
         user_achievement.save()
 
         user_profile.points += user_achievement.achievement.points
         user_profile.achievements.add(user_achievement)
         user_profile.save()
-        messages.info(request, "Achievement earned! " + achievement.name + ": " + achievement.description + " +" + str(achievement.points) + "pts")
+        messages.info(request, "Achievement earned! " + achievement.name + ": " + achievement.description + " +" + str(
+            achievement.points) + "pts")
+
 
 def create_hunt_achievement(request, user):
     try:
@@ -514,14 +545,17 @@ def create_hunt_achievement(request, user):
     except UserProfile.DoesNotExist:
         user_profile = UserProfile.objects.create(user=user)
     if not AchievementEarned.objects.filter(user=user, achievement__name="Cartographer").exists():
-        achievement = Achievement.objects.create(name="Cartographer", points=5, description="Created 1st scavenger hunt")
+        achievement = Achievement.objects.create(name="Cartographer", points=5,
+                                                 description="Created 1st scavenger hunt")
         user_achievement = AchievementEarned(user=user, achievement=achievement)
         user_achievement.save()
 
         user_profile.points += user_achievement.achievement.points
         user_profile.achievements.add(user_achievement)
         user_profile.save()
-        messages.info(request, "Achievement earned! " + achievement.name + ": " + achievement.description + " +" + str(achievement.points) + "pts")
+        messages.info(request, "Achievement earned! " + achievement.name + ": " + achievement.description + " +" + str(
+            achievement.points) + "pts")
+
 
 def create_team_achievement(request, user):
     try:
@@ -536,7 +570,9 @@ def create_team_achievement(request, user):
         user_profile.points += user_achievement.achievement.points
         user_profile.achievements.add(user_achievement)
         user_profile.save()
-        messages.info(request, "Achievement earned! " + achievement.name + ": " + achievement.description + " +" + str(achievement.points) + "pts")
+        messages.info(request, "Achievement earned! " + achievement.name + ": " + achievement.description + " +" + str(
+            achievement.points) + "pts")
+
 
 def signup_achievement(request, user):
     try:
@@ -551,4 +587,29 @@ def signup_achievement(request, user):
         user_profile.points += user_achievement.achievement.points
         user_profile.achievements.add(user_achievement)
         user_profile.save()
-        messages.info(request, "Achievement earned! " + achievement.name + ": " + achievement.description + " +" + str(achievement.points) + "pts")
+        messages.info(request, "Achievement earned! " + achievement.name + ": " + achievement.description + " +" + str(
+            achievement.points) + "pts")
+
+
+@login_required
+def check_task_secret_key(request, event_id, task_id):
+    if request.method == 'POST':
+        task = get_object_or_404(Task, pk=task_id)
+        event = get_object_or_404(Event, pk=event_id)
+        my_team = Team.objects.filter(event=event, members=request.user).first()
+
+        entered_key = request.POST.get('secret_key')
+        print("Entered key:", entered_key)  # Debugging
+        print("Actual key:", task.secret_key)  # Debugging
+
+        if task.secret_key == entered_key:
+            # Use get_or_create to avoid creating duplicate entries
+            TaskCompletion.objects.get_or_create(task=task, team=my_team)
+            messages.success(request, 'Task completed successfully!')
+        else:
+            messages.error(request, 'Incorrect secret key!')
+
+    return redirect('event_tasks_todo', event_id=event_id)
+
+
+

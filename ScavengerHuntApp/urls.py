@@ -20,6 +20,7 @@ from django.views.generic import TemplateView
 from django.contrib.auth import views as auth_views
 from django.urls import path
 from mainapp import views
+from mainapp.views import check_task_secret_key
 
 urlpatterns = [
     path('admin/', admin.site.urls),
@@ -40,23 +41,21 @@ urlpatterns = [
     path('approve_hunt/<int:event_id>/', views.approve_event, name='approve_event'),
     path('deny_hunt/<int:event_id>/', views.deny_event, name='deny_event'),
     path('leaderboard/', views.leaderboard, name='leaderboard'),
-    #path('publicevents/', views.ListScavengerHunt.as_view(), name='public_events'),
+    # path('publicevents/', views.ListScavengerHunt.as_view(), name='public_events'),
     path('approve_event/<int:event_id>/', views.approve_event, name='approve_event'),
     path('deny_event/<int:event_id>/', views.deny_event, name='deny_event'),
     path('create_task/<int:theme_id>', views.create_task, name='create_task'),
     path('create_theme/', views.create_theme, name='create_theme'),
-    path('map/<int:task_id>', views.map_view, name = "map"),
-
-
+    path('map/<int:task_id>', views.map_view, name="map"),
 
     path('event/<int:event_id>/', views.event_about, name='event_about'),  # Default to 'about' tab
     path('event/<int:event_id>/leaderboard/', views.event_leaderboard, name='event_leaderboard'),
     path('event/<int:event_id>/tasks/', views.event_tasks, name='event_tasks'),  # All tasks
     path('event/<int:event_id>/teams/', views.event_teams, name='event_teams'),
     path('event/<int:event_id>/team/<int:team_id>', views.event_team, name='event_team'),  # My team
+    path('event/<int:event_id>/all_tasks', views.event_tasks, name='event_all_tasks'),
     path('event/<int:event_id>/tasks/todo/', views.event_tasks_todo, name='event_tasks_todo'),
     path('event/<int:event_id>/tasks/completed/', views.event_completed_tasks, name='event_completed_tasks'),
-
 
     path('event/<int:event_id>/join/', views.join_event, name='join_event'),
     path('event/<int:event_id>/leave/', views.leave_event, name='leave_event'),
@@ -64,7 +63,8 @@ urlpatterns = [
     path('event/<int:event_id>/leave_team/<int:team_id>', views.leave_team, name='leave_team'),
     path('event/<int:event_id>/team/<int:team_id>/join/', views.join_team, name='join_team'),
 
-    path('achievement/', views.change_name_achievement, name='achievement' ),
-   
-]
+    path('achievement/', views.change_name_achievement, name='achievement'),
 
+    path('event/<int:event_id>/task/<int:task_id>/check_key/', check_task_secret_key, name='check_task_secret_key'),
+
+]

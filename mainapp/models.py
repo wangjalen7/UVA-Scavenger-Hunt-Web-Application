@@ -7,13 +7,15 @@ class Achievement(models.Model):
     name = models.CharField(max_length=255)
     description = models.CharField(max_length=255)
     points = models.IntegerField(default=0)
+
     def __str__(self):
         return self.name
+
 
 class AchievementEarned(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     achievement = models.ForeignKey(Achievement, on_delete=models.CASCADE, null=True)
-    
+
 
 class UserProfile(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE)
@@ -25,14 +27,13 @@ class UserProfile(models.Model):
         return self.user.username
 
 
-
 class Theme(models.Model):
     title = models.CharField(max_length=255)
     description = models.TextField()
 
     def __str__(self):
         return self.title
-    
+
 
 class Task(models.Model):
     name = models.CharField(max_length=255)
@@ -41,6 +42,7 @@ class Task(models.Model):
     latitude = models.FloatField(null=True, blank=True)
     longitude = models.FloatField(null=True, blank=True)
     theme = models.ForeignKey(Theme, on_delete=models.CASCADE, related_name='tasks')
+    secret_key = models.CharField(max_length=100, default='default_key')
 
     def __str__(self):
         return self.name
@@ -74,6 +76,9 @@ class Team(models.Model):
     event = models.ForeignKey(Event, on_delete=models.CASCADE)
     members = models.ManyToManyField(User, related_name='teams')
 
+    def __str__(self):
+        return self.name
+
 
 class UserEvent(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE)
@@ -83,10 +88,9 @@ class UserEvent(models.Model):
 
 class TaskCompletion(models.Model):
     task = models.ForeignKey(Task, on_delete=models.CASCADE)
-    completed_by = models.ForeignKey(User, on_delete=models.CASCADE)
+    # completed_by = models.ForeignKey(User, on_delete=models.CASCADE)
     team = models.ForeignKey(Team, on_delete=models.CASCADE, null=True)
     date_completed = models.DateTimeField(auto_now_add=True)
-
 
 
 class Player(models.Model):
@@ -94,6 +98,3 @@ class Player(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE)
     points = models.IntegerField(default=0)
     team = models.CharField(max_length=30, blank=False)
-
-
-

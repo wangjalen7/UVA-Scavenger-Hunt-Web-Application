@@ -5,12 +5,35 @@
 {% block content %}
 
 <head>
-    
     <script src="https://maps.googleapis.com/maps/api/js?key={{ GOOGLE_MAPS_API_KEY }}&callback=initMaps" async defer></script>
     <style>
         .map {
             height: 200px;
             width: 100%;
+            margin-bottom: 15px;
+        }
+        .task-inputs {
+            background-color: #f2f2f2;
+            padding: 15px;
+            margin-bottom: 20px;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+        .task-inputs input[type="text"],
+        .task-inputs textarea {
+            width: 100%;
+            padding: 10px;
+            margin: 10px 0;
+            display: inline-block;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            box-sizing: border-box;
+        }
+        .container-fluid {
+            padding: 20px;
+        }
+        .btn {
+            margin: 10px;
         }
     </style>
 </head>
@@ -34,6 +57,7 @@
                         <input type="text" class="task-name" placeholder="Task Name" required>
                         <textarea class="task-task" placeholder="Task" required></textarea>
                         <textarea class="task-hint" placeholder="Task Hint" required></textarea>
+                        <input type="text" class="secret-key" placeholder="Secret Key" required>
                         <div id="map0" class="map"></div>
                         <input type="hidden" class="task-latitude" required>
                         <input type="hidden" class="task-longitude" required>
@@ -52,11 +76,11 @@
         let maps = [];
         let markers = [];
         let mapCount = 0;
-    
+
         function initMaps() {
             addMapToTask(0);
         }
-    
+
         function addMapToTask(taskIndex) {
             const defaultPosition = { lat: -34.397, lng: 150.644 };
             const mapDiv = document.getElementById(`map${taskIndex}`);
@@ -64,17 +88,17 @@
                 center:{lat: 38.0336, lng: -78.5080},
                 zoom: 14
             });
-    
+
             maps[taskIndex] = map;
             markers[taskIndex] = null; // Initialize marker
-    
+
             map.addListener('click', function(mapsMouseEvent) {
                 const latLng = mapsMouseEvent.latLng.toJSON();
                 updateTaskCoordinates(taskIndex, latLng.lat, latLng.lng);
                 placeMarker(taskIndex, latLng);
             });
         }
-    
+
         function placeMarker(taskIndex, latLng) {
             if (markers[taskIndex]) {
                 // Move existing marker
@@ -87,13 +111,13 @@
                 });
             }
         }
-    
+
         function updateTaskCoordinates(taskIndex, lat, lng) {
             const taskContainer = document.getElementById(`task-container`).children[taskIndex];
             taskContainer.querySelector('.task-latitude').value = lat;
             taskContainer.querySelector('.task-longitude').value = lng;
         }
-    
+
         document.getElementById('add-task').addEventListener('click', function() {
             mapCount++;
             let taskContainer = document.getElementById('task-container');
@@ -103,6 +127,7 @@
                 <input type="text" class="task-name" placeholder="Task Name" required>
                 <textarea class="task-task" placeholder="Task" required></textarea>
                 <textarea class="task-hint" placeholder="Task Hint" required></textarea>
+                <input type="text" class="secret-key" placeholder="Secret Key" required> <!-- Add this line -->
                 <div id="map${mapCount}" class="map"></div>
                 <input type="hidden" class="task-latitude" required>
                 <input type="hidden" class="task-longitude" required>
@@ -110,7 +135,8 @@
             taskContainer.appendChild(newTaskDiv);
             addMapToTask(mapCount);
         });
-    
+
+
         document.getElementById('delete-task').addEventListener('click', function() {
             let taskContainer = document.getElementById('task-container');
             if (taskContainer.children.length > 1) {
@@ -122,21 +148,23 @@
                 alert('At least one task must remain.');
             }
         });
-        
+
         function gatherTasksData() {
-        let tasks = [];
-        document.querySelectorAll('.task-inputs').forEach((taskDiv, index) => {
-            let task = {
-                name: taskDiv.querySelector('.task-name').value,
-                task: taskDiv.querySelector('.task-task').value,
-                hint: taskDiv.querySelector('.task-hint').value,
-                latitude: markers[index] ? markers[index].getPosition().lat() : '',
-                longitude: markers[index] ? markers[index].getPosition().lng() : ''
-            };
-            tasks.push(task);
-        });
-        return tasks;
-    }
+            let tasks = [];
+            document.querySelectorAll('.task-inputs').forEach((taskDiv, index) => {
+                let task = {
+                    name: taskDiv.querySelector('.task-name').value,
+                    task: taskDiv.querySelector('.task-task').value,
+                    hint: taskDiv.querySelector('.task-hint').value,
+                    secret_key: taskDiv.querySelector('.secret-key').value,
+                    latitude: markers[index] ? markers[index].getPosition().lat() : '',
+                    longitude: markers[index] ? markers[index].getPosition().lng() : ''
+                };
+                tasks.push(task);
+            });
+            return tasks;
+        }
+
 
     document.getElementById('theme-form').addEventListener('submit', function(event) {
         const tasksData = gatherTasksData();
