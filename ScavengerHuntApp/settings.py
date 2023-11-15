@@ -31,7 +31,7 @@ SECRET_KEY = secrets.token_urlsafe(50)
 GOOGLE_MAPS_API_KEY = os.environ.get('GOOGLE_MAPS_API_KEY') or config(
      'GOOGLE_MAPS_API_KEY', default='')
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = False
 
 ALLOWED_HOSTS = ['localhost', '127.0.0.1', 'scavenger-hunt-app.herokuapp.com',
                  'scavenger-hunt-app-1c0405daa9d6.herokuapp.com']
