@@ -24,13 +24,14 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # See https://docs.djangoproject.com/en/4.2/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'django-insecure-*#e4@jz&u2%5l&h685pt2288!o8k!!s$xbt-aktnp(d#zijh0b'
+import secrets
+SECRET_KEY = secrets.token_urlsafe(50)
 
 # Google Maps API Key
 GOOGLE_MAPS_API_KEY = os.environ.get('GOOGLE_MAPS_API_KEY') or config(
      'GOOGLE_MAPS_API_KEY', default='')
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = False
 
 ALLOWED_HOSTS = ['localhost', '127.0.0.1', 'scavenger-hunt-app.herokuapp.com',
                  'scavenger-hunt-app-1c0405daa9d6.herokuapp.com']
@@ -95,18 +96,6 @@ WSGI_APPLICATION = 'ScavengerHuntApp.wsgi.application'
 # https://docs.djangoproject.com/en/4.2/ref/settings/#databases
 
 
-# Local Postgres DB
-# DATABASES = {
-#     'default': {
-#         'ENGINE': 'django.db.backends.postgresql',
-#         'NAME': 'mydb',
-#         'USER': 'myuser',
-#         'PASSWORD': 'mypassword',
-#         'HOST': 'db',  # Use the service name defined in docker-compose
-#         'PORT': '5432',
-#     }
-# }
-
 DATABASE_URL = os.environ.get('DATABASE_URL') or config(
     'DATABASE_URL', default='')
 DATABASES = {
@@ -151,6 +140,15 @@ USE_I18N = True
 
 USE_TZ = True
 
+CSRF_COOKIE_SECURE = True
+
+SECURE_SSL_REDIRECT=True
+
+SESSION_COOKIE_SECURE=True
+
+SECURE_HSTS_SECONDS = 31536000  # 1 year
+SECURE_HSTS_INCLUDE_SUBDOMAINS = True
+SECURE_HSTS_PRELOAD = True
 
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/4.2/howto/static-files/
