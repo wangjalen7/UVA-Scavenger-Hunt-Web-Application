@@ -607,27 +607,26 @@ def check_task_secret_key(request, event_id, task_id):
         entered_key = request.POST.get('secret_key')
         print("Entered key:", entered_key)  # Debugging
         print("Actual key:", task.secret_key)  # Debugging
-        completion, created = TaskCompletion.objects.get_or_create(task=task, team=my_team)
-        if created:
-            my_team.points += 5
-            my_team.save()
 
-            request.user.userprofile.points += 5
-            request.user.userprofile.save()
-            messages.success(request, 'Task completed successfully! You earned 5 points.')
+        if task.secret_key == entered_key:
+            # Check if the task has already been completed by the team
+            completion, created = TaskCompletion.objects.get_or_create(task=task, team=my_team)
+            if created:
+                my_team.points += 5
+                my_team.save()
+
+                request.user.userprofile.points += 5
+                request.user.userprofile.save()
+                messages.success(request, 'Task completed successfully! You earned 5 points.')
+            else:
+                messages.warning(request, 'You have already completed this task.')
         else:
-            messages.warning(request, 'You have already completed this task.')
-
+            messages.error(request, 'Incorrect secret key!')
     else:
-        messages.error(request, 'Incorrect secret key!')
-        # if task.secret_key == entered_key:
-        #     # Use get_or_create to avoid creating duplicate entries
-        #     TaskCompletion.objects.get_or_create(task=task, team=my_team)
-        #     messages.success(request, 'Task completed successfully!')
-        # else:
-        #     messages.error(request, 'Incorrect secret key!')
+        messages.error(request, 'Invalid request method.')
 
     return redirect('event_tasks_todo', event_id=event_id)
+
 
 
 
