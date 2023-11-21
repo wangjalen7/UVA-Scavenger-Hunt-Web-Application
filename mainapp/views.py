@@ -13,6 +13,7 @@ from django.contrib import messages
 import requests
 import googlemaps
 from django.conf import settings # need api key from google to make the request
+import geocoder
 
 
 logging.basicConfig(level=logging.INFO)
@@ -31,8 +32,10 @@ def staff_only(function):
 # Title: Django Google Maps Tutorial #4: Placing Markers on a Map
 # URL: https://www.youtube.com/watch?v=sasx2ppol5c&t=685s 
 def map_view(request, task_id):
-    key = settings.GOOGLE_MAPS_API_KEY
+    key = 'AIzaSyCamLJi3Ws33i65zxvez9nO9c1AqiFlElk'
     task = Task.objects.get(pk=task_id)
+    g = geocoder.ip('me')
+
 
     return render(request, 'map.html', {'key': key, 'latitude': task.latitude, 'longitude': task.longitude, 'hint': task.hint, 'name': task.name, })
 
