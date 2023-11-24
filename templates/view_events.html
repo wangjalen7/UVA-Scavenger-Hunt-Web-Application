@@ -1,16 +1,65 @@
 <!DOCTYPE html>
 <html>
 {% extends "base.html" %}
-{% load static %}
 {% block content %}
+    <style>
+        :root {
+            --card_width: 250px;
+            --card_border_radius: 16px;
+            --row_increment: 10px;
+            --card_small: 26;
+            --card_med: 33;
+            --card_large: 45;
+        }
+        body {
+            margin: 0;
+            padding: 0;
+            background-color: grey;
+        }
+
+        .pin_container {
+            margin: 0;
+            padding: 0;
+            width: 75%;
+            position: absolute;
+            left: 25%;
+            transform: translateX(0%);
+
+            display: grid;
+            grid-template-columns: repeat(auto-fill, var(--card_width));
+            grid-auto-rows: var(--row_increment);
+            justify-content: center;
+            background-color: black;
+        }
+
+        .card {
+            padding: 0;
+            margin: 15px 10px;
+            border-radius: var(--card_border_radius);
+
+        }
+
+        .card_small {
+            grid-row-end: span var(--card_small);
+        }
+
+        .card_medium {
+            grid-row-end: span var(--card_med);
+        }
+
+        .card_large {
+            grid-row-end: span var(--card_large);
+        }
+    </style>
 <body>
+
     <div class="container">
         <h1 style="font-size: 70px;">Events</h1>
     </div>
-    <div class="container-fluid">
-        <table border="1">
-            <thead>
-            {% for event in events %}
+    <div class="pin_container">
+        {% for event in events %}
+            <div class="card card_medium">
+            <table>
                 <tr>
                     <th colspan="2">Event Name: <a href="{% url 'event_about' event.id %}">{{ event.name }}</a></th>
                 </tr>
@@ -31,21 +80,19 @@
                     <td>{{ event.end_date }}</td>
                 </tr>
                 <tr>
-                    <td>Privacy:</td>
-                    <td>{{ event.get_privacy_display }}</td>
-                </tr>
-                <tr>
                     <td>Theme:</td>
                     <td>{{ event.theme}}</td>
                 </tr>
-                {% empty %}
+                </table>
+            </div>
+        {% empty %}
                 <tr>
                     <td colspan="2">You haven't created any events yet.</td>
                 </tr>
-                {% endfor %}
-            </thead>
-        </table>
+        {% endfor %}
     </div>
 </body>
 {% endblock %}
 </html>
+
+
