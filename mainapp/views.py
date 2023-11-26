@@ -123,7 +123,7 @@ def view_public_events(request):
 @login_required
 def view_my_events(request):
     events = Event.objects.filter(creator=request.user)
-    return render(request, 'view_events.html', {'events': events, 'title': "My Events"})
+    return render(request, 'view_my_events.html', {'events': events, 'title': "My Events"})
 
 
 @login_required
