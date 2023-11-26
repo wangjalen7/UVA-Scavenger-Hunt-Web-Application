@@ -2,6 +2,7 @@
 <html>
 {% extends "base.html" %}
 {% block content %}
+    <!--used this layout from this video: https://www.youtube.com/watch?v=VTJ_0MplSwk -->
     <style>
         :root {
             --card_width: 250px;
@@ -10,11 +11,13 @@
             --card_small: 26;
             --card_med: 33;
             --card_large: 45;
+            --bs-heading-color: #333;
         }
         body {
             margin: 0;
             padding: 0;
-            background-color: grey;
+            background-color: antiquewhite;
+
         }
 
         .pin_container {
@@ -29,16 +32,17 @@
             grid-template-columns: repeat(auto-fill, var(--card_width));
             grid-auto-rows: var(--row_increment);
             justify-content: center;
-            background-color: black;
+            background-color: #ff985a;
         }
 
         .card {
-            padding: 0;
+            padding: 10px;
             margin: 15px 10px;
             border-radius: var(--card_border_radius);
-
+            background-color: #f2c894;
+            display: flex;
+            flex-direction: column;
         }
-
         .card_small {
             grid-row-end: span var(--card_small);
         }
@@ -50,47 +54,102 @@
         .card_large {
             grid-row-end: span var(--card_large);
         }
+        }
+        .d-inline-block {
+            display: inline-block!important;
+        }
+        .text-primary-emphasis {
+            color: #052c65!important;
+        }
+        h1, h2, h3, h4, h5, h6 {
+            font-family: "Playfair Display", Georgia, "Times New Roman", serif/*rtl:Amiri, Georgia, "Times New Roman", serif*/;
+        }
+        .mb-auto {
+            margin-bottom: auto!important;
+        }
+        .mb-0 {
+            margin-bottom: 0!important;
+        }
+        .mb-2 {
+            margin-bottom: .5rem!important;
+        }
+
+        .h3, h3 {
+            font-size: calc(1.3rem + .6vw);
+        }
+        .h1, .h2, .h3, .h4, .h5, .h6, h1, h2, h3, h4, h5, h6 {
+            margin-top: 0;
+            margin-bottom: .5rem;
+            font-weight: 500;
+            line-height: 1.2;
+            color: var(--bs-heading-color);
+        }
+        h3 {
+            display: block;
+            margin-block-start: 1em;
+            margin-block-end: 1em;
+            margin-inline-start: 0px;
+            margin-inline-end: 0px;
+            font-weight: bold;
+        }
+        .text-body-secondary {
+            --bs-text-opacity: 1;
+        }
+
     </style>
+
 <body>
 
     <div class="container">
-        <h1 style="font-size: 70px;">Events</h1>
+        <h1 style="font-size: 70px; color: #779ecc; font-family: 'Algerian', sans-serif">Events</h1>
     </div>
     <div class="pin_container">
         {% for event in events %}
-            <div class="card card_medium">
+            <div class="card card_medium dynamic-height">
             <table>
                 <tr>
-                    <th colspan="2">Event Name: <a href="{% url 'event_about' event.id %}">{{ event.name }}</a></th>
+                    <strong class="d-inline-block mb-2 text-primary-emphasis">Theme: {{event.theme}}</strong>
                 </tr>
                 <tr>
-                    <td> Status:</td>
-                    <td>{{ event.get_status_display }}</td>
+                    <h3 class="mb-0">{{ event.name }}</h3>
                 </tr>
                 <tr>
-                    <td>Description:</td>
-                    <td>{{ event.description }}</td>
+                    <div class="mb-1 text-body-secondary">{{ event.start_date }} - {{ event.end_date }}</div>
                 </tr>
                 <tr>
-                    <td>Start Date:</td>
-                    <td>{{ event.start_date }}</td>
+                    <p class="card-text mb-auto">Description: {{ event.description }}</p>
                 </tr>
                 <tr>
-                    <td>End Date:</td>
-                    <td>{{ event.end_date }}</td>
-                </tr>
-                <tr>
-                    <td>Theme:</td>
-                    <td>{{ event.theme}}</td>
+                    <a href="{% url 'event_about' event.id %}" class="btn" style="background-color: #779ecc; color: #fff; text-decoration: none;">
+                        <button type="button" class="btn btn-custom">Join Event</button>
+                    </a>
                 </tr>
                 </table>
+
             </div>
         {% empty %}
-                <tr>
-                    <td colspan="2">You haven't created any events yet.</td>
-                </tr>
+                <div class="card card_small">
+                    <tr>
+                        <td colspan="2">You haven't created any events yet.</td>
+                    </tr>
+                </div>
         {% endfor %}
     </div>
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        var mediumCards = document.querySelectorAll('.card_medium.dynamic-height');
+
+        mediumCards.forEach(function (card) {
+            var titleHeight = card.querySelector('h3').offsetHeight;
+            var contentHeight = card.querySelector('.card-text').offsetHeight;
+            var rowIncrement = parseFloat(getComputedStyle(document.documentElement).getPropertyValue('--row_increment'));
+            var adjustmentFactor = 25;
+            var totalHeight = titleHeight + contentHeight;
+            var rows = Math.ceil((totalHeight / rowIncrement) + adjustmentFactor);
+            card.style.gridRowEnd = 'span ' + rows;
+        });
+    });
+</script>
 </body>
 {% endblock %}
 </html>
