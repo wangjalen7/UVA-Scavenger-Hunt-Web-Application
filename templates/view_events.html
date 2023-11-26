@@ -54,7 +54,7 @@
         .card_large {
             grid-row-end: span var(--card_large);
         }
-        }
+
         .d-inline-block {
             display: inline-block!important;
         }
@@ -99,7 +99,6 @@
     </style>
 
 <body>
-
     <div class="container">
         <h1 style="font-size: 70px; color: #779ecc; font-family: 'Algerian', sans-serif">Events</h1>
     </div>
@@ -135,21 +134,21 @@
                 </div>
         {% endfor %}
     </div>
-<script>
-    document.addEventListener("DOMContentLoaded", function () {
-        var mediumCards = document.querySelectorAll('.card_medium.dynamic-height');
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            var mediumCards = document.querySelectorAll('.card_medium.dynamic-height');
 
-        mediumCards.forEach(function (card) {
-            var titleHeight = card.querySelector('h3').offsetHeight;
-            var contentHeight = card.querySelector('.card-text').offsetHeight;
-            var rowIncrement = parseFloat(getComputedStyle(document.documentElement).getPropertyValue('--row_increment'));
-            var adjustmentFactor = 25;
-            var totalHeight = titleHeight + contentHeight;
-            var rows = Math.ceil((totalHeight / rowIncrement) + adjustmentFactor);
-            card.style.gridRowEnd = 'span ' + rows;
+            mediumCards.forEach(function (card) {
+                var titleHeight = card.querySelector('h3').offsetHeight;
+                var contentHeight = card.querySelector('.card-text').offsetHeight;
+                var rowIncrement = parseFloat(getComputedStyle(document.documentElement).getPropertyValue('--row_increment'));
+                var adjustmentFactor = 25;
+                var totalHeight = titleHeight + contentHeight;
+                var rows = Math.ceil((totalHeight / rowIncrement) + adjustmentFactor);
+                card.style.gridRowEnd = 'span ' + rows;
+            });
         });
-    });
-</script>
+    </script>
 </body>
 {% endblock %}
 </html>
