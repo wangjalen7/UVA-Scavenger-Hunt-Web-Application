@@ -13,6 +13,41 @@
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
     <link rel="stylesheet" href="{% static 'styles.css' %}">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.1/css/all.min.css">
+    <style>
+        :root {
+            --card_border_radius: 16px;
+        }
+        body{
+            background-color: antiquewhite;
+        }
+        .card {
+            padding: 10px;
+            margin: 15px 10px;
+            border-radius: var(--card_border_radius);
+            background-color: #f2c894;
+            display: flex;
+            flex-direction: column;
+        }
+        .pin_container {
+            margin: 0;
+            padding: 0;
+            width: 85%;
+            position: absolute;
+            left: 15%;
+            transform: translateX(0%);
+
+            display: grid;
+            grid-template-columns: repeat(auto-fill, var(--card_width));
+            grid-auto-rows: var(--row_increment);
+            justify-content: center;
+            background-color: #ff985a;
+        }
+        .label {
+                text-transform: uppercase;
+                font-weight: bolder;
+                color: #052c65;
+        }
+    </style>
 </head>
 
 
@@ -20,20 +55,24 @@
 <div class="container mt-5">
     <div class="row justify-content-center">
         <div class="col-md-6">
-            <h2>Home</h2>
+            <div class="container">
+                <h1 style="font-size: 70px; color: #779ecc; font-family: 'Algerian', sans-serif; text-align: center">Home</h1>
+            </div>
+            <div class="card">
             {% if user.is_authenticated %}
-                <p>Name: {{ user.first_name }}</p>
-                <p>Username: {{ user.username }}</p>
+                <p style="font-size: 20px"><span class="label">Name:</span> {{ user.first_name }}
+                <p style="font-size: 20px"><span class="label">Username:</span> {{ user.username }}
                 {% if user.is_staff %}
-                    <p>You are logged in as an Admin user.</p>
+                    <p style="text-align: center">You are logged in as an Admin user.</p>
                 {% else %}
-                    <p>You are logged in as a Regular user.</p>
+                    <p style="text-align: center">You are logged in as a Regular user.</p>
                 {% endif %}
-                <a href="{% url 'logout' %}" class="btn btn-danger">Logout</a>
+                <a href="{% url 'logout' %}" class="btn btn-danger" style="font-weight: bolder">Logout</a>
             {% else %}
                 <h2>Welcome Guest!</h2>
                 <p>You need to <a href="{% url 'login' %}">log in</a> to see more content.</p>
             {% endif %}
+            </div>
         </div>
     </div>
 </div>
