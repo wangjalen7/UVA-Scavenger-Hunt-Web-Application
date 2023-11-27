@@ -2,8 +2,41 @@
 
 {% block content %}
 {% include "event_tabs/event_menu.html" %}
+    <head>
+    <style>
+        :root {
+            --card_border_radius: 16px;
+        }
+        body{
+            background-color: antiquewhite;
+        }
+        .card {
+            padding: 10px;
+            margin: 15px 10px;
+            border-radius: var(--card_border_radius);
+            background-color: #f2c894;
+            display: flex;
+            flex-direction: column;
+        }
+        .pin_container {
+            margin: 0;
+            padding: 0;
+            width: 85%;
+            position: absolute;
+            left: 15%;
+            transform: translateX(0%);
+
+            display: grid;
+            grid-template-columns: repeat(auto-fill, var(--card_width));
+            grid-auto-rows: var(--row_increment);
+            justify-content: center;
+            background-color: #ff985a;
+        }
+    </style>
+</head>
 <div class="container">
-    <h2>Tasks To Do</h2>
+    <div class="card">
+    <h2 style="text-align: center; font-family: 'Playfair Display', serif; font-weight: bolder; font-size: 40px">Tasks To Do</h2>
     {% for task in tasks_todo %}
         <div>
             <h3>{{ task.name }}</h3>
@@ -17,7 +50,8 @@
         </div>
         <br>
     {% empty %}
-        <div>No tasks to do</div>
+        <div style="color: #052c65; text-align: center; font-weight: bold; text-transform: uppercase;">No tasks to do</div>
     {% endfor %}
+</div>
 </div>
 {% endblock %}

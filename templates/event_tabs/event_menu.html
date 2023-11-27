@@ -1,24 +1,56 @@
+<head>
+    <style>
+        :root {
+            --card_border_radius: 16px;
+        }
+        body{
+            background-color: antiquewhite;
+        }
+        .custom-btn-color {
+            background-color: #ff985a;
+        }
+        .custom-btn-color:hover {
+            color: white;
+            background-color: #ffb347; /* Set the darker color for hover state */
+        }
+        .card {
+            padding: 10px;
+            margin: 15px 10px;
+            border-radius: var(--card_border_radius);
+            background-color: #f2c894;
+            display: flex;
+            flex-direction: column;
+        }
+        .pin_container {
+            margin: 0;
+            padding: 0;
+            width: 85%;
+            position: absolute;
+            left: 15%;
+            transform: translateX(0%);
 
+            display: grid;
+            grid-template-columns: repeat(auto-fill, var(--card_width));
+            grid-auto-rows: var(--row_increment);
+            justify-content: center;
+            background-color: #ff985a;
+        }
+    </style>
+</head>
 <div class="container-fluid">
     <div class="container">
         <h1 style="font-size: 70px; color: #779ecc; font-family: 'Algerian', sans-serif; text-align: center">{{ event.name }}</h1>
     </div>
-    <div class="btn-group" role="group" aria-label="Event tabs">
-        <a href="{% url 'event_about' event.id %}"
-            class="btn btn-secondary{% if tab == 'about' %} active{% endif %}">About</a>
-        <a href="{% url 'event_leaderboard' event.id %}"
-            class="btn btn-secondary{% if tab == 'leaderboard' %} active{% endif %}">Leaderboard</a>
-        <a href="{% url 'event_teams' event.id %}"
-            class="btn btn-secondary{% if tab == 'teams' %} active{% endif %}">Teams</a>
+
+    <div class="btn-group d-flex justify-content-center" role="group" aria-label="Event tabs">
+        <a href="{% url 'event_about' event.id %}" class="btn custom-btn-color{% if tab == 'about' %} active{% endif %}" style="text-transform: uppercase; font-weight: bolder; color: #052c65;">About</a>
+        <a href="{% url 'event_leaderboard' event.id %}" class="btn custom-btn-color{% if tab == 'leaderboard' %} active{% endif %}" style="text-transform: uppercase; font-weight: bolder; color: #052c65;">Leaderboard</a>
+        <a href="{% url 'event_teams' event.id %}" class="btn custom-btn-color{% if tab == 'teams' %} active{% endif %}" style="text-transform: uppercase; font-weight: bolder; color: #052c65;">Teams</a>
         {% if is_team_member %}
-            <a href="{% url 'event_team' event.id my_team.id %}"
-                class="btn btn-secondary{% if tab == 'my_team' %} active{% endif %}">My Team</a>
-            <a href="{% url 'event_all_tasks' event.id %}"
-                class="btn btn-secondary{% if tab == 'all_tasks' %} active{% endif %}">All Tasks</a>
-            <a href="{% url 'event_tasks_todo' event.id %}"
-                class="btn btn-secondary{% if tab == 'tasks_todo' %} active{% endif %}">Tasks To Do</a>
-            <a href="{% url 'event_completed_tasks' event.id %}"
-                class="btn btn-secondary{% if tab == 'completed_tasks' %} active{% endif %}">Completed Tasks</a>
+            <a href="{% url 'event_team' event.id my_team.id %}" class="btn custom-btn-color{% if tab == 'my_team' %} active{% endif %}" style="text-transform: uppercase; font-weight: bolder; color: #052c65;">My Team</a>
+            <a href="{% url 'event_all_tasks' event.id %}" class="btn custom-btn-color{% if tab == 'all_tasks' %} active{% endif %}" style="text-transform: uppercase; font-weight: bolder; color: #052c65;">All Tasks</a>
+            <a href="{% url 'event_tasks_todo' event.id %}" class="btn custom-btn-color{% if tab == 'tasks_todo' %} active{% endif %}" style="text-transform: uppercase; font-weight: bolder; color: #052c65;">Tasks To Do</a>
+            <a href="{% url 'event_completed_tasks' event.id %}" class="btn custom-btn-color{% if tab == 'completed_tasks' %} active{% endif %}" style="text-transform: uppercase; font-weight: bolder; color: #052c65;">Completed Tasks</a>
         {% endif %}
     </div>
 </div>

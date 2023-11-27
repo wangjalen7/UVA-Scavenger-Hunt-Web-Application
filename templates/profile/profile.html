@@ -4,26 +4,79 @@
 {% load static %}
 {% block content %}
 {% include "achievement_msg.html" %}
+    <head>
+        <style>
+            :root {
+            --card_border_radius: 16px;
+        }
+        body{
+            background-color: #d5e7f8;
+        }
+        .card {
+            padding-right: 70px;
+            margin: 15px 10px;
+            background-color: #9fc0de;
+            display: flex;
+            flex-direction: column;
+            text-align: left;
+        }
+        .pin_container {
+            margin: 0;
+            padding: 0;
+            width: 85%;
+            position: absolute;
+            left: 15%;
+            display: flex;
+            justify-content: space-around;
+            flex-wrap: wrap;
+            background-color: #779ecc;
+        }
+        .achievement_card {
+            padding: 10px;
+            margin: 15px 10px;
+            border-radius: var(--card_border_radius);
+            background-color: #ff985a;
+            display: flex;
+            flex-direction: column;
+        }
+        .label {
+                text-transform: uppercase;
+                font-weight: bolder;
+                color: #052c65;
+        }
+        </style>
+    </head>
 <body>
-    <h1>User Profile</h1>
+    <div class="container">
+        <h1 style="font-size: 70px; color: #ff985a; font-family: 'Algerian', sans-serif; text-align: center">User Profile</h1>
+    </div>
 
-    <p>Username: {{ user.username }}</p>
-    <a href="{% url 'change_username' %}">Change Username</a>
+    <div class="pin_container">
 
-    <p>Leaderboard Position: {{ user_position }}</p>
-    <p>Points: {{ user.userprofile.points }}</p>
+        <div class="card">
+            <p style="font-size: 30px"><span class="label">Username:</span> {{ user.username }}
+                <a href="{% url 'change_username' %}" class="btn" style="background-color: #f2c894; color: #fff; text-decoration: none;">
+                    <button type="button" class="btn btn-custom" style="font-weight: bolder;">Change Username</button>
+                </a>
+            </p>
+            <p style="font-size: 30px"><span class="label">Bio:</span> {{ user.userprofile.bio }}
+                <a href="{% url 'change_bio' %}" class="btn" style="background-color: #f2c894; color: #fff; text-decoration: none;">
+                    <button type="button" class="btn btn-custom" style="font-weight: bolder;">Change Bio</button>
+                </a>
+            </p>
+            <p style="font-size: 30px"><span class="label">Leaderboard Position:</span> {{ user_position }}</p>
 
-    <p>Bio: {{ user.userprofile.bio }}</p>
-    <a href="{% url 'change_bio' %}">Change Bio</a>
-
-    <p>Achievements</p>
-    <ul>
-        {% for achievement in achievements %}
-            <li>{{ achievement.achievement.name }}: {{ achievement.achievement.description }} - {{ achievement.achievement.points }}pts</li>
-        {% empty %}
-            <li>No achievements yet.</li>
-        {% endfor %}
-    </ul>
+            <p style="font-size: 30px"><span class="label">Points:</span> {{ user.userprofile.points }}</p>
+        </div>
+        <div class="achievement_card">
+            <p style="text-transform: uppercase; font-weight: bolder; color: #052c65; font-size: 30px">Achievements</p>
+                {% for achievement in achievements %}
+                    <li style="font-size: 20px">{{ achievement.achievement.name }}: {{ achievement.achievement.description }} - {{ achievement.achievement.points }}pts</li>
+                {% empty %}
+                    <li style="font-size: 20px">No achievements yet.</li>
+                {% endfor %}
+        </div>
+    </div>
 </body>
 {% endblock %}
 </html>
