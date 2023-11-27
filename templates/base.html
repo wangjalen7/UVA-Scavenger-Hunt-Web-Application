@@ -17,7 +17,7 @@ ul {
   list-style-type: none;
   margin: 0;
   padding: 0;
-  width: 25%;
+  width: 15%;
   background-color: #9fc0de;
   position: fixed;
   height: 100%;
@@ -58,6 +58,7 @@ h3 {
     display: inline-block;
     flex-direction: column;
 }
+
 </style>
 </head>
 {% if user.is_authenticated %}
@@ -65,34 +66,38 @@ h3 {
     {% if user.is_staff %}
         <ul>
           <li>
-            <a href="{% url 'home' %}">
+           <a href="{% url 'home' %}" style="font-family: 'Georgia', serif; font-weight: bolder; font-size: 25px">
                 <img src="https://static.vecteezy.com/system/resources/previews/009/385/543/non_2x/magnifying-glass-clipart-design-illustration-free-png.png" alt="Home" style="width:120px;">
                 ScavHunt App
-            </a>
+           </a>
         </li>
+        <hr>
             <li><a href="{% url 'profile' %}">{{ user.username }}</a></li>
             <li><a href="{% url 'view_public_events' %}">Events</a></li>
             <li><a href="{% url 'create_event' %}">Create Events</a></li>
             <li><a href="{% url 'create_theme' %}">Create Theme</a></li>
             <li><a href="{% url 'manage_events' %}">Manage Events</a></li>
+        <hr>
         </ul>
     {% else %}
         <ul>
           <li>
-            <a href="{% url 'home' %}">
+            <a href="{% url 'home' %}" style="font-family: 'Georgia', serif; font-weight: bolder; font-size: 25px">
                 <img src="https://static.vecteezy.com/system/resources/previews/009/385/543/non_2x/magnifying-glass-clipart-design-illustration-free-png.png" alt="Home" style="width:120px;">
                 ScavHunt App
             </a>
         </li>
+        <hr>
             <li><a href="{% url 'profile' %}">{{ user.username }}</a></li>
             <li><a href="{% url 'view_public_events' %}">Events</a></li>
             <li><a href="{% url 'create_event' %}">Create Events</a></li>
             <li><a href="{% url 'view_my_events' %}">My Events</a></li>
             <li><a href="{% url 'leaderboard' %}">Leaderboard</a></li>
+        <hr>
         </ul>
     {% endif %}
 
-    <div style="margin-left:25%;padding:1px 16px;height:1000px;">
+    <div style="margin-left:15%;padding:1px 16px;height:1000px;">
         <!-- Include the achievement_msg.html for displaying messages -->
         {% include "achievement_msg.html" %}
 
