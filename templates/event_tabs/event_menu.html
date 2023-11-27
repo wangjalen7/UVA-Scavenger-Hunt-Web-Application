@@ -1,6 +1,8 @@
 
 <div class="container-fluid">
-    <h1>{{ event.name }}</h1>
+    <div class="container">
+        <h1 style="font-size: 70px; color: #779ecc; font-family: 'Algerian', sans-serif; text-align: center">{{ event.name }}</h1>
+    </div>
     <div class="btn-group" role="group" aria-label="Event tabs">
         <a href="{% url 'event_about' event.id %}"
             class="btn btn-secondary{% if tab == 'about' %} active{% endif %}">About</a>
