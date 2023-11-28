@@ -13,8 +13,6 @@ from django.contrib import messages
 import requests
 import googlemaps
 from django.conf import settings # need api key from google to make the request
-import geocoder
-
 
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger('ScavengerHuntApp')
@@ -34,8 +32,6 @@ def staff_only(function):
 def map_view(request, task_id):
     key = 'AIzaSyCamLJi3Ws33i65zxvez9nO9c1AqiFlElk'
     task = Task.objects.get(pk=task_id)
-    g = geocoder.ip('me')
-
 
     return render(request, 'map.html', {'key': key, 'latitude': task.latitude, 'longitude': task.longitude, 'hint': task.hint, 'name': task.name, })
 
