@@ -60,12 +60,12 @@
             </div>
             <div class="card">
             {% if user.is_authenticated %}
-                <p style="font-size: 20px"><span class="label">First Name:</span> {{ user.first_name }}
-                <p style="font-size: 20px"><span class="label">Last Name:</span> {{ user.last_name }}
                 <p style="font-size: 20px"><span class="label">Username:</span> {{ user.username }}
                 {% if user.is_staff %}
                     <p style="text-align: center">You are logged in as an Admin user.</p>
                 {% else %}
+                    <p style="font-size: 20px"><span class="label">First Name:</span> {{ user.first_name }}
+                    <p style="font-size: 20px"><span class="label">Last Name:</span> {{ user.last_name }}
                     <p style="text-align: center">You are logged in as a Regular user.</p>
                 {% endif %}
                 <a href="{% url 'logout' %}" class="btn btn-danger" style="font-weight: bolder">Logout</a>
