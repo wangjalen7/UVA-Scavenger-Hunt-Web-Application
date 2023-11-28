@@ -59,28 +59,33 @@
         }
     </style>
 </head>
-    <div class="container">
-        <div class="card">
+<div class="container">
+    <div class="card">
         <h2 style="text-align: center; font-family: 'Playfair Display', serif; font-weight: bolder; font-size: 40px">Leaderboard</h2>
 
-        <table class="table-hover", id="event_leaderboard">
-      <thead>
-        <tr>
-          <th style="color: #052c65; border: 3px solid #779ecc; text-align: center; background-color: #9fc0de; text-transform: uppercase;">Place</th>
-          <th style="color: #052c65; border: 3px solid #779ecc; text-align: center; background-color: #9fc0de; text-transform: uppercase;">Team</th>
-          <th style="color: #052c65; border: 3px solid #779ecc; text-align: center; background-color: #9fc0de; text-transform: uppercase;">Points</th>
-        </tr>
-      </thead>
-      <tbody style="text-align: center">
-      {% for team in teams %}
-          <tr class="{% if forloop.counter == 1 %}gold{% elif forloop.counter == 2 %}silver{% elif forloop.counter == 3 %}bronze{% endif %}" style="border: 2px solid #ffb347; padding-left: 90px; padding-right: 90px;">
-            <td>{{ forloop.counter }}</td>
-            <td>{{ team.name }}</td>
-            <td>{{ team.points }}</td>
-          </tr>
-      {% endfor %}
-      </tbody>
-      </table>
+        {% if teams %}
+            <table class="table-hover" id="event_leaderboard">
+                <thead>
+                    <tr>
+                        <th style="color: #052c65; border: 3px solid #779ecc; text-align: center; background-color: #9fc0de; text-transform: uppercase;">Place</th>
+                        <th style="color: #052c65; border: 3px solid #779ecc; text-align: center; background-color: #9fc0de; text-transform: uppercase;">Team</th>
+                        <th style="color: #052c65; border: 3px solid #779ecc; text-align: center; background-color: #9fc0de; text-transform: uppercase;">Points</th>
+                    </tr>
+                </thead>
+                <tbody style="text-align: center">
+                    {% for team in teams %}
+                        <tr class="{% if forloop.counter == 1 %}gold{% elif forloop.counter == 2 %}silver{% elif forloop.counter == 3 %}bronze{% endif %}" style="border: 2px solid #ffb347; padding-left: 90px; padding-right: 90px;">
+                            <td>{{ forloop.counter }}</td>
+                            <td>{{ team.name }}</td>
+                            <td>{{ team.points }}</td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        {% else %}
+            <div style="color: #052c65; text-align: center; font-weight: bold; text-transform: uppercase;">There are no teams yet.</div>
+        {% endif %}
     </div>
-    </div>
+</div>
+
 {% endblock %}
