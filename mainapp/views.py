@@ -37,6 +37,8 @@ def hint_view(request, event_id, task_id):
     event = Event.objects.get(pk=event_id)
     task = Task.objects.get(pk=task_id)
 
+    use_hint_achievement(request, request.user)
+
     return render(request, 'map.html',
                   {'key': key, 'latitude': task.latitude, 'longitude': task.longitude, 'hint': task.hint,
                    'name': task.name, 'event': event, })
@@ -143,6 +145,10 @@ def event_leaderboard(request, event_id):
     is_team_member = Team.objects.filter(event=event, members=request.user).exists()
     my_team = Team.objects.filter(event=event, members=request.user).first()
     teams = Team.objects.filter(event=event_id).order_by('-points')
+
+    if my_team == teams[0]:
+        win_event_achievement(request, request.user)
+
     context = {'event': event, 'is_team_member': is_team_member, 'my_team': my_team, 'teams': teams}
     return render(request, 'event_tabs/leaderboard.html', context)
 
@@ -224,6 +230,25 @@ def event_completed_tasks(request, event_id):
 
     # Fetch completed tasks
     completed_tasks = Task.objects.filter(id__in=completed_tasks_ids)
+
+    if completed_tasks.count() == all_tasks.count():
+        try:
+            user_profile = request.user.userprofile
+        except UserProfile.DoesNotExist:
+            user_profile = UserProfile.objects.create(user=request.user)
+        user_profile.events_completed += 1
+        user_profile.save()
+
+        if user_profile.events_completed == 5:
+            five_events_achievement(request, request.user)
+        if user_profile.events_completed == 10:
+            ten_events_achievement(request, request.user)
+        if user_profile.events_completed == 25:
+            twentyfive_events_achievement(request, request.user)
+        if user_profile.events_completed == 50:
+            fifty_events_achievement(request, request.user)
+        if user_profile.events_completed == 100:
+            onehundred_events_achievement(request, request.user)
 
     context = {
         'event': event,
@@ -418,6 +443,10 @@ def leaderboard(request, ):
     leaders = User.objects.alias(
         total_points=Sum('userprofile__points')
     ).exclude(userprofile__points__isnull=True).order_by('-total_points')[:10]
+
+    if request.user == leaders[0]:
+        first_place_achievement(request, request.user)
+
     return render(request, 'leaderboard.html', {'leaders': leaders})
 
 
@@ -508,7 +537,6 @@ def change_description_achievement(request, user):
             achievement.points) + "pts")
 
 
-# NOT IMPLEMENTED YET
 def first_place_achievement(request, user):
     try:
         user_profile = user.userprofile
@@ -596,6 +624,117 @@ def signup_achievement(request, user):
         messages.info(request, "Achievement earned! " + achievement.name + ": " + achievement.description + " +" + str(
             achievement.points) + "pts")
 
+def use_hint_achievement(request, user):
+    try:
+        user_profile = user.userprofile
+    except UserProfile.DoesNotExist:
+        user_profile = UserProfile.objects.create(user=user)
+    if not AchievementEarned.objects.filter(user=user, achievement__name="SOS").exists():
+        achievement = Achievement.objects.create(name="SOS", points=5, description="Used a hint")
+        user_achievement = AchievementEarned(user=user, achievement=achievement)
+        user_achievement.save()
+
+        user_profile.points += user_achievement.achievement.points
+        user_profile.achievements.add(user_achievement)
+        user_profile.save()
+        messages.info(request, "Achievement earned! " + achievement.name + ": " + achievement.description + " +" + str(
+            achievement.points) + "pts")
+
+def win_event_achievement(request, user):
+    try:
+        user_profile = user.userprofile
+    except UserProfile.DoesNotExist:
+        user_profile = UserProfile.objects.create(user=user)
+    if not AchievementEarned.objects.filter(user=user, achievement__name="Sweet Victory").exists():
+        achievement = Achievement.objects.create(name="Sweet Victory", points=10, description="Won first scavenger hunt event")
+        user_achievement = AchievementEarned(user=user, achievement=achievement)
+        user_achievement.save()
+
+        user_profile.points += user_achievement.achievement.points
+        user_profile.achievements.add(user_achievement)
+        user_profile.save()
+        messages.info(request, "Achievement earned! " + achievement.name + ": " + achievement.description + " +" + str(
+            achievement.points) + "pts")
+        
+def five_events_achievement(request, user):
+    try:
+        user_profile = user.userprofile
+    except UserProfile.DoesNotExist:
+        user_profile = UserProfile.objects.create(user=user)
+    if not AchievementEarned.objects.filter(user=user, achievement__name="On the Hunt").exists():
+        achievement = Achievement.objects.create(name="On the Hunt", points=5, description="Completed 5 scavenger hunt events")
+        user_achievement = AchievementEarned(user=user, achievement=achievement)
+        user_achievement.save()
+
+        user_profile.points += user_achievement.achievement.points
+        user_profile.achievements.add(user_achievement)
+        user_profile.save()
+        messages.info(request, "Achievement earned! " + achievement.name + ": " + achievement.description + " +" + str(
+            achievement.points) + "pts")
+
+def ten_events_achievement(request, user):
+    try:
+        user_profile = user.userprofile
+    except UserProfile.DoesNotExist:
+        user_profile = UserProfile.objects.create(user=user)
+    if not AchievementEarned.objects.filter(user=user, achievement__name="Searching for Treasure").exists():
+        achievement = Achievement.objects.create(name="Searching for Treasure", points=10, description="Completed 10 scavenger hunt events")
+        user_achievement = AchievementEarned(user=user, achievement=achievement)
+        user_achievement.save()
+
+        user_profile.points += user_achievement.achievement.points
+        user_profile.achievements.add(user_achievement)
+        user_profile.save()
+        messages.info(request, "Achievement earned! " + achievement.name + ": " + achievement.description + " +" + str(
+            achievement.points) + "pts")
+        
+def twentyfive_events_achievement(request, user):
+    try:
+        user_profile = user.userprofile
+    except UserProfile.DoesNotExist:
+        user_profile = UserProfile.objects.create(user=user)
+    if not AchievementEarned.objects.filter(user=user, achievement__name="Spirit of Adventure").exists():
+        achievement = Achievement.objects.create(name="Spirit of Adventure", points=20, description="Completed 25 scavenger hunt events")
+        user_achievement = AchievementEarned(user=user, achievement=achievement)
+        user_achievement.save()
+
+        user_profile.points += user_achievement.achievement.points
+        user_profile.achievements.add(user_achievement)
+        user_profile.save()
+        messages.info(request, "Achievement earned! " + achievement.name + ": " + achievement.description + " +" + str(
+            achievement.points) + "pts")
+        
+def fifty_events_achievement(request, user):
+    try:
+        user_profile = user.userprofile
+    except UserProfile.DoesNotExist:
+        user_profile = UserProfile.objects.create(user=user)
+    if not AchievementEarned.objects.filter(user=user, achievement__name="Map Genius").exists():
+        achievement = Achievement.objects.create(name="Map Genius", points=30, description="Completed 50 scavenger hunt events")
+        user_achievement = AchievementEarned(user=user, achievement=achievement)
+        user_achievement.save()
+
+        user_profile.points += user_achievement.achievement.points
+        user_profile.achievements.add(user_achievement)
+        user_profile.save()
+        messages.info(request, "Achievement earned! " + achievement.name + ": " + achievement.description + " +" + str(
+            achievement.points) + "pts")
+        
+def onehundred_events_achievement(request, user):
+    try:
+        user_profile = user.userprofile
+    except UserProfile.DoesNotExist:
+        user_profile = UserProfile.objects.create(user=user)
+    if not AchievementEarned.objects.filter(user=user, achievement__name="Super Searcher").exists():
+        achievement = Achievement.objects.create(name="Super Searcher", points=50, description="Completed 100 scavenger hunt events")
+        user_achievement = AchievementEarned(user=user, achievement=achievement)
+        user_achievement.save()
+
+        user_profile.points += user_achievement.achievement.points
+        user_profile.achievements.add(user_achievement)
+        user_profile.save()
+        messages.info(request, "Achievement earned! " + achievement.name + ": " + achievement.description + " +" + str(
+            achievement.points) + "pts")
 
 @login_required
 def check_task_secret_key(request, event_id, task_id):

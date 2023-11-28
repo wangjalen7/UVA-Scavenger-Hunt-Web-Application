@@ -12,6 +12,7 @@
 
     <p>Leaderboard Position: {{ user_position }}</p>
     <p>Points: {{ user.userprofile.points }}</p>
+    <p>Events Completed: {{ user.userprofile.events_completed }}</p>
 
     <p>Bio: {{ user.userprofile.bio }}</p>
     <a href="{% url 'change_bio' %}">Change Bio</a>
