@@ -10,119 +10,215 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Manage Events</title>
     <link rel="stylesheet" href="{% static 'styles.css' %}">
+    <style>
+        :root {
+            --card_width: 250px;
+            --card_border_radius: 16px;
+            --row_increment: 10px;
+            --card_small: 26;
+            --card_med: 33;
+            --card_large: 45;
+            --bs-heading-color: #333;
+        }
+        body {
+            margin: 0;
+            padding: 0;
+            background-color: antiquewhite;
+
+        }
+
+        .pin_container {
+            margin: 0;
+            padding: 0;
+            width: 85%;
+            position: absolute;
+            left: 15%;
+            transform: translateX(0%);
+
+
+            justify-content: center;
+            flex-direction: column;
+            align-content: center;
+            text-align: center;
+            background-color: #ff985a;
+        }
+        .manage_container {
+            padding: 10px;
+            margin: 15px 10px;
+            border-radius: var(--card_border_radius);
+
+            background-color: #ffb347;
+            display: flex;
+            flex-direction: column;
+            align-content: center;
+            text-align: center;
+        }
+        .manage_card {
+            padding: 10px;
+            margin: 15px 10px;
+            background-color: #f2c894;
+            display: flex;
+            flex-direction: column;
+            align-content: center;
+            text-align: center;
+        }
+        .card {
+            padding: 10px;
+            margin: 15px 10px;
+            border-radius: var(--card_border_radius);
+            background-color: #ffb347;
+
+            display: flex;
+            flex-direction: column;
+        }
+        table {
+            width: 100%;
+            margin-top: 15px;
+            border-collapse: collapse;
+        }
+
+        th, td {
+            padding: 10px;
+            border: 1px solid #779ecc;
+            text-align: left;
+        }
+        td {
+            background-color: #d5e7f8;
+        }
+        th{
+            background-color: #9fc0de;
+        }
+        .label {
+                text-transform: uppercase;
+                font-weight: bolder;
+                color: #052c65;
+        }
+
+</style>
 </head>
 
-<h2>Manage Events</h2>
+<h1 style="font-size: 70px; color: #779ecc; font-family: 'Algerian', sans-serif; text-align: center">Manage Events</h1>
+<div class="pin_container">
+    <div class="manage_container">
+    <div class="manage_card">
+        <h3 style="font-weight: bolder; color: #052c65; text-align: center; text-transform: uppercase;">Pending Events</h3>
+        <hr>
+        <table>
+            <thead>
+                <tr class="label">
+                    <th>Name</th>
+                    <th>Start Date</th>
+                    <th>End Date</th>
+                    <th>Description</th>
+                    <th>Privacy</th>
+                    <th>Status</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for event in events_pending %}
+                <tr>
+                    <td>{{ event.name }}</td>
+                    <td>{{ event.start_date }}</td>
+                    <td>{{ event.end_date }}</td>
+                    <td>{{ event.description }}</td>
+                    <td>{{ event.get_privacy_display }}</td>
+                    <td>{{ event.get_status_display }}</td>
+                    <td>
+                        <form method="post" action="{% url 'approve_event' event.id %}">
+                            {% csrf_token %}
+                            <input type="submit" value="Approve" style="background-color: #5dc99f;">
+                        </form>
+                        <form method="post" action="{% url 'deny_event' event.id %}">
+                            {% csrf_token %}
+                            <input type="submit" value="Deny" style="background-color: #dc5d7b;">
+                        </form>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+    <div class="manage_card">
+        <h3 style="font-weight: bolder; color: #052c65; text-align: center; text-transform: uppercase;">Approved Events</h3>
+        <hr>
+        <table>
+            <thead>
+                <tr class="label">
+                    <th>Name</th>
+                    <th>Start Date</th>
+                    <th>End Date</th>
+                    <th>Description</th>
+                    <th>Privacy</th>
+                    <th>Status</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for event in events_approved %}
+                <tr>
+                    <td>{{ event.name }}</td>
+                    <td>{{ event.start_date }}</td>
+                    <td>{{ event.end_date }}</td>
+                    <td>{{ event.description }}</td>
+                    <td>{{ event.get_privacy_display }}</td>
+                    <td>{{ event.get_status_display }}</td>
+                    <td>
+                        <form method="post" action="{% url 'approve_event' event.id %}">
+                            {% csrf_token %}
+                            <input type="submit" value="Approve" style="background-color: #5dc99f;">
+                        </form>
+                        <form method="post" action="{% url 'deny_event' event.id %}">
+                            {% csrf_token %}
+                            <input type="submit" value="Deny" style="background-color: #dc5d7b;">
+                        </form>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+    <div class="manage_card">
+        <h3 style="font-weight: bolder; color: #052c65; text-align: center; text-transform: uppercase;">Denied Events</h3>
+        <hr>
+        <table>
+            <thead>
+                <tr class="label">
+                    <th>Name</th>
+                    <th>Start Date</th>
+                    <th>End Date</th>
+                    <th>Description</th>
+                    <th>Privacy</th>
+                    <th>Status</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for event in events_denied %}
+                <tr>
+                    <td>{{ event.name }}</td>
+                    <td>{{ event.start_date }}</td>
+                    <td>{{ event.end_date }}</td>
+                    <td>{{ event.description }}</td>
+                    <td>{{ event.get_privacy_display }}</td>
+                    <td>{{ event.get_status_display }}</td>
+                    <td>
+                        <form method="post" action="{% url 'approve_event' event.id %}">
+                            {% csrf_token %}
+                            <input type="submit" value="Approve" style="background-color: #5dc99f;">
+                        </form>
+                        <form method="post" action="{% url 'deny_event' event.id %}">
+                            {% csrf_token %}
+                            <input type="submit" value="Deny" style="background-color: #dc5d7b;">
+                        </form>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
 
-<h3>Pending Events</h3>
-<table>
-    <thead>
-        <tr>
-            <th>Name</th>
-            <th>Start Date</th>
-            <th>End Date</th>
-            <th>Description</th>
-            <th>Privacy</th>
-            <th>Status</th>
-            <th>Actions</th>
-        </tr>
-    </thead>
-    <tbody>
-        {% for event in events_pending %}
-        <tr>
-            <td>{{ event.name }}</td>
-            <td>{{ event.start_date }}</td>
-            <td>{{ event.end_date }}</td>
-            <td>{{ event.description }}</td>
-            <td>{{ event.get_privacy_display }}</td>
-            <td>{{ event.get_status_display }}</td>
-            <td>
-                <form method="post" action="{% url 'approve_event' event.id %}">
-                    {% csrf_token %}
-                    <input type="submit" value="Approve">
-                </form>
-                <form method="post" action="{% url 'deny_event' event.id %}">
-                    {% csrf_token %}
-                    <input type="submit" value="Deny">
-                </form>
-            </td>
-        </tr>
-        {% endfor %}
-    </tbody>
-</table>
-
-<h3>Approved Events</h3>
-<table>
-    <thead>
-        <tr>
-            <th>Name</th>
-            <th>Start Date</th>
-            <th>End Date</th>
-            <th>Description</th>
-            <th>Privacy</th>
-            <th>Status</th>
-            <th>Actions</th>
-        </tr>
-    </thead>
-    <tbody>
-        {% for event in events_approved %}
-        <tr>
-            <td>{{ event.name }}</td>
-            <td>{{ event.start_date }}</td>
-            <td>{{ event.end_date }}</td>
-            <td>{{ event.description }}</td>
-            <td>{{ event.get_privacy_display }}</td>
-            <td>{{ event.get_status_display }}</td>
-            <td>
-                <form method="post" action="{% url 'approve_event' event.id %}">
-                    {% csrf_token %}
-                    <input type="submit" value="Approve">
-                </form>
-                <form method="post" action="{% url 'deny_event' event.id %}">
-                    {% csrf_token %}
-                    <input type="submit" value="Deny">
-                </form>
-            </td>
-        </tr>
-        {% endfor %}
-    </tbody>
-</table>
-
-<h3>Denied Events</h3>
-<table>
-    <thead>
-        <tr>
-            <th>Name</th>
-            <th>Start Date</th>
-            <th>End Date</th>
-            <th>Description</th>
-            <th>Privacy</th>
-            <th>Status</th>
-            <th>Actions</th>
-        </tr>
-    </thead>
-    <tbody>
-        {% for event in events_denied %}
-        <tr>
-            <td>{{ event.name }}</td>
-            <td>{{ event.start_date }}</td>
-            <td>{{ event.end_date }}</td>
-            <td>{{ event.description }}</td>
-            <td>{{ event.get_privacy_display }}</td>
-            <td>{{ event.get_status_display }}</td>
-            <td>
-                <form method="post" action="{% url 'approve_event' event.id %}">
-                    {% csrf_token %}
-                    <input type="submit" value="Approve">
-                </form>
-                <form method="post" action="{% url 'deny_event' event.id %}">
-                    {% csrf_token %}
-                    <input type="submit" value="Deny">
-                </form>
-            </td>
-        </tr>
-        {% endfor %}
-    </tbody>
-</table>
-
+    </div>
 {% endblock %}
+</div>
+</div>
+</html>
