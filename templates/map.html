@@ -6,14 +6,56 @@ Title: Django Google Maps Tutorial #4: Placing Markers on a Map
 URL: https://www.youtube.com/watch?v=sasx2ppol5c&t=685s -->
 <!DOCTYPE html>
 <style>
-.mapholder{
-    height: 500px;
-    width: 100%;
-}
+    :root {
+        --card_border_radius: 16px;
+    }
+    body{
+        background-color: antiquewhite;
+    }
+    .card {
+        padding: 10px;
+        margin: 15px 10px;
+        border-radius: var(--card_border_radius);
+        background-color: #f2c894;
+        display: flex;
+        flex-direction: column;
+    }
+    .pin_container {
+        margin: 0;
+        padding: 0;
+        width: 85%;
+        position: absolute;
+        left: 15%;
+        transform: translateX(0%);
 
-#map{
-    height: 100%;
-}
+        display: grid;
+        grid-template-columns: repeat(auto-fill, var(--card_width));
+        grid-auto-rows: var(--row_increment);
+        justify-content: center;
+        background-color: #ff985a;
+        flex-direction: column;
+        align-content: center;
+        text-align: center;
+    }
+    .mapholder{
+        height: 500px;
+        width: 100%;
+    }
+
+    #map{
+        height: 100%;
+    }
+    .map_container{
+        background-color: navajowhite;
+        padding: 10px;
+        height: 100vh;
+
+    }
+    .label {
+        text-transform: uppercase;
+        font-weight: bolder;
+        color: #052c65;
+    }
 </style>
 
 <script src="https://maps.googleapis.com/maps/api/js?key={{key}}&libraries=places"></script>
@@ -81,7 +123,9 @@ Link: https://chat.openai.com/share/f2f2591e-18bc-4ebf-b6d6-db23ce038802 -->
     </script>
 <html>
 <div class = "pageholder">
-<h1>Hint: "{{hint}}"</h1> <br>
+<h1 style="font-size: 70px; color: #779ecc; font-family: 'Algerian', sans-serif; text-align: center">Hint:</h1>
+    <div class="map_container">
+    <h1 class="label">{{ hint }}</h1> <br>
 <!-- <p>Hover over the pin to see the hint!<p> -->
 <!-- <script src="https://polyfill.io/v3/polyfill.min.js?features=default"></script> -->
 
@@ -91,11 +135,17 @@ Link: https://chat.openai.com/share/f2f2591e-18bc-4ebf-b6d6-db23ce038802 -->
             <script async
                 src="https://maps.googleapis.com/maps/api/js?key={{key}}&callback=initMap">
             </script>
-        <button onclick="calculateDirections()" class="btn btn-primary">Find Route To Hint</button>
-        <button onclick="location.href='{% url 'event_all_tasks' event.id %}'" class="btn btn-primary">Back to Tasks</button>
+
+        <a class="btn" style="background-color: #779ecc; color: #fff; text-decoration: none;">
+            <button onclick="calculateDirections()" type="button" class="btn btn-custom" style="font-weight: bolder;">Find Route To Hint</button>
+        </a>
+        <a class="btn" style="background-color: #779ecc; color: #fff; text-decoration: none;">
+            <button onclick="location.href='{% url 'event_all_tasks' event.id %}'" type="button" class="btn btn-custom" style="font-weight: bolder;">Back to Tasks</button>
+        </a>
     </div>
 </div>
 </div>
+    </div>
 </html>
 
 {% endblock %}

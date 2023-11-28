@@ -50,7 +50,7 @@
 {% if request.user in team.members.all %}
     <!-- User is a member of this team -->
     <div class="card">
-    <h2 style="text-align: center; font-family: 'Playfair Display', serif; font-weight: bolder; font-size: 40px">My Team</h2>
+    <h2 style="text-align: center; font-family: 'Playfair Display', serif; font-weight: bolder; font-size: 40px">My Team: {{ team.name }}</h2>
     <div class="team_container">
         {% for user in team.members.all %}
             <h3 style="font-weight: bolder; color: #052c65; text-align: center; background-color: #d5e7f8; text-transform: uppercase;">{{ user.username }}</h3> <!-- Assuming you want to display the username -->

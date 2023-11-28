@@ -1,16 +1,60 @@
 {% extends "base.html" %}
 
 {% block content %}
-<h2>{{ event.name }} Hunt</h2>
+<h1 style="font-size: 70px; color: #779ecc; font-family: 'Algerian', sans-serif; text-align: center">{{ event.name }} Hunt</h1>
 {% if is_member %}
     <p>You have already joined this event.</p>
 {% else %}
+<head>
+      <style>
+        :root {
+            --card_border_radius: 16px;
+        }
+        body{
+            background-color: antiquewhite;
+        }
+        .card {
+            padding: 10px;
+            margin: 15px 10px;
+            border-radius: var(--card_border_radius);
+            background-color: #f2c894;
+            display: flex;
+            flex-direction: column;
+        }
+        .pin_container {
+            margin: 0;
+            padding: 0;
+            width: 85%;
+            position: absolute;
+            left: 15%;
+            transform: translateX(0%);
 
-    <h3>Create a new team:</h3>
+            display: grid;
+            grid-template-columns: repeat(auto-fill, var(--card_width));
+            grid-auto-rows: var(--row_increment);
+            justify-content: center;
+            background-color: #ff985a;
+        }
+        .label {
+                text-transform: uppercase;
+                font-weight: bolder;
+                color: #052c65;
+        }
+    </style>
+</head>
+    <div class="pin_container">
+    <div class="card">
+    <h3 style="font-weight: bolder; color: #052c65; text-align: center; text-transform: uppercase;">Create a new team:</h3>
     <form method="post">
         {% csrf_token %}
         <input type="text" name="new_team_name" placeholder="Enter new team name">
-        <button type="submit" name="action" value="create_team" class="btn btn-primary">Create Team</button>
+        <a style="color: #fff;">
+            <button type="submit" name ="action" value="create_team" class="btn btn-block" style="background-color: #779ecc; font-weight: bolder;">
+                Create Team
+            </button>
+        </a>
     </form>
+    </div>
+    </div>
 {% endif %}
 {% endblock %}
