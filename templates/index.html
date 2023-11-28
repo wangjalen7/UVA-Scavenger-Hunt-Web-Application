@@ -60,7 +60,8 @@
             </div>
             <div class="card">
             {% if user.is_authenticated %}
-                <p style="font-size: 20px"><span class="label">Name:</span> {{ user.first_name }}
+                <p style="font-size: 20px"><span class="label">First Name:</span> {{ user.first_name }}
+                <p style="font-size: 20px"><span class="label">Last Name:</span> {{ user.last_name }}
                 <p style="font-size: 20px"><span class="label">Username:</span> {{ user.username }}
                 {% if user.is_staff %}
                     <p style="text-align: center">You are logged in as an Admin user.</p>

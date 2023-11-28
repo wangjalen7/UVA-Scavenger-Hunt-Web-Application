@@ -43,6 +43,14 @@
             align-content: center;
             text-align: center;
         }
+        .text-body-secondary {
+            --bs-text-opacity: 1;
+        }
+        .label {
+                text-transform: uppercase;
+                font-weight: bolder;
+                color: #052c65;
+        }
     </style>
 </head>
 <!-- About Content -->
@@ -50,8 +58,8 @@
     <div class="card">
     <h2 style="text-align: center; font-family: 'Playfair Display', serif; font-weight: bolder; font-size: 40px">About</h2>
     <div class="about_container">
-    <p>Date: {{ event.start_date }} to {{ event.end_date }}</p>
-    <p>Description: {{ event.description }}</p>
+    <p class="text-body-secondary">Date: {{ event.start_date }} to {{ event.end_date }}</p>
+    <p><span class="label">Description:</span> {{ event.description }}</p>
     <p>{{ about_info }}</p>
 
 

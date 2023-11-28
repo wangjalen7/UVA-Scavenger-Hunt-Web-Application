@@ -51,7 +51,7 @@
         <div class="team_container">
             {% for team in teams %}
 
-                <h3 style="font-weight: bolder; color: #052c65; border: 3px solid #779ecc; text-align: center; background-color: #9fc0de; text-transform: uppercase;"><a href="{% url 'event_team' event.id team.id %}" style="color: #052c65">{{ team.name }}</a></h3>
+                <h3 style="font-weight: bolder; color: #052c65; text-align: center; background-color: #d5e7f8; text-transform: uppercase;"><a href="{% url 'event_team' event.id team.id %}" style="color: #052c65">{{ team.name }}</a></h3>
             {% endfor %}
             <a href="{% url 'create_team' event.id %}" style="color: #fff;">
                 <button type="button" class="btn btn-block" style="background-color: #779ecc; font-weight: bolder;">

@@ -53,7 +53,7 @@
     <h2 style="text-align: center; font-family: 'Playfair Display', serif; font-weight: bolder; font-size: 40px">My Team</h2>
     <div class="team_container">
         {% for user in team.members.all %}
-            <h3 style="font-weight: bolder; color: #052c65; border: 3px solid #779ecc; text-align: center; background-color: #9fc0de; text-transform: uppercase;">{{ user.username }}</h3> <!-- Assuming you want to display the username -->
+            <h3 style="font-weight: bolder; color: #052c65; text-align: center; background-color: #d5e7f8; text-transform: uppercase;">{{ user.username }}</h3> <!-- Assuming you want to display the username -->
         {% endfor %}
 
     <form action="{% url 'leave_team' event.id team.id %}" method="post" id="leave-team-form">

@@ -32,28 +32,54 @@
             justify-content: center;
             background-color: #ff985a;
         }
+        .task_container {
+            padding: 10px;
+            margin: 15px 10px;
+            border-radius: var(--card_border_radius);
+            background-color: #9fc0de;
+            display: flex;
+            flex-direction: column;
+            align-content: center;
+            text-align: center;
+        }
+        .individual_task {
+            padding: 10px;
+            margin: 15px 10px;
+            background-color: #d5e7f8;
+            display: flex;
+            flex-direction: column;
+            align-content: center;
+            text-align: center;
+        }
     </style>
 </head>
 <div class="container">
     <div class="card">
     <h2 style="text-align: center; font-family: 'Playfair Display', serif; font-weight: bolder; font-size: 40px">All Tasks</h2>
+    <div class="task_container">
     {% for task in all_tasks %}
-        <div>
-            <h3>{{ task.name }}</h3>
+        <div class="individual_task">
+            <h3 style="font-weight: bolder; color: #052c65; text-align: center; text-transform: uppercase;">{{ task.name }}</h3>
+            <hr>
             <p>{{ task.task }}</p>
-            <a href="{% url 'hint' event.id task.id %}" class="btn btn-primary">Hint</a>
-
+            <a href="{% url 'hint' event.id task.id %}" style="color: #fff;">
+                <button type="button" class="btn btn-block" style="background-color: #779ecc; font-weight: bolder;">
+                    Hint
+                </button>
+            </a>
+            <hr>
             <!-- Check if the task is completed and display status accordingly -->
             {% if task.id in completed_tasks_ids %}
-                <p><strong>Status:</strong> Completed</p>
+                <p><strong style="color: #052c65; text-align: center; font-weight: bold; text-transform: uppercase;">Status:</strong> Completed</p>
             {% else %}
-                <p><strong>Status:</strong> Incomplete</p>
+                <p><strong style="color: #052c65; text-align: center; font-weight: bold; text-transform: uppercase;">Status:</strong> Incomplete</p>
             {% endif %}
         </div>
         <br>
     {% empty %}
-        <div>No tasks available</div>
+        <div style="color: #052c65; text-align: center; font-weight: bold; text-transform: uppercase;">No tasks available</div>
     {% endfor %}
+    </div>
     </div>
 </div>
 {% endblock %}
