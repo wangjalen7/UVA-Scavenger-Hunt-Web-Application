@@ -51,9 +51,14 @@ class CustomSignupView(SignupView):
 
 @login_required
 def profile(request):
+    profile_error = ""
+    try:
+        user_profile = request.user.userprofile
+    except UserProfile.DoesNotExist:
+        user_profile = UserProfile.objects.create(user=request.user)
     user = request.user
     achievements = AchievementEarned.objects.filter(user=user)
-    user_position = UserProfile.objects.filter(points__gt=user.userprofile.points).count() + 1
+    user_position = UserProfile.objects.filter(points__gt=user_profile.points).count() + 1
     signup_achievement(request, user)
     return render(request, 'profile/profile.html', {'user': user, 'achievements': achievements, 'user_position': user_position})
 
