@@ -2,19 +2,80 @@
 
 {% block content %}
 {% include "event_tabs/event_menu.html" %}
+    <head>
+    <style>
+        :root {
+            --card_border_radius: 16px;
+        }
+        body{
+            background-color: antiquewhite;
+        }
+        .card {
+            padding: 10px;
+            margin: 15px 10px;
+            border-radius: var(--card_border_radius);
+            background-color: #f2c894;
+            display: flex;
+            flex-direction: column;
+        }
+        .pin_container {
+            margin: 0;
+            padding: 0;
+            width: 85%;
+            position: absolute;
+            left: 15%;
+            transform: translateX(0%);
+
+            display: grid;
+            grid-template-columns: repeat(auto-fill, var(--card_width));
+            grid-auto-rows: var(--row_increment);
+            justify-content: center;
+            background-color: #ff985a;
+        }
+        .task_container {
+            padding: 10px;
+            margin: 15px 10px;
+            border-radius: var(--card_border_radius);
+            background-color: #9fc0de;
+            display: flex;
+            flex-direction: column;
+            align-content: center;
+            text-align: center;
+        }
+        .individual_task {
+            padding: 10px;
+            margin: 15px 10px;
+            background-color: #d5e7f8;
+            display: flex;
+            flex-direction: column;
+            align-content: center;
+            text-align: center;
+        }
+    </style>
+</head>
 <div class="container">
-    <h2>Completed Tasks</h2>
+    <div class="card">
+    <h2 style="text-align: center; font-family: 'Playfair Display', serif; font-weight: bolder; font-size: 40px">Completed Tasks</h2>
+    <div class="task_container">
     {% for task in completed_tasks %}
-        <div>
-            <h3>{{ task.name }}</h3>
+        <div class="individual_task">
+            <h3 style="font-weight: bolder; color: #052c65; text-align: center; text-transform: uppercase;">{{ task.name }}</h3>
+            <hr>
             <p>{{ task.task }}</p>
-            <a href="{% url 'hint' event.id task.id %}" class="btn btn-primary">Hint</a>
+            <a href="{% url 'hint' event.id task.id %}" style="color: #fff;">
+                <button type="button" class="btn btn-block" style="background-color: #779ecc; font-weight: bolder;">
+                    Hint
+                </button>
+            </a>
+            <hr>
             <!-- Optionally, display the secret key for completed tasks -->
-            <p><strong>Secret Key:</strong> {{ task.secret_key }}</p>
+            <p><strong style="color: #052c65; text-align: center; font-weight: bold; text-transform: uppercase;">Secret Key:</strong> {{ task.secret_key }}</p>
         </div>
         <br>
     {% empty %}
-        <div>No tasks completed</div>
+        <div style="color: #052c65; text-align: center; font-weight: bold; text-transform: uppercase;">No tasks completed</div>
     {% endfor %}
+    </div>
+</div>
 </div>
 {% endblock %}

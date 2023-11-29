@@ -3,12 +3,50 @@
 {% extends "base.html" %}
 {% load static %}
 {% block content %}
-<body>
-    <h1>Change Bio</h1>
+    <head>
+      <style>
+        :root {
+            --card_border_radius: 16px;
+        }
+        body{
+            background-color: antiquewhite;
+        }
+        .card {
+            padding: 10px;
+            margin: 15px 10px;
+            border-radius: var(--card_border_radius);
+            background-color: #f2c894;
+            display: flex;
+            flex-direction: column;
+        }
+        .pin_container {
+            margin: 0;
+            padding: 0;
+            width: 85%;
+            position: absolute;
+            left: 15%;
+            transform: translateX(0%);
 
+            display: grid;
+            grid-template-columns: repeat(auto-fill, var(--card_width));
+            grid-auto-rows: var(--row_increment);
+            justify-content: center;
+            background-color: #ff985a;
+        }
+        .label {
+                text-transform: uppercase;
+                font-weight: bolder;
+                color: #052c65;
+        }
+    </style>
+</head>
+<body>
+    <h1 style="font-size: 70px; color: #779ecc; font-family: 'Algerian', sans-serif; text-align: center">Change Bio</h1>
+    <div class="pin_container">
+    <div class="card">
     <form method="post">
         {% csrf_token %}
-            <label for="bio">Bio:</label>
+            <label class="label" for="bio">Bio:</label>
             <textarea id="bio" name="bio" rows="3" cols="40">
                 {% if bio %}
                     {{ bio }}
@@ -16,14 +54,18 @@
                     Nothing here yet
                 {% endif %}
             </textarea>
-            <button type="submit">Save</button>
+            <a class="btn" style="background-color: #779ecc; color: #fff; text-decoration: none;">
+                <button type="submit" class="btn btn-custom" style="font-weight: bolder;">Save</button>
+            </a>
     </form>
 
     {% if bio_error %}
         <p class="error-message">{{ bio_error }}</p>
     {% endif %}
 
-    <a href="{% url 'profile' %}">Back to Profile</a>
+    <a href="{% url 'profile' %}" style="color: #779ecc">Back to Profile</a>
+    </div>
+    </div>
 </body>
 {% endblock %}
 </html>

@@ -109,7 +109,7 @@ class EventFormTests(TestCase):
     def test_event_form_no_data(self):
         form = EventForm(data={})
         self.assertFalse(form.is_valid())
-        self.assertEqual(len(form.errors), 6)
+        self.assertEqual(len(form.errors), 5)
 
     def setUp(self):
         self.user = User.objects.create_user('testuserjalen', 'testuser@example.com', 'testpassword123')

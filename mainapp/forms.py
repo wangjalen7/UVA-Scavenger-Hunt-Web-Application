@@ -20,11 +20,10 @@ class AllauthCustomSignupForm(SignupForm):
 class EventForm(forms.ModelForm):
     class Meta:
         model = Event
-        fields = ['name', 'start_date', 'end_date', 'privacy', 'description', 'theme']
+        fields = ['name', 'start_date', 'end_date', 'description', 'theme']
         widgets = {
             'start_date': DateInput(attrs={'type': 'date'}),
             'end_date': DateInput(attrs={'type': 'date'}),
-            'privacy': forms.Select(choices=Event.PRIVACY_CHOICES),
         }
 
 
