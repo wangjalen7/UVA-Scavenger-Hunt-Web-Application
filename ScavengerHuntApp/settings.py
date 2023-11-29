@@ -25,7 +25,8 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 
 # SECURITY WARNING: keep the secret key used in production secret!
 import secrets
-SECRET_KEY = secrets.token_urlsafe(50)
+# SECRET_KEY = secrets.token_urlsafe(50)
+SECRET_KEY = 'django-insecure-*#e4@jz&u2%5l&h685pt2288!o8k!!s$xbt-aktnp(d#zijh0b'
 
 # Google Maps API Key
 GOOGLE_MAPS_API_KEY = os.environ.get('GOOGLE_MAPS_API_KEY') or config(
@@ -140,23 +141,23 @@ USE_I18N = True
 
 USE_TZ = True
 
-CSRF_COOKIE_SECURE = True
+# CSRF_COOKIE_SECURE = True
 
-SECURE_SSL_REDIRECT=False
+# SECURE_SSL_REDIRECT=False
 
-SESSION_COOKIE_SECURE=False
+# SESSION_COOKIE_SECURE=False
 
-SECURE_HSTS_SECONDS = 31536000  # 1 year
-SECURE_HSTS_INCLUDE_SUBDOMAINS = True
-SECURE_HSTS_PRELOAD = True
+# SECURE_HSTS_SECONDS = 31536000  # 1 year
+# SECURE_HSTS_INCLUDE_SUBDOMAINS = True
+# SECURE_HSTS_PRELOAD = True
 
 
-CSRF_COOKIE_SECURE = True
-SECURE_SSL_REDIRECT = False
-SESSION_COOKIE_SECURE = True
-SECURE_HSTS_SECONDS = 31536000  # 1 year
-SECURE_HSTS_INCLUDE_SUBDOMAINS = True
-SECURE_HSTS_PRELOAD = True
+# CSRF_COOKIE_SECURE = True
+# SECURE_SSL_REDIRECT = False
+# SESSION_COOKIE_SECURE = True
+# SECURE_HSTS_SECONDS = 31536000  # 1 year
+# SECURE_HSTS_INCLUDE_SUBDOMAINS = True
+# SECURE_HSTS_PRELOAD = True
 
 
 # Static files (CSS, JavaScript, Images)
