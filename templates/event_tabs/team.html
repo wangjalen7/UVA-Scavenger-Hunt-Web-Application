@@ -2,30 +2,84 @@
 
 {% block content %}
 {% include "event_tabs/event_menu.html" %}
+    <head>
+    <style>
+        :root {
+            --card_border_radius: 16px;
+        }
+        body{
+            background-color: antiquewhite;
+        }
+        .card {
+            padding: 10px;
+            margin: 15px 10px;
+            border-radius: var(--card_border_radius);
+            background-color: #f2c894;
+            display: flex;
+            flex-direction: column;
+            align-content: center;
+            text-align: center;
+        }
+        .pin_container {
+            margin: 0;
+            padding: 0;
+            width: 85%;
+            position: absolute;
+            left: 15%;
+            transform: translateX(0%);
 
+            display: grid;
+            grid-template-columns: repeat(auto-fill, var(--card_width));
+            grid-auto-rows: var(--row_increment);
+            justify-content: center;
+            background-color: #ff985a;
+        }
+        .team_container {
+            padding: 10px;
+            margin: 15px 10px;
+            border-radius: var(--card_border_radius);
+            background-color: #9fc0de;
+            display: flex;
+            flex-direction: column;
+            align-content: center;
+            text-align: center;
+        }
+
+    </style>
+</head>
 {% if request.user in team.members.all %}
     <!-- User is a member of this team -->
-    <h3>My Team</h3>
+    <div class="card">
+    <h2 style="text-align: center; font-family: 'Playfair Display', serif; font-weight: bolder; font-size: 40px">My Team: {{ team.name }}</h2>
+    <div class="team_container">
+        {% for user in team.members.all %}
+            <h3 style="font-weight: bolder; color: #052c65; text-align: center; background-color: #d5e7f8; text-transform: uppercase;">{{ user.username }}</h3> <!-- Assuming you want to display the username -->
+        {% endfor %}
+
     <form action="{% url 'leave_team' event.id team.id %}" method="post" id="leave-team-form">
         {% csrf_token %}
-        <button type="button" class="btn btn-secondary" onclick="confirmLeaveTeam()">Leave Team</button>
+        <a style="color: #fff;">
+                <button type="button" class="btn btn-block" style="background-color: #779ecc; font-weight: bolder;" onclick="confirmLeaveTeam()">
+                    Leave Team
+                </button>
+            </a>
     </form>
+    </div>
 {% else %}
     <!-- User is not a member of this team -->
-    <h3>{{ team.name }}</h3>
+    <div class="team_container">
+    <h3 style="font-weight: bolder; color: #052c65; text-align: center; background-color: #d5e7f8; text-transform: uppercase;">{{ team.name }}</h3>
     <form action="{% url 'join_team' event.id team.id %}" method="post">
         {% csrf_token %}
-        <button type="submit" class="btn btn-secondary">Join Team</button>
+        <a style="color: #fff;">
+            <button type="submit" class="btn btn-block" style="background-color: #779ecc; font-weight: bolder;">
+                Join Team
+            </button>
+        </a>
     </form>
+    </div>
 {% endif %}
 
-<ul>
-    {% for user in team.members.all %}
-    <li>
-        <h3>{{ user.username }}</h3> <!-- Assuming you want to display the username -->
-    </li>
-    {% endfor %}
-</ul>
 
 <script>
     function confirmLeaveTeam() {

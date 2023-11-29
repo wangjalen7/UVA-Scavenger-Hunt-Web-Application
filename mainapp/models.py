@@ -22,6 +22,7 @@ class UserProfile(models.Model):
     bio = models.TextField(blank=True, null=True)
     points = models.IntegerField(default=0)
     achievements = models.ManyToManyField(AchievementEarned)
+    events_completed = models.IntegerField(default=0)
 
     def __str__(self):
         return self.user.username
@@ -61,7 +62,7 @@ class Event(models.Model):
     name = models.CharField(max_length=100)
     start_date = models.DateField()
     end_date = models.DateField()
-    description = models.TextField()
+    description = models.TextField(max_length=350)
     creator = models.ForeignKey(User, on_delete=models.CASCADE)
     status = models.CharField(choices=STATUS_CHOICES, default='pending', max_length=10)
     privacy = models.CharField(max_length=1, choices=PRIVACY_CHOICES, default='U')

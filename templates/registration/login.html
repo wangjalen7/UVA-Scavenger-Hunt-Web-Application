@@ -13,9 +13,9 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.1/css/all.min.css">
 </head>
 
-<body>
 
-    <body>
+
+    <body style="background-color: antiquewhite;">
         <div class="container mt-5">
             <div class="row justify-content-center">
                 <div class="col-md-6">
@@ -36,18 +36,19 @@
                                 <input type="password" name="password" id="id_password" required class="form-control">
                                 <div class="d-flex justify-content-between align-items-center mt-1"> 
                                     <label class="form-label mb-0" for="id_password">Password</label>
-                                    <a href="#!">Forgot password?</a>
+                                    <a href="#!" style="color: #779ecc;">Forgot password?</a>
                                 </div>
                             </div>
                             
-    
-                            <button type="submit" class="btn btn-primary btn-block mb-4">Sign in</button>
+                            <button type="submit" class="btn btn-block mb-4" style="background-color: #779ecc; color: #fff;">
+                                Sign In
+                            </button>
     
                     <div class="text-center">
-                        Don't have an account? <a href="{% url 'account_signup' %}">Sign Up</a>
+                        Don't have an account? <a href="{% url 'account_signup' %}" style="color: #779ecc;">Sign Up</a>
                         <p>or sign in with:</p>
                         <a href="{% provider_login_url 'google' %}" class="btn btn-link btn-floating mx-1 mt-n4">
-                            <i class="fab fa-google"></i>
+                            <i class="fab fa-google" style="color:#779ecc;"></i>
                         </a>
                     </div>
 

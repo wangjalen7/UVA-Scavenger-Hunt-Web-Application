@@ -105,12 +105,35 @@
             margin-bottom: 10px;
             padding: 10px;
         }
+        .status-badge {
+            display: inline-block;
+            padding: 5px 10px;
+            border-radius: 3px;
+            font-weight: bold;
+            text-align: center;
+            line-height: 1.5;
+            text-transform: uppercase;
+        }
 
+        .status-approved {
+            background-color: #29bf84;
+            color: #052c65;
+        }
+
+        .status-pending {
+            background-color: #f0d98c;
+            color: #052c65;
+        }
+
+        .status-denied {
+            background-color: #cc3062;
+            color: #052c65;
+        }
     </style>
 
 <body>
     <div class="container">
-        <h1 style="color: #779ecc; text-align: center; font-family: 'Playfair Display', serif; font-weight: bolder; font-size: 70px; text-transform: uppercase;">Events</h1>
+        <h1 style="color: #779ecc; text-align: center; font-family: 'Playfair Display', serif; font-weight: bolder; font-size: 70px; text-transform: uppercase;">My Events</h1>
     </div>
     <div class="pin_container">
         {% for event in events %}
@@ -118,6 +141,9 @@
             <table>
                 <tr>
                     <strong class="d-inline-block mb-2 text-primary-emphasis">Theme: {{event.theme}}</strong>
+                </tr>
+                <tr>
+                    <span class="status-badge {% if event.status == 'approved' %}status-approved{% elif event.status == 'pending' %}status-pending{% elif event.status == 'denied' %}status-denied{% endif %}">{{ event.get_status_display }}</span>
                 </tr>
                 <tr>
                     <h3 class="mb-0">{{ event.name }}</h3>
@@ -128,18 +154,20 @@
                 <tr>
                     <p class="card-text mb-auto">Description: {{ event.description }}</p>
                 </tr>
-                <tr>
-                    <a href="{% url 'event_about' event.id %}" class="btn" style="background-color: #779ecc; color: #fff; text-decoration: none;">
-                        <button type="button" class="btn btn-custom" style="font-weight: bolder;">View Event</button>
-                    </a>
-                </tr>
+                {% if event.status != 'denied' and event.status != 'pending' %}
+                    <tr>
+                        <a href="{% url 'event_about' event.id %}" class="btn" style="background-color: #779ecc; color: #fff; text-decoration: none;">
+                            <button type="button" class="btn btn-custom" style="font-weight: bolder;">View Event</button>
+                        </a>
+                    </tr>
+                {% endif %}
                 </table>
 
             </div>
         {% empty %}
                 <div class="card card_small">
                     <tr>
-                        <strong class="d-inline-block mb-2 text-primary-emphasis">There are currently no public events.</strong>
+                        <strong class="d-inline-block mb-2 text-primary-emphasis">You haven't created any events.</strong>
                     </tr>
                 </div>
         {% endfor %}
