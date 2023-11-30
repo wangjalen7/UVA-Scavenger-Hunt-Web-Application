@@ -36,6 +36,9 @@ Link: https://chat.openai.com/share/f2f2591e-18bc-4ebf-b6d6-db23ce038802 -->
                     lat: position.coords.latitude,
                     lng: position.coords.longitude
                     };
+                    () => {
+                        handleLocationError(true, infoWindow, map.getCenter());
+                },
 
                     marker1 = new google.maps.Marker({
                         position: userLocation, 
@@ -43,7 +46,9 @@ Link: https://chat.openai.com/share/f2f2591e-18bc-4ebf-b6d6-db23ce038802 -->
                         title: 'Your Location'
                     });
                     marker1.setVisible(false);
-            });
+            },
+            function error(msg) {alert('Please enable your GPS position feature.');},
+            {maximumAge:0, timeout:5000, enableHighAccuracy: true});;
             } else {
             alert('Geolocation is not supported by your browser.');
             }
