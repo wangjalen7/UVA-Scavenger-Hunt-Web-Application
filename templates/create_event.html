@@ -13,25 +13,36 @@
         }
         .card {
             padding: 10px;
-            margin: 15px 10px;
+            margin: 15px auto; /* Adjusted for auto margins to center the card */
             border-radius: var(--card_border_radius);
             background-color: #f2c894;
             display: flex;
             flex-direction: column;
+            width: 90%; /* Increased width */
+            max-width: 800px; /* Optional: You can set a max-width */
         }
         .pin_container {
             margin: 0;
             padding: 0;
-            width: 85%;
-            position: absolute;
-            left: 15%;
-            transform: translateX(0%);
-
-            display: grid;
-            grid-template-columns: repeat(auto-fill, var(--card_width));
-            grid-auto-rows: var(--row_increment);
-            justify-content: center;
+            width: 100%; /* Adjusted to 100% of its parent */
+            position: relative; /* Changed to relative */
             background-color: #ff985a;
+            display: flex;
+            justify-content: center; /* Center children horizontally */
+        }
+
+        /* Added CSS for form labels */
+        form label {
+            display: block;
+            margin-top: 20px;
+            font-weight: bold;
+        }
+
+        form input, form textarea, form select {
+            display: block;
+            width: 100%;
+            padding: 8px;
+            margin-top: 5px;
         }
     </style>
     </head>
@@ -40,7 +51,7 @@
         <h1 style="color: #779ecc; text-align: center; font-family: 'Playfair Display', serif; font-weight: bolder; font-size: 70px; text-transform: uppercase;">Create Events</h1>
     </div>
     <div class="pin_container text-center">
-        <div class ="card">
+        <div class="card">
         <form method="post" action=" {% url 'create_event' %}" class="mt-4">
            {% csrf_token %}
             <div class="card-body" style="text-align: left; font-weight: bolder; text-transform: uppercase; color: #052c65">
