@@ -151,7 +151,7 @@ def event_leaderboard(request, event_id):
     my_team = Team.objects.filter(event=event, members=request.user).first()
     teams = Team.objects.filter(event=event_id).order_by('-points')
 
-    if team and my_team == teams[0]:
+    if teams and my_team == teams[0]:
         win_event_achievement(request, request.user)
 
     context = {'event': event, 'is_team_member': is_team_member, 'my_team': my_team, 'teams': teams}

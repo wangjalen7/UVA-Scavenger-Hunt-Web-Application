@@ -103,6 +103,7 @@
     <div class="manage_card">
         <h3 style="font-weight: bolder; color: #052c65; text-align: center; text-transform: uppercase;">Pending Events</h3>
         <hr>
+        {% if events_pending %}
         <table>
             <thead>
                 <tr class="label">
@@ -110,7 +111,6 @@
                     <th>Start Date</th>
                     <th>End Date</th>
                     <th>Description</th>
-                    <th>Privacy</th>
                     <th>Status</th>
                     <th>Actions</th>
                 </tr>
@@ -122,7 +122,6 @@
                     <td>{{ event.start_date }}</td>
                     <td>{{ event.end_date }}</td>
                     <td>{{ event.description }}</td>
-                    <td>{{ event.get_privacy_display }}</td>
                     <td>{{ event.get_status_display }}</td>
                     <td>
                         <form method="post" action="{% url 'approve_event' event.id %}">
@@ -138,10 +137,14 @@
                 {% endfor %}
             </tbody>
         </table>
+        {% else %}
+            <p style="font-weight: bolder; color: #052c65; text-align: center; text-transform: uppercase;">No pending events.</p>
+        {% endif %}
     </div>
     <div class="manage_card">
         <h3 style="font-weight: bolder; color: #052c65; text-align: center; text-transform: uppercase;">Approved Events</h3>
         <hr>
+        {% if events_approved %}
         <table>
             <thead>
                 <tr class="label">
@@ -177,10 +180,14 @@
                 {% endfor %}
             </tbody>
         </table>
+        {% else %}
+            <p style="font-weight: bolder; color: #052c65; text-align: center; text-transform: uppercase;">No approved events.</p>
+        {% endif %}
     </div>
     <div class="manage_card">
         <h3 style="font-weight: bolder; color: #052c65; text-align: center; text-transform: uppercase;">Denied Events</h3>
         <hr>
+        {% if events_denied %}
         <table>
             <thead>
                 <tr class="label">
@@ -216,7 +223,9 @@
                 {% endfor %}
             </tbody>
         </table>
-
+        {% else %}
+            <p style="font-weight: bolder; color: #052c65; text-align: center; text-transform: uppercase;">No denied events.</p>
+        {% endif %}
     </div>
 {% endblock %}
 </div>
