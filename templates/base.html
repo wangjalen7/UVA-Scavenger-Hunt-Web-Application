@@ -73,7 +73,7 @@ h3 {
            </a>
         </li>
         <hr>
-            <li><a href="{% url 'profile' %}">{{ user.username }}</a></li>
+            <li><a href="{% url 'profile' %}">Profile</a></li>
             <li><a href="{% url 'view_public_events' %}">Events</a></li>
             <li><a href="{% url 'create_event' %}">Create Events</a></li>
             <li><a href="{% url 'create_theme' %}">Create Theme</a></li>
@@ -89,7 +89,7 @@ h3 {
             </a>
         </li>
         <hr>
-            <li><a href="{% url 'profile' %}">{{ user.username }}</a></li>
+            <li><a href="{% url 'profile' %}">Profile</a></li>
             <li><a href="{% url 'view_public_events' %}">Events</a></li>
             <li><a href="{% url 'create_event' %}">Create Events</a></li>
             <li><a href="{% url 'view_my_events' %}">My Events</a></li>
@@ -107,8 +107,8 @@ h3 {
         {% endblock %}
     </div>
 
-    <!-- Include the achievement.html at the bottom -->
-    {% include "achievement.html" %}
+    Include the achievement.html at the bottom
+    <!-- {% include "achievement.html" %} -->
 </body>
 
 {% else %}

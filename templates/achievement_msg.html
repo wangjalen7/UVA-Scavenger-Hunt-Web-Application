@@ -12,10 +12,22 @@
 
 {% if messages %}
   {% for message in messages %}
-    <div class="alert alert-success alert-dismissible">
-      <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
-      <strong>{{message}}</strong>
-    </div>
+    {% if message.tags == 'success' or message.tags == 'info' %}
+      <div class="alert alert-success alert-dismissible">
+        <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+        <strong>{{ message }}</strong>
+      </div>
+    {% elif message.tags == 'error' %}
+      <div class="alert alert-danger alert-dismissible">
+        <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+        <strong>{{ message }}</strong>
+      </div>
+    {% else %}
+      <div class="alert alert-warning alert-dismissible">
+        <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+        <strong>{{ message }}</strong>
+      </div>
+    {% endif %}
  {% endfor %}
 {% endif %}
 </body>
