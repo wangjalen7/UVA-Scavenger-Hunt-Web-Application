@@ -165,9 +165,9 @@ def event_leaderboard(request, event_id):
 def event_tasks(request, event_id):
     event = get_object_or_404(Event, pk=event_id)
 
-    # Check if user is attempting to join an event before it opens or after it closes
+    # Check if user is attempting to modify an event before it opens or after it closes
     if (datetime.date.today() < event.start_date) or (datetime.date.today() > event.end_date):
-        messages.error(request, "The event is not open to join. Please wait to join event.")
+        messages.error(request, "The event is not open to join. Tasks cannot be completed right now.")
         return redirect('event_about', event_id=event_id)
     
     is_team_member = Team.objects.filter(event=event, members=request.user).exists()
@@ -191,9 +191,9 @@ def event_tasks(request, event_id):
 def event_teams(request, event_id):
     event = get_object_or_404(Event, pk=event_id)
 
-    # Check if user is attempting to join an event before it opens or after it closes
+    # Check if user is attempting to modify an event before it opens or after it closes
     if (datetime.date.today() < event.start_date) or (datetime.date.today() > event.end_date):
-        messages.error(request, "The event is not open to join. Please wait to join event.")
+        messages.error(request, "The event is not open to join. Teams cannot be joined right now.")
         return redirect('event_about', event_id=event_id)
 
     teams = Team.objects.filter(event=event)
@@ -207,9 +207,9 @@ def event_teams(request, event_id):
 def event_team(request, event_id, team_id):
     event = get_object_or_404(Event, pk=event_id)
 
-    # Check if user is attempting to join an event before it opens or after it closes
+    # Check if user is attempting to modify an event before it opens or after it closes
     if (datetime.date.today() < event.start_date) or (datetime.date.today() > event.end_date):
-        messages.error(request, "The event is not open to join. Please wait to join event.")
+        messages.error(request, "The event is not open to join. Teams cannot be joined right now.")
         return redirect('event_about', event_id=event_id)
     
     team = get_object_or_404(Team, pk=team_id, event=event)
@@ -223,9 +223,9 @@ def event_team(request, event_id, team_id):
 def event_tasks_todo(request, event_id):
     event = get_object_or_404(Event, pk=event_id)
 
-    # Check if user is attempting to join an event before it opens or after it closes
+    # Check if user is attempting to modify an event before it opens or after it closes
     if (datetime.date.today() < event.start_date) or (datetime.date.today() > event.end_date):
-        messages.error(request, "The event is not open to join. Please wait to join event.")
+        messages.error(request, "The event is not open to join. Tasks cannot be attempted right now.")
         return redirect('event_about', event_id=event_id)
     
     is_team_member = Team.objects.filter(event=event, members=request.user).exists()
@@ -255,9 +255,9 @@ def event_tasks_todo(request, event_id):
 def event_completed_tasks(request, event_id):
     event = get_object_or_404(Event, pk=event_id)
 
-    # Check if user is attempting to join an event before it opens or after it closes
+    # Check if user is attempting to modify an event before it opens or after it closes
     if (datetime.date.today() < event.start_date) or (datetime.date.today() > event.end_date):
-        messages.error(request, "The event is not open to join. Please wait to join event.")
+        messages.error(request, "The event is not open to join. Tasks cannot be completed right now.")
         return redirect('event_about', event_id=event_id)
     
     is_team_member = Team.objects.filter(event=event, members=request.user).exists()
@@ -304,7 +304,7 @@ def event_completed_tasks(request, event_id):
 def join_event(request, event_id):
     event = get_object_or_404(Event, pk=event_id)
 
-    # Check if user is attempting to join an event before it opens or after it closes
+    # Check if user is attempting to modify an event before it opens or after it closes
     if (datetime.date.today() < event.start_date) or (datetime.date.today() > event.end_date):
         messages.error(request, "The event is not open to join. Please wait to join event.")
         return redirect('event_about', event_id=event_id)
@@ -336,7 +336,7 @@ def leave_event(request, event_id):
         messages.error(request, "The event is not open to join. Please wait to join event.")
         return redirect('event_about', event_id=event_id)
     
-    # Check if user is attempting to join an event before it opens or after it closes
+    # Check if user is attempting to modify an event after it closes
     if (datetime.date.today() > event.end_date):
         messages.error(request, "The event is not open to make changes.")
         return redirect('event_about', event_id=event_id)
@@ -375,9 +375,9 @@ def join_team(request, event_id, team_id):
     event = get_object_or_404(Event, pk=event_id)
     team_to_join = get_object_or_404(Team, pk=team_id, event=event)
 
-    # if today's date is earlier or later than the event's timeline, then redirect and say the event cannot be joined/rejoined
+    # Check if user is attempting to modify an event before it opens or after it closes
     if (datetime.date.today() < event.start_date) or (datetime.date.today() > event.end_date):
-        messages.error(request, "The event is not open. You cannot join a team.")
+        messages.error(request, "The event is not open. Teams cannot be joined right now.")
         return redirect('event_about', event_id=event_id)
 
     # Check if user is part of the event
@@ -406,9 +406,9 @@ def join_team(request, event_id, team_id):
 def create_team(request, event_id):
     event = get_object_or_404(Event, pk=event_id)
 
-    # if today's date is earlier or later than the event's timeline, then redirect and say the event cannot be joined/rejoined
+    # Check if user is attempting to modify an event before it opens or after it closes
     if (datetime.date.today() < event.start_date) or (datetime.date.today() > event.end_date):
-        messages.error(request, "The event is not open to join. You cannot create a team.")
+        messages.error(request, "The event is not open to join. Teams cannot be created right now.")
         return redirect('event_about', event_id=event_id)
 
     # Check if user is part of the event
