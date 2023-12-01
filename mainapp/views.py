@@ -37,6 +37,8 @@ def hint_view(request, event_id, task_id):
     event = Event.objects.get(pk=event_id)
     task = Task.objects.get(pk=task_id)
 
+    messages.warning(request, "Please wait for a few moments before calculating route.")
+
     use_hint_achievement(request, request.user)
 
     return render(request, 'map.html',
@@ -107,10 +109,11 @@ def change_bio(request):
 
 @login_required
 def create_event(request):
+
     if request.method == "POST":
         form = EventForm(request.POST)
         if form.is_valid():
-            event = form.save(commit=False)
+            event = form.save(commit=False)          
             event.creator = request.user
             event.status = "pending"
             event.save()
@@ -123,7 +126,7 @@ def create_event(request):
 
 @login_required
 def view_public_events(request):
-    events = Event.objects.filter(status='approved', privacy='U')
+    events = Event.objects.filter(status='approved', privacy='U', end_date__gte=datetime.date.today()) # remove event after expired
     return render(request, 'view_events.html', {'events': events, 'title': "Public Events"})
 
 
@@ -161,6 +164,12 @@ def event_leaderboard(request, event_id):
 @login_required
 def event_tasks(request, event_id):
     event = get_object_or_404(Event, pk=event_id)
+
+    # Check if user is attempting to join an event before it opens or after it closes
+    if (datetime.date.today() < event.start_date) or (datetime.date.today() > event.end_date):
+        messages.error(request, "The event is not open to join. Please wait to join event.")
+        return redirect('event_about', event_id=event_id)
+    
     is_team_member = Team.objects.filter(event=event, members=request.user).exists()
     my_team = Team.objects.filter(event=event, members=request.user).first()
     # Filter tasks by the event's theme
@@ -181,6 +190,12 @@ def event_tasks(request, event_id):
 @login_required
 def event_teams(request, event_id):
     event = get_object_or_404(Event, pk=event_id)
+
+    # Check if user is attempting to join an event before it opens or after it closes
+    if (datetime.date.today() < event.start_date) or (datetime.date.today() > event.end_date):
+        messages.error(request, "The event is not open to join. Please wait to join event.")
+        return redirect('event_about', event_id=event_id)
+
     teams = Team.objects.filter(event=event)
     is_team_member = Team.objects.filter(event=event, members=request.user).exists()
     my_team = Team.objects.filter(event=event, members=request.user).first()
@@ -191,6 +206,12 @@ def event_teams(request, event_id):
 @login_required
 def event_team(request, event_id, team_id):
     event = get_object_or_404(Event, pk=event_id)
+
+    # Check if user is attempting to join an event before it opens or after it closes
+    if (datetime.date.today() < event.start_date) or (datetime.date.today() > event.end_date):
+        messages.error(request, "The event is not open to join. Please wait to join event.")
+        return redirect('event_about', event_id=event_id)
+    
     team = get_object_or_404(Team, pk=team_id, event=event)
     is_team_member = Team.objects.filter(event=event, members=request.user).exists()
     my_team = Team.objects.filter(event=event, members=request.user).first()
@@ -201,6 +222,12 @@ def event_team(request, event_id, team_id):
 @login_required
 def event_tasks_todo(request, event_id):
     event = get_object_or_404(Event, pk=event_id)
+
+    # Check if user is attempting to join an event before it opens or after it closes
+    if (datetime.date.today() < event.start_date) or (datetime.date.today() > event.end_date):
+        messages.error(request, "The event is not open to join. Please wait to join event.")
+        return redirect('event_about', event_id=event_id)
+    
     is_team_member = Team.objects.filter(event=event, members=request.user).exists()
     my_team = Team.objects.filter(event=event, members=request.user).first()
 
@@ -227,6 +254,12 @@ def event_tasks_todo(request, event_id):
 @login_required
 def event_completed_tasks(request, event_id):
     event = get_object_or_404(Event, pk=event_id)
+
+    # Check if user is attempting to join an event before it opens or after it closes
+    if (datetime.date.today() < event.start_date) or (datetime.date.today() > event.end_date):
+        messages.error(request, "The event is not open to join. Please wait to join event.")
+        return redirect('event_about', event_id=event_id)
+    
     is_team_member = Team.objects.filter(event=event, members=request.user).exists()
     my_team = Team.objects.filter(event=event, members=request.user).first()
     all_tasks = Task.objects.filter(theme=event.theme)
@@ -271,6 +304,11 @@ def event_completed_tasks(request, event_id):
 def join_event(request, event_id):
     event = get_object_or_404(Event, pk=event_id)
 
+    # Check if user is attempting to join an event before it opens or after it closes
+    if (datetime.date.today() < event.start_date) or (datetime.date.today() > event.end_date):
+        messages.error(request, "The event is not open to join. Please wait to join event.")
+        return redirect('event_about', event_id=event_id)
+    
     # Check if the user has already joined the event
     if UserEvent.objects.filter(user=request.user, event=event).exists():
         messages.error(request, "You have already joined this event.")
@@ -292,6 +330,16 @@ def join_event(request, event_id):
 def leave_event(request, event_id):
     event = get_object_or_404(Event, pk=event_id)
     user_event = UserEvent.objects.filter(user=request.user, event=event)
+
+    # Check if user is attempting to join an event
+    if (datetime.date.today() < event.start_date):
+        messages.error(request, "The event is not open to join. Please wait to join event.")
+        return redirect('event_about', event_id=event_id)
+    
+    # Check if user is attempting to join an event before it opens or after it closes
+    if (datetime.date.today() > event.end_date):
+        messages.error(request, "The event is not open to make changes.")
+        return redirect('event_about', event_id=event_id)
 
     if not user_event.exists():
         messages.error(request, "You are not part of this event.")
@@ -327,6 +375,11 @@ def join_team(request, event_id, team_id):
     event = get_object_or_404(Event, pk=event_id)
     team_to_join = get_object_or_404(Team, pk=team_id, event=event)
 
+    # if today's date is earlier or later than the event's timeline, then redirect and say the event cannot be joined/rejoined
+    if (datetime.date.today() < event.start_date) or (datetime.date.today() > event.end_date):
+        messages.error(request, "The event is not open. You cannot join a team.")
+        return redirect('event_about', event_id=event_id)
+
     # Check if user is part of the event
     if not UserEvent.objects.filter(user=request.user, event=event).exists():
         messages.error(request, "You need to join the event before joining a team.")
@@ -352,6 +405,11 @@ def join_team(request, event_id, team_id):
 @login_required
 def create_team(request, event_id):
     event = get_object_or_404(Event, pk=event_id)
+
+    # if today's date is earlier or later than the event's timeline, then redirect and say the event cannot be joined/rejoined
+    if (datetime.date.today() < event.start_date) or (datetime.date.today() > event.end_date):
+        messages.error(request, "The event is not open to join. You cannot create a team.")
+        return redirect('event_about', event_id=event_id)
 
     # Check if user is part of the event
     if not UserEvent.objects.filter(user=request.user, event=event).exists():
