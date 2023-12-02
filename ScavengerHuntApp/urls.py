@@ -24,7 +24,7 @@ from mainapp.views import check_task_secret_key
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('', TemplateView.as_view(template_name="index.html"), name='home'),  # Use the index view here
+    # path('', TemplateView.as_view(template_name="index.html"), name='home'),  # Use the index view here
     path('accounts/', include('allauth.urls')),
     path('login/', auth_views.LoginView.as_view(), name='login'),
     path('logout/', auth_views.LogoutView.as_view(), name='logout'),
@@ -35,13 +35,12 @@ urlpatterns = [
     path('profile/change_username/', views.change_username, name='change_username'),
     path('profile/change_bio/', views.change_bio, name='change_bio'),
     path('create_event/', views.create_event, name='create_event'),
-    path('view_public_events/', views.view_public_events, name='view_public_events'),
+    path('', views.view_public_events, name='home'),
     path('view_my_events/', views.view_my_events, name='view_my_events'),
     path('manage_events/', views.manage_events, name='manage_events'),
     path('approve_hunt/<int:event_id>/', views.approve_event, name='approve_event'),
     path('deny_hunt/<int:event_id>/', views.deny_event, name='deny_event'),
     path('leaderboard/', views.leaderboard, name='leaderboard'),
-    # path('publicevents/', views.ListScavengerHunt.as_view(), name='public_events'),
     path('approve_event/<int:event_id>/', views.approve_event, name='approve_event'),
     path('deny_event/<int:event_id>/', views.deny_event, name='deny_event'),
     path('create_task/<int:theme_id>', views.create_task, name='create_task'),
