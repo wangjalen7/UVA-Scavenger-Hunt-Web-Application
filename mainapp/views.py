@@ -810,7 +810,7 @@ def check_task_secret_key(request, event_id, task_id):
         print("Entered key:", entered_key)  # Debugging
         print("Actual key:", task.secret_key)  # Debugging
 
-        if task.secret_key == entered_key:
+        if task.secret_key.lower() == entered_key.lower():
             # Check if the task has already been completed by the team
             completion, created = TaskCompletion.objects.get_or_create(task=task, team=my_team)
             if created:
