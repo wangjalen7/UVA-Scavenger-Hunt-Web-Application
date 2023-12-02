@@ -72,7 +72,7 @@
         <div class="achievement_card">
             <p style="text-transform: uppercase; font-weight: bolder; color: #052c65; font-size: 30px">Achievements</p>
                 {% for achievement in achievements %}
-                    <li style="font-size: 20px">{{ achievement.achievement.name }}: {{ achievement.achievement.description }} - {{ achievement.achievement.points }}pts</li>
+                    <li style="font-size: 20px">{{ achievement.achievement.name }}: {{ achievement.achievement.description }} +{{ achievement.achievement.points }}pts</li>
                 {% empty %}
                     <li style="font-size: 20px">No achievements yet.</li>
                 {% endfor %}
