@@ -1,122 +1,77 @@
-<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/css/bootstrap.min.css" integrity="sha384-rbsA2VBKQhggwzxH7pPCaAqO46MgnOM80zW1RWuH61DGLwZJEdK2Kadq2F9CUG65" crossorigin="anonymous">
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-Nf6k9_4Yl1Y1ObK1F0St4f0rG7rttKFE3bFxEi5GxIb4b5s7qUeJoxca3EFy72fE" crossorigin="anonymous"></script>
-
-{% load bootstrap5 %}
-
-{% load static %}
-
 <!DOCTYPE html>
 <html>
 <head>
-<style>
-body {
-    margin: 0;
-    background-color: antiquewhite;
-}
-
-ul {
-  list-style-type: none;
-  margin: 0;
-  padding: 0;
-  width: 15%;
-  background-color: #9fc0de;
-  position: fixed;
-  height: 100%;
-  overflow: auto;
-}
-
-li a {
-  display: block;
-  color: #000;
-  padding: 8px 16px;
-  text-decoration: none;
-}
-
-li a.active {
-  background-color: #04AA6D;
-  color: white;
-}
-
-li a:hover:not(.active) {
-  background-color: #779ecc;
-  color: white;
-}
-h3 {
-    font-weight: bold;
-    font-family: "Playfair Display", Georgia, "Times New Roman", serif;
-    padding: 30px;
-    font-size:70px;
-}
-.card-container {
-    text-align: center;
-    margin-top: 50px;
-}
-.card {
-    padding: 10px;
-    margin: 15px 10px;
-    border-radius: 16px;
-    background-color: #f2c894;
-    display: inline-block;
-    flex-direction: column;
-}
-
-</style>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/css/bootstrap.min.css" integrity="sha384-rbsA2VBKQhggwzxH7pPCaAqO46MgnOM80zW1RWuH61DGLwZJEdK2Kadq2F9CUG65" crossorigin="anonymous">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-Nf6k9_4Yl1Y1ObK1F0St4f0rG7rttKFE3bFxEi5GxIb4b5s7qUeJoxca3EFy72fE" crossorigin="anonymous"></script>
+    <style>
+        body {
+            margin: 0;
+            background-color: antiquewhite;
+        }
+        h3 {
+            font-weight: bold;
+            font-family: "Playfair Display", Georgia, "Times New Roman", serif;
+            padding: 30px;
+            font-size:70px;
+        }
+        .card-container {
+            text-align: center;
+            margin-top: 50px;
+        }
+        .card {
+            padding: 10px;
+            margin: 15px 10px;
+            border-radius: 16px;
+            background-color: #f2c894;
+            display: inline-block;
+            flex-direction: column;
+        }
+    </style>
 </head>
-{% if user.is_authenticated %}
 <body>
-    {% if user.is_staff %}
-        <ul>
-          <li>
-           <a href="{% url 'home' %}" style="font-family: 'Georgia', serif; font-weight: bolder; font-size: 25px">
-                <img src="https://static.vecteezy.com/system/resources/previews/009/385/543/non_2x/magnifying-glass-clipart-design-illustration-free-png.png" alt="Home" style="width:120px;">
-                ScavHunt App
-           </a>
-        </li>
-        <hr>
-            <li><a href="{% url 'profile' %}">Profile</a></li>
-            <li><a href="{% url 'view_public_events' %}">Events</a></li>
-            <li><a href="{% url 'create_event' %}">Create Events</a></li>
-            <li><a href="{% url 'create_theme' %}">Create Theme</a></li>
-            <li><a href="{% url 'manage_events' %}">Manage Events</a></li>
-        <hr>
-        </ul>
+    {% if user.is_authenticated %}
+        <nav class="navbar navbar-expand-lg navbar-light bg-light">
+            <div class="container-fluid">
+                <a class="navbar-brand" href="{% url 'home' %}">
+                    <img src="https://static.vecteezy.com/system/resources/previews/009/385/543/non_2x/magnifying-glass-clipart-design-illustration-free-png.png" alt="Home" style="width:30px;">
+                    ScavHunt App
+                </a>
+                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+                <div class="collapse navbar-collapse" id="navbarNav">
+                    <ul class="navbar-nav">
+                        <li class="nav-item"><a class="nav-link" href="{% url 'profile' %}">Profile</a></li>
+                        <li class="nav-item"><a class="nav-link" href="{% url 'home' %}">Events</a></li>
+                        <li class="nav-item"><a class="nav-link" href="{% url 'create_event' %}">Create Events</a></li>
+                        {% if user.is_staff %}
+                            <li class="nav-item"><a class="nav-link" href="{% url 'create_theme' %}">Create Theme</a></li>
+                            <li class="nav-item"><a class="nav-link" href="{% url 'manage_events' %}">Manage Events</a></li>
+                        {% else %}
+                            <li class="nav-item"><a class="nav-link" href="{% url 'view_my_events' %}">My Events</a></li>
+                            <li class="nav-item"><a class="nav-link" href="{% url 'leaderboard' %}">Leaderboard</a></li>
+                        {% endif %}
+                    </ul>
+                </div>
+            </div>
+        </nav>
+        <div class="container" style="padding-top: 20px;">
+            <!-- Include the achievement_msg.html for displaying messages -->
+            {% include "achievement_msg.html" %}
+
+            <!-- Main content block -->
+            {% block content %}
+            {% endblock %}
+        </div>
     {% else %}
-        <ul>
-          <li>
-            <a href="{% url 'home' %}" style="font-family: 'Georgia', serif; font-weight: bolder; font-size: 25px">
-                <img src="https://static.vecteezy.com/system/resources/previews/009/385/543/non_2x/magnifying-glass-clipart-design-illustration-free-png.png" alt="Home" style="width:120px;">
-                ScavHunt App
-            </a>
-        </li>
-        <hr>
-            <li><a href="{% url 'profile' %}">Profile</a></li>
-            <li><a href="{% url 'view_public_events' %}">Events</a></li>
-            <li><a href="{% url 'create_event' %}">Create Events</a></li>
-            <li><a href="{% url 'view_my_events' %}">My Events</a></li>
-            <li><a href="{% url 'leaderboard' %}">Leaderboard</a></li>
-        <hr>
-        </ul>
+        <div class="card-container">
+            <div class="card">
+                <h3>You are not logged in</h3>
+                <a href="{% url 'login' %}" class="btn" style="background-color: #779ecc; color: #fff; text-decoration: none; display: inline-block;">
+                    <button type="button" class="btn btn-custom" style="font-size: 30px; padding: 10px 20px; font-weight: bold;" >Log In</button>
+                </a>
+            </div>
+        </div>
     {% endif %}
-
-    <div style="margin-left:15%;padding:1px 16px;height:1000px;">
-        <!-- Include the achievement_msg.html for displaying messages -->
-        {% include "achievement_msg.html" %}
-
-        <!-- Main content block -->
-        {% block content %}
-        {% endblock %}
-    </div>
-
 </body>
-
-{% else %}
-  <div class="card-container">
-      <div class="card">
-          <h3>You are not logged in</h3>
-            <a href="{% url 'login' %}" class="btn" style="background-color: #779ecc; color: #fff; text-decoration: none; display: inline-block;">
-              <button type="button" class="btn btn-custom" style="font-size: 30px; padding: 10px 20px; font-weight: bold;" >Log In</button>
-            </a>
-      </div>
-  </div>
-{% endif %}
 </html>

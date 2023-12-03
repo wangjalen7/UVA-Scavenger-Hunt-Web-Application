@@ -21,42 +21,52 @@
         }
 
         .pin_container {
-            margin: 0;
+            border-radius: 25px;
+            margin: 0 auto;
             padding: 0;
             width: 85%;
-            position: absolute;
-            left: 15%;
+            border-radius: 25px;
             transform: translateX(0%);
-
             display: grid;
             grid-template-columns: repeat(auto-fill, var(--card_width));
-            grid-auto-rows: var(--row_increment);
+            grid-auto-rows: auto; /* Changed from a fixed size to 'auto' */
             justify-content: center;
             background-color: #ff985a;
         }
 
         .card {
-            padding: 10px;
+            padding: 5px;
             margin: 15px 10px;
             border-radius: var(--card_border_radius);
             background-color: #f2c894;
             display: flex;
             flex-direction: column;
-        }
-        .card_small {
-            grid-row-end: span var(--card_small);
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            align-items: center;
+            text-align: center;
         }
 
-        .card_medium {
-            grid-row-end: span var(--card_med);
+        .card h3, .card .text-primary-emphasis, .card .text-body-secondary, .card .card-text {
+            margin: 10px 0;
         }
 
-        .card_large {
-            grid-row-end: span var(--card_large);
+        .card .text-body-secondary {
+            font-size: 0.9rem; 
+        }
+
+        .card .card-text {
+            font-size: 1rem;
+        }
+
+        .btn-custom {
+            background-color: #779ecc;
+            color: #fff;
+            border: none;
+            padding: 8px 15px;
+            margin-top: 10px;
+            font-weight: bold;
+            border-radius: 4px;
+            text-align: center;
+            text-decoration: none;
+            display: inline-block;
         }
 
         .d-inline-block {
@@ -100,11 +110,24 @@
             --bs-text-opacity: 1;
         }
 
-        .card h3 {
-            margin-top: 0;
-            margin-bottom: 10px;
-            padding: 10px;
+        .no-events-card {
+            text-align: center;
+            background-color: #f2c894;
+            border-radius: var(--card_border_radius);
+            padding: 20px;
+            margin: 15px auto;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            grid-column: span 2;
         }
+
+        .no-events-card strong {
+            color: #052c65;
+            font-size: 1.2rem;
+        }
+
 
     </style>
 
@@ -115,36 +138,24 @@
     <div class="pin_container">
         {% for event in events %}
             <div class="card card_medium dynamic-height">
-            <table>
-                <tr>
-                    <strong class="d-inline-block mb-2 text-primary-emphasis">Theme: {{event.theme}}</strong>
-                </tr>
-                <tr>
                     <h3 class="mb-0">{{ event.name }}</h3>
-                </tr>
-                <tr>
-                    <div class="mb-1 text-body-secondary">{{ event.start_date }} - {{ event.end_date }}</div>
-                </tr>
-                <tr>
-                    <p class="card-text mb-auto">Description: {{ event.description }}</p>
-                </tr>
-                <tr>
-                    <a href="{% url 'event_about' event.id %}" class="btn" style="background-color: #779ecc; color: #fff; text-decoration: none;">
-                        <button type="button" class="btn btn-custom" style="font-weight: bolder;">View Event</button>
-                    </a>
-                </tr>
-                </table>
-
-            </div>
-        {% empty %}
-                <div class="card card_small">
+                    <strong class="d-inline-block mb-2 text-primary-emphasis">Theme: {{event.theme}}</strong>
                     <tr>
-                        <strong class="d-inline-block mb-2 text-primary-emphasis">There are currently no public events.</strong>
+                        <span class="status-badge {% if event.status == 'approved' %}status-approved{% elif event.status == 'pending' %}status-pending{% elif event.status == 'denied' %}status-denied{% endif %}">{{ event.get_status_display }}</span>
                     </tr>
+                    <div class="mb-1 text-body-secondary">{{ event.start_date }} - {{ event.end_date }}</div>
+                    <p class="card-text mb-auto">Description: {{ event.description }}</p>
+                    {% if event.status != 'denied' and event.status != 'pending' %}
+                    <a href="{% url 'event_about' event.id %}" class="btn-custom">View Event</a>
+                {% endif %}
                 </div>
-        {% endfor %}
-    </div>
-    <script>
+                {% empty %}
+                    <div class="no-events-card">
+                        <strong>There are currently no public events.</strong>
+                    </div>
+                {% endfor %}
+            </div>
+            <script>
         document.addEventListener("DOMContentLoaded", function () {
             var mediumCards = document.querySelectorAll('.card_medium.dynamic-height');
 

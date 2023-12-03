@@ -20,14 +20,10 @@
             text-align: left;
         }
         .pin_container {
-            margin: 0;
-            padding: 0;
+            border-radius: 25px;
+            margin: 0 auto;
+            padding: 20px;
             width: 85%;
-            position: absolute;
-            left: 15%;
-            display: flex;
-            justify-content: space-around;
-            flex-wrap: wrap;
             background-color: #779ecc;
         }
         .achievement_card {
@@ -77,6 +73,7 @@
                     <li style="font-size: 20px">No achievements yet.</li>
                 {% endfor %}
         </div>
+        <a href="{% url 'logout' %}" class="btn btn-danger" style="font-weight: bolder">Logout</a>
     </div>
 </body>
 {% endblock %}
