@@ -1,3 +1,16 @@
+<!--/***************************************************************************************
+*  REFERENCES
+*  Title: JavaScript
+*  Author: Chat GBT
+*  URL: https://chat.openai.com
+*
+*  Title: Bootstrap Doc
+*  Author: Bootstrap
+*  Code version: v5.3.2
+*  URL: https://getbootstrap.com/docs/5.3/getting-started/introduction/
+*  Software License: MIT
+*
+***************************************************************************************/ -->
 {% extends "base.html" %}
 
 {% block content %}
@@ -48,13 +61,12 @@
     </style>
 </head>
 {% if request.user in team.members.all %}
-    <!-- User is a member of this team -->
     <div class="card">
     <h2 style="text-align: center; font-family: 'Playfair Display', serif; font-weight: bolder; font-size: 40px">My Team: {{ team.name }}</h2>
     <a style="text-align: center; font-family: 'Playfair Display', serif; font-weight: bolder; font-size: 30px">Team Members</a>
     <div class="team_container">
         {% for user in team.members.all %}
-            <h3 style="font-weight: bolder; color: #052c65; text-align: center; background-color: #d5e7f8; text-transform: uppercase;">{{ user.username }}</h3> <!-- Assuming you want to display the username -->
+            <h3 style="font-weight: bolder; color: #052c65; text-align: center; background-color: #d5e7f8; text-transform: uppercase;">{{ user.username }}</h3>
         {% endfor %}
 
     <form action="{% url 'leave_team' event.id team.id %}" method="post" id="leave-team-form">
@@ -67,7 +79,6 @@
     </form>
     </div>
 {% else %}
-    <!-- User is not a member of this team -->
     <div class="team_container">
     <h3 style="font-weight: bolder; color: #052c65; text-align: center; background-color: #d5e7f8; text-transform: uppercase;">{{ team.name }}</h3>
     <form action="{% url 'join_team' event.id team.id %}" method="post">

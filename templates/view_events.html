@@ -1,8 +1,25 @@
+<!--/***************************************************************************************
+*  REFERENCES
+*  Title: JavaScript
+*  Author: Chat GBT
+*  URL: https://chat.openai.com
+*
+*  Title: Bootstrap Doc
+*  Author: Bootstrap
+*  Code version: v5.3.2
+*  URL: https://getbootstrap.com/docs/5.3/getting-started/introduction/
+*  Software License: MIT
+*
+*  Title: CSS Grid Layout
+*  Author: An Object Is A
+*  Date: 01/20/21
+*  URL: https://www.youtube.com/watch?v=VTJ_0MplSwk
+*
+***************************************************************************************/ -->
 <!DOCTYPE html>
 <html>
 {% extends "base.html" %}
 {% block content %}
-    <!--used this layout from this video: https://www.youtube.com/watch?v=VTJ_0MplSwk -->
     <style>
         :root {
             --card_width: 250px;
@@ -156,10 +173,9 @@
                 {% endfor %}
             </div>
             <script>
-        document.addEventListener("DOMContentLoaded", function () {
-            var mediumCards = document.querySelectorAll('.card_medium.dynamic-height');
-
-            mediumCards.forEach(function (card) {
+                document.addEventListener("DOMContentLoaded", function () {
+                var mediumCards = document.querySelectorAll('.card_medium.dynamic-height');
+                mediumCards.forEach(function (card) {
                 var titleHeight = card.querySelector('h3').offsetHeight;
                 var contentHeight = card.querySelector('.card-text').offsetHeight;
                 var rowIncrement = parseFloat(getComputedStyle(document.documentElement).getPropertyValue('--row_increment'));
