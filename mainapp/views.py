@@ -362,14 +362,6 @@ def leave_event(request, event_id):
     return redirect('event_about', event_id=event_id)
 
 
-# @login_required
-# def team_details(request, event_id, team_id):
-#     event = get_object_or_404(Event, pk=event_id)
-#     team = get_object_or_404(Team, pk=team_id, event=event)
-#     members = team.members.all()
-#     return render(request, 'event_details.html', {'event': event, 'team': team, 'members': members, 'tab': 'team'})
-
-
 @login_required
 def join_team(request, event_id, team_id):
     event = get_object_or_404(Event, pk=event_id)
