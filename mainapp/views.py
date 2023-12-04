@@ -126,7 +126,7 @@ def create_event(request):
 
 @login_required
 def view_public_events(request):
-    events = Event.objects.filter(status='approved', privacy='U', end_date__gte=datetime.date.today()) # remove event after expired
+    events = Event.objects.filter(status='approved', privacy='U', end_date__gt=datetime.date.today()) # remove event after expired
     return render(request, 'view_events.html', {'events': events, 'title': "Public Events"})
 
 
