@@ -22,3 +22,5 @@ psycopg2
 django-bootstrap-v5
 
 googlemaps
+
+pytz

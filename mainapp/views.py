@@ -16,6 +16,7 @@ import googlemaps
 from django.conf import settings  # need api key from google to make the request
 import datetime
 import json
+import pytz
 
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger('ScavengerHuntApp')
@@ -126,7 +127,9 @@ def create_event(request):
 
 @login_required
 def view_public_events(request):
-    events = Event.objects.filter(status='approved', start_date__lte=datetime.date.today(), end_date__gte=datetime.date.today()) # remove event after expired
+    utc_now = datetime.datetime.now(pytz.utc)     
+    est_now = utc_now.astimezone(pytz.timezone('US/Eastern'))     
+    events = Event.objects.filter(status='approved', end_date__gte=est_now.date()) # remove event after expired
     return render(request, 'view_events.html', {'events': events, 'title': "Public Events"})
 
 
