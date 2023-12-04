@@ -167,9 +167,11 @@ def event_leaderboard(request, event_id):
 @login_required
 def event_tasks(request, event_id):
     event = get_object_or_404(Event, pk=event_id)
+    utc_now = datetime.datetime.now(pytz.utc)     
+    est_now = utc_now.astimezone(pytz.timezone('US/Eastern'))   
 
     # Check if user is attempting to modify an event before it opens or after it closes
-    if (datetime.date.today() < event.start_date) or (datetime.date.today() > event.end_date):
+    if (est_now.date() < event.start_date) or (est_now.date() > event.end_date):
         messages.error(request, "The event is not open to join. Tasks cannot be completed right now.")
         return redirect('event_about', event_id=event_id)
     
@@ -193,9 +195,11 @@ def event_tasks(request, event_id):
 @login_required
 def event_teams(request, event_id):
     event = get_object_or_404(Event, pk=event_id)
+    utc_now = datetime.datetime.now(pytz.utc)     
+    est_now = utc_now.astimezone(pytz.timezone('US/Eastern'))  
 
     # Check if user is attempting to modify an event before it opens or after it closes
-    if (datetime.date.today() < event.start_date) or (datetime.date.today() > event.end_date):
+    if (est_now.date() < event.start_date) or (est_now.date() > event.end_date):
         messages.error(request, "The event is not open to join. Teams cannot be joined right now.")
         return redirect('event_about', event_id=event_id)
 
@@ -209,9 +213,11 @@ def event_teams(request, event_id):
 @login_required
 def event_team(request, event_id, team_id):
     event = get_object_or_404(Event, pk=event_id)
-
+    utc_now = datetime.datetime.now(pytz.utc)     
+    est_now = utc_now.astimezone(pytz.timezone('US/Eastern'))  
+  
     # Check if user is attempting to modify an event before it opens or after it closes
-    if (datetime.date.today() < event.start_date) or (datetime.date.today() > event.end_date):
+    if (est_now.date() < event.start_date) or (est_now.date() > event.end_date):
         messages.error(request, "The event is not open to join. Teams cannot be joined right now.")
         return redirect('event_about', event_id=event_id)
     
@@ -225,9 +231,11 @@ def event_team(request, event_id, team_id):
 @login_required
 def event_tasks_todo(request, event_id):
     event = get_object_or_404(Event, pk=event_id)
+    utc_now = datetime.datetime.now(pytz.utc)     
+    est_now = utc_now.astimezone(pytz.timezone('US/Eastern'))  
 
     # Check if user is attempting to modify an event before it opens or after it closes
-    if (datetime.date.today() < event.start_date) or (datetime.date.today() > event.end_date):
+    if (est_now.date() < event.start_date) or (est_now.date() > event.end_date):
         messages.error(request, "The event is not open to join. Tasks cannot be attempted right now.")
         return redirect('event_about', event_id=event_id)
     
@@ -257,9 +265,11 @@ def event_tasks_todo(request, event_id):
 @login_required
 def event_completed_tasks(request, event_id):
     event = get_object_or_404(Event, pk=event_id)
+    utc_now = datetime.datetime.now(pytz.utc)     
+    est_now = utc_now.astimezone(pytz.timezone('US/Eastern'))  
 
     # Check if user is attempting to modify an event before it opens or after it closes
-    if (datetime.date.today() < event.start_date) or (datetime.date.today() > event.end_date):
+    if (est_now.date() < event.start_date) or (est_now.date()> event.end_date):
         messages.error(request, "The event is not open to join. Tasks cannot be completed right now.")
         return redirect('event_about', event_id=event_id)
     
@@ -306,9 +316,11 @@ def event_completed_tasks(request, event_id):
 @login_required
 def join_event(request, event_id):
     event = get_object_or_404(Event, pk=event_id)
+    utc_now = datetime.datetime.now(pytz.utc)     
+    est_now = utc_now.astimezone(pytz.timezone('US/Eastern'))  
 
     # Check if user is attempting to modify an event before it opens or after it closes
-    if (datetime.date.today() < event.start_date) or (datetime.date.today() > event.end_date):
+    if (est_now.date() < event.start_date) or (est_now.date() > event.end_date):
         messages.error(request, "The event is not open to join. Please wait to join event.")
         return redirect('event_about', event_id=event_id)
     
@@ -333,14 +345,16 @@ def join_event(request, event_id):
 def leave_event(request, event_id):
     event = get_object_or_404(Event, pk=event_id)
     user_event = UserEvent.objects.filter(user=request.user, event=event)
+    utc_now = datetime.datetime.now(pytz.utc)     
+    est_now = utc_now.astimezone(pytz.timezone('US/Eastern'))  
 
     # Check if user is attempting to join an event
-    if (datetime.date.today() < event.start_date):
+    if (est_now.date() < event.start_date):
         messages.error(request, "The event is not open to join. Please wait to join event.")
         return redirect('event_about', event_id=event_id)
     
     # Check if user is attempting to modify an event after it closes
-    if (datetime.date.today() > event.end_date):
+    if (est_now.date() > event.end_date):
         messages.error(request, "The event is not open to make changes.")
         return redirect('event_about', event_id=event_id)
 
@@ -377,9 +391,11 @@ def leave_event(request, event_id):
 def join_team(request, event_id, team_id):
     event = get_object_or_404(Event, pk=event_id)
     team_to_join = get_object_or_404(Team, pk=team_id, event=event)
+    utc_now = datetime.datetime.now(pytz.utc)     
+    est_now = utc_now.astimezone(pytz.timezone('US/Eastern'))  
 
     # Check if user is attempting to modify an event before it opens or after it closes
-    if (datetime.date.today() < event.start_date) or (datetime.date.today() > event.end_date):
+    if (est_now.date() < event.start_date) or (est_now.date()> event.end_date):
         messages.error(request, "The event is not open. Teams cannot be joined right now.")
         return redirect('event_about', event_id=event_id)
 
@@ -408,9 +424,11 @@ def join_team(request, event_id, team_id):
 @login_required
 def create_team(request, event_id):
     event = get_object_or_404(Event, pk=event_id)
+    utc_now = datetime.datetime.now(pytz.utc)     
+    est_now = utc_now.astimezone(pytz.timezone('US/Eastern'))    
 
     # Check if user is attempting to modify an event before it opens or after it closes
-    if (datetime.date.today() < event.start_date) or (datetime.date.today() > event.end_date):
+    if (est_now.date() < event.start_date) or (est_now.date()> event.end_date):
         messages.error(request, "The event is not open to join. Teams cannot be created right now.")
         return redirect('event_about', event_id=event_id)
 
